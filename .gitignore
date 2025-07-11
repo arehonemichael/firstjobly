@@ -1,6 +1,12 @@
-node_modules
-.next
+# Ignore Next.js build output
+.next/
+out/
+
+# Ignore dependencies
+node_modules/
+
+# Ignore environment files
 .env
-.DS_Store
+
+# Ignore logs
 *.log
-*.lock
