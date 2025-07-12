@@ -40,10 +40,11 @@ export default function Home() {
             Discover internships, entry-level jobs, and career-starting opportunities.
           </p>
           <Link href="/jobs">
-            <button className="bg-white text-blue-700 font-semibold px-6 py-3 rounded-full hover:bg-gray-200 transition">
-              Browse Jobs
-            </button>
-          </Link>
+  <button className="bg-white text-blue-700 font-semibold px-6 py-3 rounded-full hover:bg-gray-200 transition">
+    Browse Jobs
+  </button>
+</Link>
+
         </div>
       </section>
 
