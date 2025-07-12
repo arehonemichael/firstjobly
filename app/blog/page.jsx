@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { getPosts } from "../../lib/blog"; 
+import { getPosts } from "../../lib/blog";
+
+export const dynamic = "force-dynamic"; // 👈 Forces dynamic rendering on Vercel
 
 export default async function BlogPage() {
   const posts = await getPosts();
@@ -13,7 +15,7 @@ export default async function BlogPage() {
       <h1 className="text-3xl font-bold mb-6">Career Blog</h1>
       <div className="space-y-6">
         {posts.map((post) => {
-          const date = post.createdAt?.toDate?.(); // Convert Firestore timestamp
+          const date = post.createdAt?.toDate?.();
           const formattedDate = date
             ? new Intl.DateTimeFormat("en-ZA", {
                 year: "numeric",
