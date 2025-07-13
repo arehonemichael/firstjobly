@@ -4,11 +4,12 @@ import { getJobs } from "../../lib/jobs";
 export const dynamic = "force-dynamic";
 
 export default async function JobsPage({ searchParams }) {
-  const rawJobs = await getJobs();
+  const allJobsRaw = await getJobs();
 
-  const allJobs = rawJobs.map((job) => ({
+  const allJobs = allJobsRaw.map((job) => ({
     ...job,
-    createdAt: job.createdAt?.toMillis?.() || null, // Convert Firestore Timestamp to number
+    // createdAt is already a JS Date from getJobs(), no need to convert again
+    createdAt: job.createdAt || null,
   }));
 
   return <JobsClient allJobs={allJobs} searchParams={searchParams} />;

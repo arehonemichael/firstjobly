@@ -1,4 +1,5 @@
 import { getJobById } from "../../../lib/jobs";
+import ApplyButton from "../../../components/ApplyButton";
 
 export default async function JobDetailPage({ params }) {
   const job = await getJobById(params.id);
@@ -42,16 +43,9 @@ export default async function JobDetailPage({ params }) {
       <div className="text-sm mb-4">
         {job.company && <p><strong>Company:</strong> {job.company}</p>}
         {job.link && (
-          <p className="mt-2">
-            <a
-              href={job.link}
-              className="text-blue-600 hover:underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Apply Now
-            </a>
-          </p>
+          <div className="mt-4">
+            <ApplyButton link={job.link} />
+          </div>
         )}
       </div>
     </main>

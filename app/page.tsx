@@ -70,14 +70,14 @@ export default function Home() {
               </p>
             </div>
           </Link>
-          <Link href="/jobs?category=Remote">
-            <div className="cursor-pointer bg-white shadow-md p-6 rounded-lg border hover:shadow-lg transition">
-              <h4 className="text-xl font-medium mb-2">Remote Opportunities</h4>
-              <p className="text-gray-600 text-sm">
-                Work from anywhere jobs for fresh graduates.
-              </p>
-            </div>
-          </Link>
+         <Link href="/jobs?category=Bursary">
+  <div className="cursor-pointer bg-white shadow-md p-6 rounded-lg border hover:shadow-lg transition">
+    <h4 className="text-xl font-medium mb-2">Bursaries</h4>
+    <p className="text-gray-600 text-sm">
+      Funding opportunities for students and graduates.
+    </p>
+  </div>
+</Link>
           <Link href="/jobs?category=Government">
             <div className="cursor-pointer bg-white shadow-md p-6 rounded-lg border hover:shadow-lg transition">
               <h4 className="text-xl font-medium mb-2">Government Jobs</h4>

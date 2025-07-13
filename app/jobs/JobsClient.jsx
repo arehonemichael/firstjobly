@@ -1,82 +1,82 @@
 "use client";
-
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import JobCard from "../../components/JobCard";
 
-// 🧠 Helper to convert timestamp to "X days ago"
-function formatRelativeTime(timestamp) {
-  if (!timestamp) return "Unknown date";
-
-  const now = Date.now();
-  const diffMs = now - timestamp;
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) return "Today";
-  if (diffDays === 1) return "1 day ago";
-  return `${diffDays} days ago`;
-}
-
 export default function JobsClient({ allJobs, searchParams }) {
+  const router = useRouter();
+
   const category = searchParams?.category || "";
   const page = parseInt(searchParams?.page || "1");
-  const jobsPerPage = 10;
+  const perPage = 10;
+
+  const categories = [
+    "Internships",
+    "Entry-Level",
+    "Bursary",
+    "Government",
+    "Permanent",
+    "Learnership",
+  ];
 
   const filteredJobs = category
     ? allJobs.filter((job) => job.category === category)
     : allJobs;
 
-  const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
-  const paginatedJobs = filteredJobs.slice(
-    (page - 1) * jobsPerPage,
-    page * jobsPerPage
-  );
+  const totalPages = Math.ceil(filteredJobs.length / perPage);
+  const startIndex = (page - 1) * perPage;
+  const visibleJobs = filteredJobs.slice(startIndex, startIndex + perPage);
 
-  const handlePageChange = (newPage) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", newPage);
-    if (category) params.set("category", category);
-    window.location.href = `/jobs?${params.toString()}`;
+  const formattedCategory = category
+    ? category.charAt(0).toUpperCase() + category.slice(1)
+    : "All Jobs";
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page, category]);
+
+  const handleCategoryChange = (e) => {
+    const selected = e.target.value;
+    const query = selected ? `?category=${selected}&page=1` : "?page=1";
+    router.push(`/jobs${query}`);
   };
 
   return (
-    <main className="max-w-6xl mx-auto px-4 py-8">
-      {category && (
-        <h2 className="text-2xl font-semibold mb-6 text-blue-700">
-          {category} Jobs
-        </h2>
-      )}
-
-      {paginatedJobs.length === 0 ? (
-        <p className="text-center text-gray-500">No jobs found.</p>
-      ) : (
-        <div className="grid gap-6">
-          {paginatedJobs.map((job) => (
-            <JobCard
-              key={job.id}
-              job={{
-                ...job,
-                postedAgo: formatRelativeTime(job.createdAt),
-              }}
-            />
+    <main className="max-w-4xl mx-auto px-4 py-6 sm:py-10">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
+        <h1 className="text-2xl font-bold">{formattedCategory}</h1>
+        <select
+          value={category}
+          onChange={handleCategoryChange}
+          className="border px-3 py-2 rounded w-full sm:w-auto"
+        >
+          <option value="">All Categories</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
           ))}
-        </div>
-      )}
+        </select>
+      </div>
 
-      {/* Pagination */}
+      <div className="space-y-4">
+        {visibleJobs.map((job) => (
+          <JobCard key={job.id} job={job} />
+        ))}
+      </div>
+
       {totalPages > 1 && (
-        <div className="mt-8 flex justify-center space-x-2">
+        <div className="flex flex-wrap justify-center mt-8 gap-2">
           {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => handlePageChange(i + 1)}
-              className={`px-4 py-2 rounded ${
-                page === i + 1
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-200 text-gray-800"
+            <a
+              key={i}
+              href={`?category=${category}&page=${i + 1}`}
+              className={`px-4 py-2 rounded border text-sm ${
+                i + 1 === page ? "bg-blue-600 text-white" : "text-blue-600"
               }`}
             >
               {i + 1}
-            </button>
+            </a>
           ))}
         </div>
       )}

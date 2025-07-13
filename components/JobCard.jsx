@@ -1,46 +1,53 @@
 import Link from "next/link";
 
+function getRelativeTime(dateString) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diff = Math.floor((now - date) / 1000); // in seconds
+
+  const minutes = Math.floor(diff / 60);
+  const hours = Math.floor(diff / 3600);
+  const days = Math.floor(diff / 86400);
+
+  if (diff < 60) return "Just now";
+  if (minutes < 60) return `Posted ${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+  if (hours < 24) return `Posted ${hours} hour${hours > 1 ? "s" : ""} ago`;
+  return `Posted ${days} day${days > 1 ? "s" : ""} ago`;
+}
+
+function getShortText(text, wordLimit = 20) {
+  return text.split(" ").slice(0, wordLimit).join(" ") + "...";
+}
+
 export default function JobCard({ job }) {
-  const {
-    id,
-    title,
-    company,
-    logo,
-    category,
-    description,
-    postedAgo,
-    link,
-  } = job;
+  const posted = job.createdAt ? getRelativeTime(job.createdAt) : "Posted recently";
 
   return (
-    <div className="border rounded-lg p-4 flex justify-between items-center shadow-sm bg-white hover:shadow-md transition">
-      {/* Left: Job Info */}
-      <div className="flex-1 pr-4">
-        <Link href={`/jobs/${id}`}>
-          <h2 className="text-lg font-semibold text-blue-700 hover:underline">
-            {title}
-          </h2>
-        </Link>
-        <p className="text-sm text-gray-700">{company}</p>
-        <p className="text-sm text-gray-500 mb-1">{postedAgo || ""}</p>
-        <p className="text-sm text-gray-600 line-clamp-2">{description}</p>
-        {category && (
-          <span className="mt-2 inline-block text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
-            {category}
-          </span>
-        )}
-      </div>
-
-      {/* Right: Logo */}
-      {logo && (
-        <div className="w-16 h-16 flex-shrink-0">
-          <img
-            src={logo}
-            alt={`${company} logo`}
-            className="w-full h-full object-contain rounded"
-          />
+    <Link
+      href={`/jobs/${job.id}`}
+      className="block border rounded p-4 hover:shadow transition relative"
+    >
+      <div className="flex justify-between items-center">
+        <div className="flex-1">
+          <h3 className="text-lg font-semibold">{job.title}</h3>
+          <p className="text-sm text-gray-700">{job.company}</p>
+          <p className="text-gray-500 text-xs mt-1">{posted}</p>
+          <p className="text-sm text-gray-600 mt-2">
+            {getShortText(job.requirements || "")}
+          </p>
         </div>
-      )}
-    </div>
+       {job.logo && (
+  <div style={{ width: "160px", height: "80px" }} className="ml-4 flex items-center justify-center">
+    <img
+      src={job.logo}
+      alt={`${job.company} logo`}
+      style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
+    />
+  </div>
+)}
+
+
+      </div>
+    </Link>
   );
 }
