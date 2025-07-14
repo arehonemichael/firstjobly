@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://firstjobly.co.za
+
+# Sitemaps
+Sitemap: https://firstjobly.co.za/sitemap.xml
