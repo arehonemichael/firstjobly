@@ -37,7 +37,8 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/* ✅ Google Analytics */}
+
+        {/* Google Analytics */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-HKHVEJR9N2"></script>
         <script
           dangerouslySetInnerHTML={{
@@ -49,6 +50,13 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
+
+        {/* Google AdSense */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1928566490547141"
+          crossOrigin="anonymous"
+        ></script>
       </head>
       <body className="bg-white text-gray-800">
         <Navbar />
