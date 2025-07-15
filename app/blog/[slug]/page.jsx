@@ -1,50 +1,42 @@
-import { getPostBySlug } from "../../../lib/blog";
-import PageHeader from "../../../components/PageHeader";
-import Link from "next/link";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+import { getBlogBySlug } from "../../../lib/blog";
 
 export default async function BlogPostPage({ params }) {
-  const post = await getPostBySlug(params.slug);
+  const post = await getBlogBySlug(params.slug);
 
   if (!post) {
-    return <p className="text-center py-12">Post not found.</p>;
+    return (
+      <main className="p-6">
+        <h1 className="text-2xl font-bold">Blog Not Found</h1>
+        <p>This post may have been removed or doesn't exist.</p>
+      </main>
+    );
   }
 
-  const date = post.createdAt?.toDate?.(); // Firestore Timestamp
-  const formattedDate = date
-    ? new Intl.DateTimeFormat("en-ZA", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      }).format(date)
-    : "Unknown date";
-
   return (
-    <main className="max-w-3xl mx-auto px-4 py-12">
-      {/* Header */}
-      <PageHeader title={post.title} subtitle={post.description || ""} />
-{post.image && (
-  <img
-    src={post.image}
-    alt={post.title}
-    className="rounded-lg mb-6 w-full object-cover max-h-96"
-  />
-)}
-
-      {/* Date */}
-      <p className="text-sm text-gray-500 mb-6">{formattedDate}</p>
-
-      {/* Article Content */}
-      <article
-        className="prose lg:prose-lg max-w-none prose-headings:text-blue-700 prose-a:text-blue-600 prose-a:underline prose-img:rounded"
+    <main className="max-w-3xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
+      {post.createdAt && (
+        <p className="text-gray-500 text-sm mb-4">
+          {new Intl.DateTimeFormat("en-ZA", {
+            dateStyle: "medium",
+            timeStyle: "short",
+          }).format(new Date(post.createdAt))}
+        </p>
+      )}
+      {post.image && (
+        <img
+          src={post.image}
+          alt={post.title}
+          className="w-full h-auto rounded mb-4"
+        />
+      )}
+      <div
+        className="prose prose-lg max-w-none"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
-
-      {/* Back link */}
-      <div className="mt-10">
-        <Link href="/blog" className="text-blue-600 hover:underline">
-          ← Back to Blog
-        </Link>
-      </div>
     </main>
   );
 }

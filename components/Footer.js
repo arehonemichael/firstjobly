@@ -9,16 +9,11 @@ export default function Footer() {
 
         {/* Grid layout: 2 rows of 4 links each */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-4 gap-x-6 justify-items-center mb-8">
-          <Link href="/" className="hover:underline text-base">Home</Link>
-          <Link href="/jobs" className="hover:underline text-base">Jobs</Link>
-          <Link href="/blog" className="hover:underline text-base">Blog</Link>
-          <Link href="/about" className="hover:underline text-base">About</Link>
-
-          <Link href="/contact" className="hover:underline text-base">Contact</Link>
+          
+          {/* REMOVED: <Link href="/contact" className="hover:underline text-base">Contact</Link> */}
           <Link href="/privacy" className="hover:underline text-base">Privacy Policy</Link>
           <Link href="/terms" className="hover:underline text-base">Terms of Use</Link>
-          <Link href="/cookie-policy">Cookie Policy</Link>
-
+          <Link href="/cookie-policy" className="hover:underline text-base">Cookie Policy</Link>
         </div>
 
         {/* Contact and copyright */}

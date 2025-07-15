@@ -30,7 +30,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <main className="bg-white min-h-screen text-gray-800">
-      {/* ✅ Modern Gradient Hero Section */}
+      {/*  Hero Section */}
       <section className="bg-gradient-to-br from-blue-700 via-indigo-600 to-purple-700 text-white py-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
@@ -48,7 +48,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ✅ Popular Job Categories */}
+      {/*  Popular Job Categories */}
       <section className="max-w-6xl mx-auto px-4 py-12">
         <h3 className="text-2xl font-semibold mb-6 text-center">
           Popular Job Categories
