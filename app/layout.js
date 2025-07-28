@@ -52,11 +52,8 @@ export default function RootLayout({ children }) {
         />
 
         {/* Google AdSense */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1928566490547141"
-          crossOrigin="anonymous"
-        ></script>
+       <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1505001993402465"
+     crossorigin="anonymous"></script>
       </head>
       <body className="bg-white text-gray-800">
         <Navbar />
