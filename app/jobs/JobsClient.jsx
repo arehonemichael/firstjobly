@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import JobCard from "../../components/JobCard";
+import AdSlot from "../../components/AdSlot"; // ⬅️ import the reusable ad
 
 export default function JobsClient({ allJobs, searchParams }) {
   const router = useRouter();
@@ -60,9 +61,34 @@ export default function JobsClient({ allJobs, searchParams }) {
       </div>
 
       <div className="space-y-4">
-        {visibleJobs.map((job) => (
-          <JobCard key={job.id} job={job} />
+        {visibleJobs.map((job, index) => (
+          <div key={job.id}>
+            <JobCard job={job} />
+
+            {/* ⬇️ Ad right after the 1st job */}
+            {index === 0 && (
+              <div className="my-4">
+                <AdSlot
+                  slot="7878892308"          // your in-list ad unit
+                  layout="in-article"
+                  responsive
+                  style={{ display: "block", minHeight: 250 }}
+                />
+              </div>
+            )}
+
+            {/* (Optional) add another ad deeper in the list for long scrollers */}
+            {/* {index === 4 && (
+              <div className="my-6">
+                <AdSlot slot="YOUR_SECOND_IN_LIST_SLOT" layout="in-article" responsive />
+              </div>
+            )} */}
+          </div>
         ))}
+
+        {visibleJobs.length === 0 && (
+          <p className="text-gray-600">No jobs found in this category yet.</p>
+        )}
       </div>
 
       {totalPages > 1 && (
