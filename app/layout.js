@@ -3,7 +3,7 @@ import "../styles/globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Script from "next/script";
-import AdSlot from "../components/AdSlot"; // <-- import
+import AdSlot from "../components/AdSlot"; // reusable AdSense slot
 
 export const metadata = {
   title: "FirstJobly - Find Your First Job Fast",
@@ -35,7 +35,7 @@ export default function RootLayout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body className="bg-white text-gray-800">
-        {/* GA */}
+        {/* ------- Google Analytics ------- */}
         <Script
           id="ga-loader"
           strategy="afterInteractive"
@@ -54,7 +54,7 @@ export default function RootLayout({ children }) {
           }}
         />
 
-        {/* AdSense (load once) */}
+        {/* ------- Google AdSense (load once globally) ------- */}
         <Script
           id="adsense-script"
           strategy="afterInteractive"
@@ -65,19 +65,48 @@ export default function RootLayout({ children }) {
 
         <Navbar />
 
-        {/* content + desktop sidebar */}
+        {/* Main content grid */}
         <div className="mx-auto max-w-6xl px-4 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
           <main>{children}</main>
-          <aside className="hidden lg:block sticky top-4 h-fit space-y-4">
+
+          {/* Grid sidebar: visible on lg, hidden on xl (to avoid double right-rail) */}
+          <aside className="hidden lg:block xl:hidden sticky top-4 h-fit space-y-4">
             {/* Desktop sidebar ad */}
-            <AdSlot slot="2290721371" responsive style={{ display: "block", minHeight: 600 }} />
+            <AdSlot
+              slot="2290721371"
+              responsive
+              style={{ display: "block", minHeight: 600 }}
+            />
           </aside>
         </div>
 
-        {/* Mobile footer ad (shows on sm/md; hidden on lg since sidebar exists) */}
+        {/* FIXED right rail for very wide screens (xl and up) */}
+        <div className="hidden xl:block">
+          <aside
+            className="fixed right-4 top-24 w-[336px] space-y-4 z-20"
+            aria-label="Right rail ads"
+          >
+            {/* Top skyscraper */}
+            <AdSlot
+              slot="2290721371"
+              responsive
+              style={{ display: "block", minHeight: 600 }}
+            />
+
+            {/* Lower autorelaxed unit */}
+            <AdSlot
+              slot="8280865915"
+              format="autorelaxed"
+              responsive
+              style={{ display: "block", minHeight: 280 }}
+            />
+          </aside>
+        </div>
+
+        {/* Mobile footer ad (shows on all pages, hidden on lg+ since sidebar exists) */}
         <div className="lg:hidden mx-auto max-w-3xl px-4 mt-6">
           <AdSlot
-            slot="4489509306"   // 
+            slot="4489509306"
             layout="auto"
             responsive
             style={{ display: "block", minHeight: 250 }}
