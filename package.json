@@ -5,8 +5,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-  "postbuild": "next-sitemap"
-
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "date-fns": "^4.1.0",

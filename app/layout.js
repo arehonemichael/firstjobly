@@ -1,5 +1,6 @@
 // app/layout.js
 import "../styles/globals.css";
+import InstallPrompt from "../components/InstallPrompt";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Script from "next/script";
@@ -34,7 +35,7 @@ export default function RootLayout({ children }) {
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className="bg-white text-gray-800">
+      <body className="bg-gray-50 text-gray-800">
         {/* ------- Google Analytics ------- */}
         <Script
           id="ga-loader"
@@ -114,6 +115,9 @@ export default function RootLayout({ children }) {
         </div>
 
         <Footer />
+
+        {/* Install prompt for PWA */}
+        <InstallPrompt />
       </body>
     </html>
   );
