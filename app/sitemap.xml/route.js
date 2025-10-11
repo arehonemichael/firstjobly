@@ -1,8 +1,10 @@
-import { getJobs } from "../../lib/jobs"; // adjust if path differs
+import { getJobs } from "../../lib/jobs"; // Adjust if path differs
+import { getPosts } from "../../lib/blog"; // Use this to fetch blog posts
 
 export async function GET() {
   const baseUrl = "https://firstjobly.co.za";
   const jobs = await getJobs();
+  const posts = await getPosts(); // Fetch all blog posts from Firestore
 
   const staticUrls = [
     `${baseUrl}/`,
@@ -15,24 +17,23 @@ export async function GET() {
     `${baseUrl}/cookie-policy`,
   ];
 
-  const jobUrls = jobs.map((job) => {
-    return `${baseUrl}/jobs/${job.id}`;
-  });
+  const jobUrls = jobs.map((job) => `${baseUrl}/jobs/${job.id}`);
+  const blogUrls = posts.map((post) => `${baseUrl}/blog/${post.slug}`); // Use slug from Firestore
 
-  const allUrls = [...staticUrls, ...jobUrls];
+  const allUrls = [...staticUrls, ...jobUrls, ...blogUrls];
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     ${allUrls
       .map(
         (url) => `
-      <url>
-        <loc>${url}</loc>
-        <lastmod>${new Date().toISOString()}</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-      </url>
-    `
+    <url>
+      <loc>${url}</loc>
+      <lastmod>${new Date().toISOString()}</lastmod> <!-- Update with post.createdAt for accuracy -->
+      <changefreq>weekly</changefreq>
+      <priority>0.7</priority>
+    </url>
+  `
       )
       .join("")}
   </urlset>`;
