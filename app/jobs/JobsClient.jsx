@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import JobCard from "../../components/JobCard";
-import AdSlot from "../../components/AdSlot"; // ⬅️ import the reusable ad
+import AdSlot from "../../components/AdSlot";
 
 export default function JobsClient({ allJobs, searchParams }) {
   const router = useRouter();
@@ -43,13 +43,14 @@ export default function JobsClient({ allJobs, searchParams }) {
   };
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-6 sm:py-10">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
-        <h1 className="text-2xl font-bold">{formattedCategory}</h1>
+    <main className="max-w-4xl mx-auto px-4 py-6 sm:py-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
+        <h1 className="text-xl sm:text-2xl font-semibold">{formattedCategory}</h1>
         <select
           value={category}
           onChange={handleCategoryChange}
-          className="border px-3 py-2 rounded w-full sm:w-auto"
+          className="border px-3 py-1 rounded w-full sm:w-auto text-sm"
         >
           <option value="">All Categories</option>
           {categories.map((cat) => (
@@ -60,44 +61,39 @@ export default function JobsClient({ allJobs, searchParams }) {
         </select>
       </div>
 
-      <div className="space-y-4">
+      {/* Job Listings */}
+      <div className="space-y-3">
         {visibleJobs.map((job, index) => (
           <div key={job.id}>
-            <JobCard job={job} />
+            <JobCard job={job} compact />
 
-            {/* ⬇️ Ad right after the 1st job */}
+            {/* Ad after the 1st job */}
             {index === 0 && (
-              <div className="my-4">
+              <div className="my-3">
                 <AdSlot
-                  slot="7878892308"          // your in-list ad unit
+                  slot="7878892308"
                   layout="in-article"
                   responsive
-                  style={{ display: "block", minHeight: 250 }}
+                  style={{ display: "block", minHeight: 200 }}
                 />
               </div>
             )}
-
-            {/* (Optional) add another ad deeper in the list for long scrollers */}
-            {/* {index === 4 && (
-              <div className="my-6">
-                <AdSlot slot="YOUR_SECOND_IN_LIST_SLOT" layout="in-article" responsive />
-              </div>
-            )} */}
           </div>
         ))}
 
         {visibleJobs.length === 0 && (
-          <p className="text-gray-600">No jobs found in this category yet.</p>
+          <p className="text-gray-600 text-sm">No jobs found in this category yet.</p>
         )}
       </div>
 
+      {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex flex-wrap justify-center mt-8 gap-2">
+        <div className="flex flex-wrap justify-center mt-6 gap-2">
           {Array.from({ length: totalPages }, (_, i) => (
             <a
               key={i}
               href={`?category=${category}&page=${i + 1}`}
-              className={`px-4 py-2 rounded border text-sm ${
+              className={`px-3 py-1 rounded border text-sm ${
                 i + 1 === page ? "bg-blue-600 text-white" : "text-blue-600"
               }`}
             >
