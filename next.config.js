@@ -5,7 +5,7 @@ const nextConfig = {
     appDir: true,
   },
   images: {
-    domains: ['firebasestorage.googleapis.com'], // allow Firebase Storage images
+    domains: ['firebasestorage.googleapis.com'], // allow Firebase URLs
   },
 };
 

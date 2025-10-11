@@ -1,10 +1,9 @@
 // app/blog/page.jsx (or pages/blog/index.jsx)
 import { getPosts } from "../../lib/blog";
 import Link from "next/link";
-import Image from "next/image";
 import Head from "next/head";
 
-export const revalidate = 60; // ISR: regenerate page every 60 seconds
+export const revalidate = 60; // optional ISR
 
 export default async function BlogPage() {
   const posts = await getPosts();
@@ -29,7 +28,6 @@ export default async function BlogPage() {
 
         {posts.map((post) => (
           <article key={post.id} className="border-b pb-6 mb-6">
-            {/* Blog Title */}
             <h2 className="text-2xl font-semibold">
               <Link
                 href={`/blog/${post.slug}`}
@@ -39,7 +37,6 @@ export default async function BlogPage() {
               </Link>
             </h2>
 
-            {/* Date */}
             {post.createdAt && (
               <p className="text-gray-500 text-sm mb-2">
                 {new Intl.DateTimeFormat("en-ZA", {
@@ -49,49 +46,15 @@ export default async function BlogPage() {
               </p>
             )}
 
-            {/* Image */}
             {post.image && (
-              <div className="relative w-full h-64 mb-4 rounded overflow-hidden">
-                <Image
-                  src={post.image}
-                  alt={post.title}
-                  fill
-                  className="object-cover"
-                  priority={false} // lazy-load
-                />
-              </div>
+              <img
+                src={post.image} // Firebase URL
+                alt={post.title}
+                className="w-full h-auto rounded mb-4"
+              />
             )}
 
-            {/* Description */}
             <p className="text-sm text-gray-700">{post.description}</p>
-
-            {/* Structured data per post */}
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{
-                __html: JSON.stringify({
-                  "@context": "https://schema.org",
-                  "@type": "BlogPosting",
-                  headline: post.title,
-                  image: post.image ? [post.image] : [],
-                  author: { "@type": "Person", name: "Your Name" },
-                  publisher: {
-                    "@type": "Organization",
-                    name: "Your Blog Name",
-                    logo: {
-                      "@type": "ImageObject",
-                      url: "https://yourdomain.com/logo.png",
-                    },
-                  },
-                  datePublished: post.createdAt,
-                  description: post.description || "",
-                  mainEntityOfPage: {
-                    "@type": "WebPage",
-                    "@id": `https://yourdomain.com/blog/${post.slug}`,
-                  },
-                }),
-              }}
-            />
           </article>
         ))}
       </main>
