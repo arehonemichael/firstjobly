@@ -18,23 +18,33 @@ export async function GET() {
   ];
 
   const jobUrls = jobs.map((job) => `${baseUrl}/jobs/${job.id}`);
-  const blogUrls = posts.map((post) => `${baseUrl}/blog/${post.slug}`); // Use slug from Firestore
+  const blogUrls = Array.from(new Set(posts.map((post) => post.slug))).map((slug) =>
+    `${baseUrl}/blog/${slug}`
+  );
 
   const allUrls = [...staticUrls, ...jobUrls, ...blogUrls];
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     ${allUrls
-      .map(
-        (url) => `
-    <url>
-      <loc>${url}</loc>
-      <lastmod>${new Date().toISOString()}</lastmod> <!-- Use post.createdAt for accuracy -->
-      <changefreq>weekly</changefreq>
-      <priority>0.7</priority>
-    </url>
-  `
-      )
+      .map((url) => {
+        let lastmod = new Date().toISOString(); // Default for static pages
+        if (url.startsWith(`${baseUrl}/jobs/`)) {
+          const job = jobs.find((j) => `${baseUrl}/jobs/${j.id}` === url);
+          if (job?.createdAt) lastmod = job.createdAt.toDate().toISOString();
+        } else if (url.startsWith(`${baseUrl}/blog/`)) {
+          const post = posts.find((p) => `${baseUrl}/blog/${p.slug}` === url);
+          if (post?.createdAt) lastmod = post.createdAt.toDate().toISOString();
+        }
+        return `
+  <url>
+    <loc>${url}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+`;
+      })
       .join("")}
   </urlset>`;
 
