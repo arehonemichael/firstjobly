@@ -3,7 +3,7 @@ import Link from "next/link";
 function getRelativeTime(dateString) {
   const date = new Date(dateString);
   const now = new Date();
-  const diff = Math.floor((now - date) / 1000); // seconds
+  const diff = Math.floor((now - date) / 1000);
 
   const minutes = Math.floor(diff / 60);
   const hours = Math.floor(diff / 3600);
@@ -30,9 +30,10 @@ export default function JobCard({ job, compact = false }) {
         compact ? "p-3 sm:p-2" : "p-4 sm:p-4"
       }`}
     >
-      <div className="flex justify-between items-center gap-4">
+      {/* Use flex-wrap to keep logo aligned on mobile */}
+      <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
         {/* Job Details */}
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <h3 className={`${compact ? "text-base" : "text-lg"} font-semibold truncate`}>
             {job.title}
           </h3>
@@ -48,7 +49,7 @@ export default function JobCard({ job, compact = false }) {
         {/* Company Logo */}
         {job.logo && (
           <div
-            className={`flex items-center justify-center flex-shrink-0 ${
+            className={`flex-shrink-0 flex items-center justify-center ${
               compact ? "w-16 h-16 sm:w-20 sm:h-20" : "w-32 h-16 sm:w-40 sm:h-20"
             }`}
           >
