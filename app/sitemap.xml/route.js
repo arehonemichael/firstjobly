@@ -1,10 +1,10 @@
-import { getJobs } from "../../lib/jobs"; // Adjust if path differs
-import { getPosts } from "../../lib/blog"; // Use this to fetch blog posts
+import { getJobs } from "../../lib/jobs";
+import { getPosts } from "../../lib/blog";
 
 export async function GET() {
   const baseUrl = "https://firstjobly.co.za";
   const jobs = await getJobs();
-  const posts = await getPosts(); // Fetch all blog posts from Firestore
+  const posts = await getPosts(); // Fetch blog posts from Firestore
 
   const staticUrls = [
     `${baseUrl}/`,
@@ -29,7 +29,7 @@ export async function GET() {
         (url) => `
     <url>
       <loc>${url}</loc>
-      <lastmod>${new Date().toISOString()}</lastmod> <!-- Update with post.createdAt for accuracy -->
+      <lastmod>${new Date().toISOString()}</lastmod> <!-- Use post.createdAt for accuracy -->
       <changefreq>weekly</changefreq>
       <priority>0.7</priority>
     </url>
