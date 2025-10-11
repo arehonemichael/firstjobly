@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,10 +9,13 @@ export default function InstallPrompt() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Delay show and check if dismissed before
+    // Check if popup was dismissed before
     const dismissed = localStorage.getItem("installPromptDismissed");
+
     if (!dismissed) {
-      const timer = setTimeout(() => setVisible(true), 2500);
+      const timer = setTimeout(() => {
+        setVisible(true);
+      }, 2500);
       return () => clearTimeout(timer);
     }
   }, []);
@@ -24,8 +28,8 @@ export default function InstallPrompt() {
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-4 inset-x-0 z-50 flex justify-center px-3 animate-fadeUp">
-      <div className="bg-white shadow-2xl rounded-2xl p-3 md:p-4 flex items-center gap-4 w-full max-w-md border border-gray-100">
+    <div className="fixed bottom-4 inset-x-0 z-50 flex justify-center px-3">
+      <div className="bg-white shadow-2xl rounded-2xl p-4 flex items-center gap-4 w-full max-w-md border border-gray-200">
         {/* App Icon */}
         <div className="flex-shrink-0">
           <Image
@@ -37,7 +41,7 @@ export default function InstallPrompt() {
           />
         </div>
 
-        {/* Text Content */}
+        {/* Text Section */}
         <div className="flex-1">
           <h3 className="text-base md:text-lg font-semibold text-gray-800">
             Install FirstJobly

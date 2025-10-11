@@ -1,10 +1,9 @@
-// app/layout.js
 import "../styles/globals.css";
-import InstallPrompt from "../components/InstallPrompt";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Script from "next/script";
-import AdSlot from "../components/AdSlot"; // reusable AdSense slot
+import AdSlot from "../components/AdSlot";
+import InstallPrompt from "../components/InstallPrompt";
 
 export const metadata = {
   title: "FirstJobly - Find Your First Job Fast",
@@ -23,7 +22,8 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "FirstJobly - Find Your First Job Fast",
-    description: "Explore internships, entry-level, remote, and government jobs.",
+    description:
+      "Explore internships, entry-level, remote, and government jobs.",
     images: ["/og-image.png"],
   },
   icons: { icon: "/favicon.ico" },
@@ -36,7 +36,7 @@ export default function RootLayout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body className="bg-gray-50 text-gray-800">
-        {/* ------- Google Analytics ------- */}
+        {/* Google Analytics */}
         <Script
           id="ga-loader"
           strategy="afterInteractive"
@@ -55,7 +55,7 @@ export default function RootLayout({ children }) {
           }}
         />
 
-        {/* ------- Google AdSense (load once globally) ------- */}
+        {/* Google AdSense */}
         <Script
           id="adsense-script"
           strategy="afterInteractive"
@@ -64,15 +64,14 @@ export default function RootLayout({ children }) {
           crossOrigin="anonymous"
         />
 
+        {/* Navbar */}
         <Navbar />
 
-        {/* Main content grid */}
+        {/* Page Content */}
         <div className="mx-auto max-w-6xl px-4 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
           <main>{children}</main>
 
-          {/* Grid sidebar: visible on lg, hidden on xl (to avoid double right-rail) */}
           <aside className="hidden lg:block xl:hidden sticky top-4 h-fit space-y-4">
-            {/* Desktop sidebar ad */}
             <AdSlot
               slot="2290721371"
               responsive
@@ -81,20 +80,17 @@ export default function RootLayout({ children }) {
           </aside>
         </div>
 
-        {/* FIXED right rail for very wide screens (xl and up) */}
+        {/* Right rail for wide screens */}
         <div className="hidden xl:block">
           <aside
             className="fixed right-4 top-24 w-[336px] space-y-4 z-20"
             aria-label="Right rail ads"
           >
-            {/* Top skyscraper */}
             <AdSlot
               slot="2290721371"
               responsive
               style={{ display: "block", minHeight: 600 }}
             />
-
-            {/* Lower autorelaxed unit */}
             <AdSlot
               slot="8280865915"
               format="autorelaxed"
@@ -104,7 +100,7 @@ export default function RootLayout({ children }) {
           </aside>
         </div>
 
-        {/* Mobile footer ad (shows on all pages, hidden on lg+ since sidebar exists) */}
+        {/* Mobile Ad */}
         <div className="lg:hidden mx-auto max-w-3xl px-4 mt-6">
           <AdSlot
             slot="4489509306"
@@ -116,7 +112,7 @@ export default function RootLayout({ children }) {
 
         <Footer />
 
-        {/* Install prompt for PWA */}
+        {/* ✅ Install Prompt Popup */}
         <InstallPrompt />
       </body>
     </html>
