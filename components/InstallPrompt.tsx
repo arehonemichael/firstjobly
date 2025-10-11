@@ -9,7 +9,7 @@ export default function InstallPrompt() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Check if popup was dismissed before
+    // Check if dismissed before
     const dismissed = localStorage.getItem("installPromptDismissed");
 
     if (!dismissed) {
@@ -28,8 +28,8 @@ export default function InstallPrompt() {
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-4 inset-x-0 z-50 flex justify-center px-3">
-      <div className="bg-white shadow-2xl rounded-2xl p-4 flex items-center gap-4 w-full max-w-md border border-gray-200">
+    <div className="fixed top-4 inset-x-0 z-50 flex justify-center px-3">
+      <div className="bg-white shadow-2xl rounded-2xl p-4 flex items-center gap-4 w-full max-w-md border border-gray-200 animate-slideDown">
         {/* App Icon */}
         <div className="flex-shrink-0">
           <Image
