@@ -9,20 +9,15 @@ export default function InstallPrompt() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Check if dismissed before
-    const dismissed = localStorage.getItem("installPromptDismissed");
-
-    if (!dismissed) {
-      const timer = setTimeout(() => {
-        setVisible(true);
-      }, 2500);
-      return () => clearTimeout(timer);
-    }
+    // Always show after 2.5 seconds
+    const timer = setTimeout(() => {
+      setVisible(true);
+    }, 2500);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleDismiss = () => {
-    setVisible(false);
-    localStorage.setItem("installPromptDismissed", "true");
+    setVisible(false); // just hides for this page load
   };
 
   if (!visible) return null;
@@ -30,7 +25,6 @@ export default function InstallPrompt() {
   return (
     <div className="fixed top-4 inset-x-0 z-50 flex justify-center px-3">
       <div className="bg-white shadow-2xl rounded-2xl p-4 flex items-center gap-4 w-full max-w-md border border-gray-200 animate-slideDown">
-        {/* App Icon */}
         <div className="flex-shrink-0">
           <Image
             src="/icon-192.png"
@@ -41,7 +35,6 @@ export default function InstallPrompt() {
           />
         </div>
 
-        {/* Text Section */}
         <div className="flex-1">
           <h3 className="text-base md:text-lg font-semibold text-gray-800">
             Install FirstJobly
@@ -59,7 +52,6 @@ export default function InstallPrompt() {
           </Link>
         </div>
 
-        {/* Close Button */}
         <button
           onClick={handleDismiss}
           className="text-gray-400 hover:text-gray-600"
