@@ -1,50 +1,36 @@
 import { getJobs } from "../../lib/jobs";
-import { getPosts } from "../../lib/blog";
 
 export async function GET() {
-  const baseUrl = "https://firstjobly.co.za";
   const jobs = await getJobs();
-  const posts = await getPosts(); // Fetch blog posts from Firestore
 
-  const staticUrls = [
-    `${baseUrl}/`,
-    `${baseUrl}/jobs`,
-    `${baseUrl}/blog`,
-    `${baseUrl}/about`,
-    `${baseUrl}/contact`,
-    `${baseUrl}/privacy-policy`,
-    `${baseUrl}/terms-of-use`,
-    `${baseUrl}/cookie-policy`,
-  ];
+  // Normalize createdAt to JS Date
+  const normalizedJobs = jobs.map((job) => {
+    let date;
+    if (job.createdAt && typeof job.createdAt.toDate === "function") {
+      date = job.createdAt.toDate(); // Firestore Timestamp
+    } else {
+      date = job.createdAt ? new Date(job.createdAt) : new Date();
+    }
 
-  const jobUrls = jobs.map((job) => `${baseUrl}/jobs/${job.id}`);
-  const blogUrls = Array.from(new Set(posts.map((post) => post.slug))).map((slug) =>
-    `${baseUrl}/blog/${slug}`
-  );
+    return {
+      ...job,
+      createdAt: date,
+    };
+  });
 
-  const allUrls = [...staticUrls, ...jobUrls, ...blogUrls];
-
+  // Generate XML
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    ${allUrls
-      .map((url) => {
-        let lastmod = new Date().toISOString(); // Default for static pages
-        if (url.startsWith(`${baseUrl}/jobs/`)) {
-          const job = jobs.find((j) => `${baseUrl}/jobs/${j.id}` === url);
-          if (job?.createdAt) lastmod = job.createdAt.toDate().toISOString();
-        } else if (url.startsWith(`${baseUrl}/blog/`)) {
-          const post = posts.find((p) => `${baseUrl}/blog/${p.slug}` === url);
-          if (post?.createdAt) lastmod = post.createdAt.toDate().toISOString();
-        }
-        return `
-  <url>
-    <loc>${url}</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-`;
-      })
+    ${normalizedJobs
+      .map(
+        (job) => `
+      <url>
+        <loc>https://yourdomain.com/jobs/${job.slug}</loc>
+        <lastmod>${job.createdAt.toISOString()}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+      </url>`
+      )
       .join("")}
   </urlset>`;
 
