@@ -1,107 +1,116 @@
+import Link from "next/link";
+import Image from "next/image";
+import {
+  FaBriefcase,
+  FaUniversity,
+  FaBuilding,
+  FaSuitcaseRolling,
+  FaBookOpen,
+} from "react-icons/fa";
+
 export const metadata = {
   title: "FirstJobly - Find Your First Job Fast",
   description:
     "Explore internships, entry-level, remote, and government jobs for youth and graduates on FirstJobly.",
-  openGraph: {
-    title: "FirstJobly - Find Your First Job Fast",
-    description:
-      "Explore internships, entry-level, remote, and government jobs for youth and graduates.",
-    url: "https://firstjobly.co.za",
-    siteName: "FirstJobly",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-      },
-    ],
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "FirstJobly - Find Your First Job Fast",
-    description: "Explore internships, entry-level, remote, and government jobs.",
-    images: ["/og-image.png"],
-  },
 };
 
-import Link from "next/link";
-
 export default function Home() {
+  const categories = [
+    {
+      title: "Internships",
+      desc: "Start your career with real-world experience.",
+      href: "/jobs?category=Internships",
+      icon: <FaBriefcase className="text-pink-600 w-10 h-10 mb-3" />,
+    },
+    {
+      title: "Entry-Level Jobs",
+      desc: "Roles designed for fresh graduates and youth.",
+      href: "/jobs?category=Entry-Level",
+      icon: <FaSuitcaseRolling className="text-pink-600 w-10 h-10 mb-3" />,
+    },
+    {
+      title: "Bursaries",
+      desc: "Funding programs to help you study and grow.",
+      href: "/jobs?category=Bursary",
+      icon: <FaUniversity className="text-pink-600 w-10 h-10 mb-3" />,
+    },
+    {
+      title: "Government Jobs",
+      desc: "Public sector internships and entry level positions.",
+      href: "/jobs?category=Government",
+      icon: <FaBuilding className="text-pink-600 w-10 h-10 mb-3" />,
+    },
+    {
+      title: "Permanent Jobs",
+      desc: "Long-term roles to build your career foundation.",
+      href: "/jobs?category=Permanent",
+      icon: <FaBriefcase className="text-pink-600 w-10 h-10 mb-3" />,
+    },
+    {
+      title: "Learnerships",
+      desc: "Earn while you learn through hands-on programs.",
+      href: "/jobs?category=Learnership",
+      icon: <FaBookOpen className="text-pink-600 w-10 h-10 mb-3" />,
+    },
+  ];
+
   return (
     <main className="bg-white min-h-screen text-gray-800">
-      {/*  Hero Section */}
-      <section className="bg-gradient-to-br from-blue-700 via-indigo-600 to-purple-700 text-white py-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Find Your First Job, Fast
-          </h1>
-          <p className="text-lg md:text-xl mb-6">
-            Discover internships, entry-level jobs, and career-starting opportunities.
-          </p>
-          <Link href="/jobs">
-  <button className="bg-white text-blue-700 font-semibold px-6 py-3 rounded-full hover:bg-gray-200 transition">
-    Browse Jobs
-  </button>
-</Link>
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-pink-50 via-white to-white h-screen flex items-center">
+        <div className="max-w-7xl mx-auto px-6 flex flex-row items-center justify-between gap-10 flex-wrap md:flex-nowrap">
+          {/* Image on Left */}
+          <div className="flex-1 flex justify-center items-center">
+            <div className="relative">
+              <div className="absolute -z-10 w-[28rem] h-[28rem] bg-pink-100 rounded-full blur-3xl opacity-60 top-10 left-10"></div>
+              <Image
+                src="/images/hero-image.png"
+                alt="Young professional working"
+                width={800}
+                height={620}
+                className="rounded-2xl shadow-2xl object-contain"
+                priority
+              />
+            </div>
+          </div>
 
+          {/* Text on Right */}
+          <div className="flex-1 flex flex-col justify-center items-start text-left">
+            <h1 className="text-6xl md:text-7xl font-extrabold leading-tight text-gray-900 mb-6">
+              Your Career <span className="text-pink-600">Starts Here.</span>
+            </h1>
+            <p className="text-lg text-gray-600 mb-8 max-w-md">
+              Explore opportunities, gain experience, and find your first step
+              toward a successful career all in one place.
+            </p>
+            <Link href="/jobs">
+              <button className="bg-pink-600 text-white px-10 py-4 rounded-lg font-medium hover:bg-pink-700 transition shadow-md text-lg">
+                Browse Jobs
+              </button>
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/*  Popular Job Categories */}
-      <section className="max-w-6xl mx-auto px-4 py-12">
-        <h3 className="text-2xl font-semibold mb-6 text-center">
+      {/* Popular Job Categories */}
+      <section className="py-20 bg-gray-50 border-t border-gray-100">
+        <h2 className="text-center text-3xl font-bold text-gray-900 mb-12">
           Popular Job Categories
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Link href="/jobs?category=Internships">
-            <div className="cursor-pointer bg-white shadow-md p-6 rounded-lg border hover:shadow-lg transition">
-              <h4 className="text-xl font-medium mb-2">Internships</h4>
-              <p className="text-gray-600 text-sm">
-                Paid and unpaid internships across industries.
-              </p>
-            </div>
-          </Link>
-          <Link href="/jobs?category=Entry-Level">
-            <div className="cursor-pointer bg-white shadow-md p-6 rounded-lg border hover:shadow-lg transition">
-              <h4 className="text-xl font-medium mb-2">Entry-Level Jobs</h4>
-              <p className="text-gray-600 text-sm">
-                Roles with little to no experience required.
-              </p>
-            </div>
-          </Link>
-         <Link href="/jobs?category=Bursary">
-  <div className="cursor-pointer bg-white shadow-md p-6 rounded-lg border hover:shadow-lg transition">
-    <h4 className="text-xl font-medium mb-2">Bursaries</h4>
-    <p className="text-gray-600 text-sm">
-      Funding opportunities for students and graduates.
-    </p>
-  </div>
-</Link>
-          <Link href="/jobs?category=Government">
-            <div className="cursor-pointer bg-white shadow-md p-6 rounded-lg border hover:shadow-lg transition">
-              <h4 className="text-xl font-medium mb-2">Government Jobs</h4>
-              <p className="text-gray-600 text-sm">
-                Entry-level government jobs & internships.
-              </p>
-            </div>
-          </Link>
-          <Link href="/jobs?category=Permanent">
-            <div className="cursor-pointer bg-white shadow-md p-6 rounded-lg border hover:shadow-lg transition">
-              <h4 className="text-xl font-medium mb-2">Permanent Jobs</h4>
-              <p className="text-gray-600 text-sm">
-                Secure full-time roles with long-term growth.
-              </p>
-            </div>
-          </Link>
-          <Link href="/jobs?category=Learnership">
-            <div className="cursor-pointer bg-white shadow-md p-6 rounded-lg border hover:shadow-lg transition">
-              <h4 className="text-xl font-medium mb-2">Learnerships</h4>
-              <p className="text-gray-600 text-sm">
-                Programs combining learning and work experience.
-              </p>
-            </div>
-          </Link>
+        </h2>
+        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 px-6">
+          {categories.map((cat) => (
+            <Link key={cat.title} href={cat.href}>
+              <div className="group cursor-pointer bg-white border rounded-xl p-8 shadow-sm hover:shadow-lg transition transform hover:-translate-y-1 text-center">
+                <div className="flex flex-col items-center">
+                  {cat.icon}
+                  <h3 className="text-lg font-semibold text-gray-900 mt-2 group-hover:text-pink-600 transition">
+                    {cat.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm mt-2">{cat.desc}</p>
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
     </main>

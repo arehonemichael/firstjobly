@@ -2,24 +2,25 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-100 text-gray-800 py-12 mt-16 border-t">
-      <div className="max-w-4xl mx-auto px-4 text-center">
-        {/* Centered Site Name */}
-        <h4 className="text-2xl font-bold mb-8 text-blue-700">FirstJobly</h4>
-
-        {/* Grid layout: 2 rows of 4 links each */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-4 gap-x-6 justify-items-center mb-8">
-          
-          {/* REMOVED: <Link href="/contact" className="hover:underline text-base">Contact</Link> */}
-          <Link href="/privacy" className="hover:underline text-base">Privacy Policy</Link>
-          <Link href="/terms" className="hover:underline text-base">Terms of Use</Link>
-          <Link href="/cookie-policy" className="hover:underline text-base">Cookie Policy</Link>
-        </div>
-
-        {/* Contact and copyright */}
-        <div className="text-sm text-gray-600">
-          <p>info@firstjobly.co.za</p>
-          <p className="mt-1">&copy; {new Date().getFullYear()} FirstJobly. All rights reserved.</p>
+    <footer className="bg-white border-t mt-16 py-6">
+      <div className="max-w-7xl mx-auto px-6 text-center space-y-4">
+        
+        {/* Brand */}
+        <h2 className="text-2xl font-bold text-pink-600">
+          First<span className="text-gray-900">Jobly.</span>
+        </h2>
+        
+        {/* Links */}
+        <div className="flex justify-center space-x-6 text-gray-600 text-sm">
+          <Link href="/privacy" className="hover:text-pink-600 transition">
+            Privacy Policy
+          </Link>
+          <Link href="/terms" className="hover:text-pink-600 transition">
+            Terms of Use
+          </Link>
+          <Link href="/cookie-policy" className="hover:text-pink-600 transition">
+            Cookie Policy
+          </Link>
         </div>
       </div>
     </footer>

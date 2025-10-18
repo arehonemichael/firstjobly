@@ -35,7 +35,7 @@ export default function RootLayout({ children }) {
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className="bg-gray-50 text-gray-800">
+      <body className="bg-white text-gray-800">
         {/* Google Analytics */}
         <Script
           id="ga-loader"
@@ -64,13 +64,14 @@ export default function RootLayout({ children }) {
           crossOrigin="anonymous"
         />
 
-        {/* Navbar */}
+        {/* ✅ New Navbar */}
         <Navbar />
 
-        {/* Page Content */}
-        <div className="mx-auto max-w-6xl px-4 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
+        {/* ✅ Main Layout Container */}
+        <div className="mx-auto max-w-6xl px-4 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 pt-4">
           <main>{children}</main>
 
+          {/* Left Ad Column */}
           <aside className="hidden lg:block xl:hidden sticky top-4 h-fit space-y-4">
             <AdSlot
               slot="2290721371"
@@ -80,7 +81,7 @@ export default function RootLayout({ children }) {
           </aside>
         </div>
 
-        {/* Right rail for wide screens */}
+        {/* ✅ Right rail for wide screens */}
         <div className="hidden xl:block">
           <aside
             className="fixed right-4 top-24 w-[336px] space-y-4 z-20"
@@ -100,7 +101,7 @@ export default function RootLayout({ children }) {
           </aside>
         </div>
 
-        {/* Mobile Ad */}
+        {/* ✅ Mobile Ad */}
         <div className="lg:hidden mx-auto max-w-3xl px-4 mt-6">
           <AdSlot
             slot="4489509306"
@@ -110,9 +111,8 @@ export default function RootLayout({ children }) {
           />
         </div>
 
+        {/* ✅ Footer + Install Prompt */}
         <Footer />
-
-        {/* ✅ Install Prompt Popup */}
         <InstallPrompt />
       </body>
     </html>
