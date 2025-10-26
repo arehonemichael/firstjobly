@@ -4,6 +4,8 @@ import Footer from "../components/Footer";
 import Script from "next/script";
 import AdSlot from "../components/AdSlot";
 import InstallPrompt from "../components/InstallPrompt";
+import Image from "next/image";
+import Link from "next/link";
 
 export const metadata = {
   title: "FirstJobly - Find Your First Job Fast",
@@ -64,10 +66,10 @@ export default function RootLayout({ children }) {
           crossOrigin="anonymous"
         />
 
-        {/* ✅ New Navbar */}
+        {/* ✅ Navbar */}
         <Navbar />
 
-        {/* ✅ Main Layout Container */}
+        {/* ✅ Main Layout */}
         <div className="mx-auto max-w-6xl px-4 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 pt-4">
           <main>{children}</main>
 
@@ -81,7 +83,7 @@ export default function RootLayout({ children }) {
           </aside>
         </div>
 
-        {/* ✅ Right rail for wide screens */}
+        {/* ✅ Right rail ads (XL screens) */}
         <div className="hidden xl:block">
           <aside
             className="fixed right-4 top-24 w-[336px] space-y-4 z-20"
@@ -110,6 +112,28 @@ export default function RootLayout({ children }) {
             style={{ display: "block", minHeight: 250 }}
           />
         </div>
+
+        {/* ✅ WhatsApp Ad Banner with Gentle Movement */}
+<div className="w-full flex justify-center mt-10 px-4">
+  <Link
+    href="https://wa.me/27827940534?text=Hi%2C%20I%20saw%20your%20ad%20on%20Firstly%20Jobly.%20I%20have%20a%20dream%20of%20starting%20or%20upgrading%20a%20business%2C%20what%20solutions%20do%20you%20have%20to%20offer%3F"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="block w-full max-w-[420px] sm:max-w-[520px] md:max-w-[640px] lg:max-w-[720px] xl:max-w-[800px] hover:scale-[1.03] transition-transform duration-300"
+  >
+    <div className="rounded-2xl overflow-hidden shadow-lg bg-[#0B132B] animate-float">
+      <Image
+        src="/whatsapp-banner.png"
+        alt="Chat with us on WhatsApp"
+        width={1146}
+        height={895}
+        className="w-full h-auto object-contain"
+        priority
+      />
+    </div>
+  </Link>
+</div>
+
 
         {/* ✅ Footer + Install Prompt */}
         <Footer />
