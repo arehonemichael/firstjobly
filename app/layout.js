@@ -116,7 +116,7 @@ export default function RootLayout({ children }) {
         {/* ✅ WhatsApp Ad Banner with Gentle Movement */}
 <div className="w-full flex justify-center mt-10 px-4">
   <Link
-    href="https://wa.me/27827940534?text=Hi%2C%20I%20saw%20your%20ad%20on%20Firstly%20Jobly.%20I%20have%20a%20dream%20of%20starting%20or%20upgrading%20a%20business%2C%20what%20solutions%20do%20you%20have%20to%20offer%3F"
+    href="https://wa.me/27827940534?text=I%20saw%20your%20ad%20on%20First%20Jobly%20and%20I%20would%20like%20to%20explore%20your%20a%20personalised%20gifts.%20%F0%9F%98%8A"
     target="_blank"
     rel="noopener noreferrer"
     className="block w-full max-w-[420px] sm:max-w-[520px] md:max-w-[640px] lg:max-w-[720px] xl:max-w-[800px] hover:scale-[1.03] transition-transform duration-300"
