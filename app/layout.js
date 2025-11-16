@@ -123,7 +123,7 @@ export default function RootLayout({ children }) {
   >
     <div className="rounded-2xl overflow-hidden shadow-lg bg-[#0B132B] animate-float">
       <Image
-        src="/whatsapp-banner.png"
+        src="/whatsapp-banner.gif"
         alt="Chat with us on WhatsApp"
         width={1146}
         height={895}
