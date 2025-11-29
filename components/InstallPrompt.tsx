@@ -9,44 +9,83 @@ export default function InstallPrompt() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Always show after 2.5 seconds
-    const timer = setTimeout(() => {
-      setVisible(true);
-    }, 2500);
-    return () => clearTimeout(timer);
+    if (typeof window === "undefined") return;
+
+    const ua = window.navigator.userAgent.toLowerCase();
+    const isAndroid = ua.includes("android");
+    const isMobileWidth = window.innerWidth < 1024; // mobile / small tablet
+
+    // Only target Android + mobile
+    if (!isAndroid || !isMobileWidth) return;
+
+    // Limit to 2 views per user
+    const count = parseInt(
+      window.localStorage.getItem("fj_install_prompt_count") || "0",
+      10
+    );
+    if (count >= 2) return;
+
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+
+      const scrolledRatio = docHeight > 0 ? scrollTop / docHeight : 0;
+
+      // Show when user has scrolled at least 40% of the page
+      if (scrolledRatio >= 0.4) {
+        setVisible(true);
+        window.removeEventListener("scroll", handleScroll);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    // In case user is already far down (from navigation / back button)
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const handleDismiss = () => {
-    setVisible(false); // just hides for this page load
+    setVisible(false);
+
+    if (typeof window !== "undefined") {
+      const count = parseInt(
+        window.localStorage.getItem("fj_install_prompt_count") || "0",
+        10
+      );
+      window.localStorage.setItem(
+        "fj_install_prompt_count",
+        String(count + 1)
+      );
+    }
   };
 
   if (!visible) return null;
 
   return (
-    <div className="fixed top-4 inset-x-0 z-50 flex justify-center px-3">
-      <div className="bg-white shadow-2xl rounded-2xl p-4 flex items-center gap-4 w-full max-w-md border border-gray-200 animate-slideDown">
-        <div className="flex-shrink-0">
-          <Image
-            src="/icon-192.png"
-            alt="FirstJobly App"
-            width={56}
-            height={56}
-            className="rounded-xl shadow-sm"
-          />
-        </div>
+    <div className="fixed bottom-20 right-4 z-50 lg:hidden">
+      <div className="bg-white shadow-xl rounded-2xl p-3 flex items-center gap-3 w-[260px] border border-gray-200 animate-slideUp">
+        <Image
+          src="/icon-192.png"
+          alt="FirstJobly App"
+          width={40}
+          height={40}
+          className="rounded-xl"
+        />
 
         <div className="flex-1">
-          <h3 className="text-base md:text-lg font-semibold text-gray-800">
+          <h3 className="text-sm font-semibold text-gray-800">
             Install FirstJobly
           </h3>
-          <p className="text-sm text-gray-500 leading-tight">
-            Get job updates instantly and manage your profile faster.
-          </p>
           <Link
             href="https://play.google.com/store/apps/details?id=com.first.firstjobly"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 inline-block bg-blue-600 text-white text-sm font-medium py-1.5 px-4 rounded-lg hover:bg-blue-700 transition"
+            className="text-xs text-blue-600 font-medium underline"
           >
             Install from Play Store
           </Link>
@@ -55,9 +94,9 @@ export default function InstallPrompt() {
         <button
           onClick={handleDismiss}
           className="text-gray-400 hover:text-gray-600"
-          aria-label="Close"
+          aria-label="Close install prompt"
         >
-          <X size={20} />
+          <X size={16} />
         </button>
       </div>
     </div>

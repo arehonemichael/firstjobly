@@ -4,8 +4,6 @@ import Footer from "../components/Footer";
 import Script from "next/script";
 import AdSlot from "../components/AdSlot";
 import InstallPrompt from "../components/InstallPrompt";
-import Image from "next/image";
-import Link from "next/link";
 
 export const metadata = {
   title: "FirstJobly - Find Your First Job Fast",
@@ -73,7 +71,7 @@ export default function RootLayout({ children }) {
         <div className="mx-auto max-w-6xl px-4 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 pt-4">
           <main>{children}</main>
 
-          {/* Left Ad Column */}
+          {/* Left Ad Column (for lg screens) */}
           <aside className="hidden lg:block xl:hidden sticky top-4 h-fit space-y-4">
             <AdSlot
               slot="2290721371"
@@ -103,7 +101,7 @@ export default function RootLayout({ children }) {
           </aside>
         </div>
 
-        {/* ✅ Mobile Ad */}
+        {/* ✅ Mobile Bottom Ad (phones / small screens) */}
         <div className="lg:hidden mx-auto max-w-3xl px-4 mt-6">
           <AdSlot
             slot="4489509306"
@@ -113,27 +111,15 @@ export default function RootLayout({ children }) {
           />
         </div>
 
-        {/* ✅ WhatsApp Ad Banner with Gentle Movement */}
-<div className="w-full flex justify-center mt-10 px-4">
-  <Link
-    href="https://wa.me/27827940534?text=I%20saw%20your%20ad%20on%20First%20Jobly%20and%20I%20would%20like%20to%20explore%20your%20a%20personalised%20gifts.%20%F0%9F%98%8A"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="block w-full max-w-[420px] sm:max-w-[520px] md:max-w-[640px] lg:max-w-[720px] xl:max-w-[800px] hover:scale-[1.03] transition-transform duration-300"
-  >
-    <div className="rounded-2xl overflow-hidden shadow-lg bg-[#0B132B] animate-float">
-      <Image
-        src="/whatsapp-banner.gif"
-        alt="Chat with us on WhatsApp"
-        width={1146}
-        height={895}
-        className="w-full h-auto object-contain"
-        priority
-      />
-    </div>
-  </Link>
-</div>
-
+        {/* ✅ Desktop Bottom Ad (under content, matches earlier discussion) */}
+        <div className="hidden lg:block mx-auto max-w-5xl px-4 mt-8">
+          <AdSlot
+            slot="2290721371" // you can use a dedicated slot if you prefer
+            layout="in-article"
+            responsive
+            style={{ display: "block", minHeight: 250 }}
+          />
+        </div>
 
         {/* ✅ Footer + Install Prompt */}
         <Footer />
