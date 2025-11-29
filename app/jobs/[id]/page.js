@@ -15,10 +15,10 @@ export default async function JobDetailPage({ params }) {
   }
 
   return (
-    <main className="bg-white max-w-3xl mx-auto p-6 rounded shadow mt-6 space-y-6">
+    <main className="bg-white max-w-3xl mx-auto p-6 rounded shadow mt-6">
       {/* Logo */}
       {job.logo && (
-        <div className="mb-2">
+        <div className="mb-3">
           <img
             src={job.logo}
             alt="Company Logo"
@@ -28,75 +28,64 @@ export default async function JobDetailPage({ params }) {
       )}
 
       {/* Title + meta */}
-      <div>
-        <h1 className="text-2xl font-bold mb-1">{job.title}</h1>
-        <p className="text-gray-600">
-          {job.category} · {job.location}
-        </p>
-      </div>
+      <h1 className="text-2xl font-bold mb-1">{job.title}</h1>
+      <p className="text-gray-600 mb-4">
+        {job.category} · {job.location}
+      </p>
 
-      {/* 🔹 AD 1 – high-visibility, after title */}
-      <div className="border rounded-md p-2">
-        <AdSlot
-          slot="2290721371"        // use one of your display slots
-          layout="in-article"
-          responsive
-          style={{ display: "block", minHeight: 250 }}
-        />
-      </div>
+      {/* AD 1 – directly in flow, no border box */}
+      <AdSlot
+        slot="2290721371"
+        layout="in-article"
+        responsive
+        style={{ display: "block", minHeight: 250, margin: "16px 0" }}
+      />
 
       {/* Requirements */}
       {job.requirements && (
-        <section className="space-y-2">
+        <div className="mb-4">
           <h2 className="font-semibold">Requirements:</h2>
-          <p className="text-sm whitespace-pre-line">
-            {job.requirements}
-          </p>
-        </section>
+          <p className="text-sm whitespace-pre-line">{job.requirements}</p>
+        </div>
       )}
 
-      {/* 🔹 AD 2 – mid-content, strong RPM position */}
-      <div className="border rounded-md p-2">
-        <AdSlot
-          slot="4489509306"        // another slot (or reuse if needed)
-          layout="in-article"
-          responsive
-          style={{ display: "block", minHeight: 250 }}
-        />
-      </div>
+      {/* AD 2 – mid-content */}
+      <AdSlot
+        slot="4489509306"
+        layout="in-article"
+        responsive
+        style={{ display: "block", minHeight: 250, margin: "16px 0" }}
+      />
 
       {/* Description */}
-      <section className="space-y-2">
+      <div className="mb-4">
         <h2 className="font-semibold">Description:</h2>
         <p className="text-sm whitespace-pre-line">
           {job.description || "No description provided."}
         </p>
-      </section>
+      </div>
 
       {/* Company + Apply */}
-      <section className="text-sm space-y-2">
+      <div className="text-sm mb-4">
         {job.company && (
           <p>
             <strong>Company:</strong> {job.company}
           </p>
         )}
-
         {job.link && (
-          <div className="mt-2">
+          <div className="mt-3">
             <ApplyButton link={job.link} />
           </div>
         )}
-      </section>
-
-      {/* 🔹 AD 3 – exit ad near bottom */}
-      <div className="border rounded-md p-2">
-        <AdSlot
-          slot="8280865915"        // e.g. your autorelaxed/feed slot
-          layout="in-article"
-          responsive
-          style={{ display: "block", minHeight: 250 }}
-        />
       </div>
+
+      {/* AD 3 – near bottom */}
+      <AdSlot
+        slot="8280865915"
+        layout="in-article"
+        responsive
+        style={{ display: "block", minHeight: 250, margin: "16px 0" }}
+      />
     </main>
   );
 }
