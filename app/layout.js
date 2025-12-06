@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Script from "next/script";
 import AdSlot from "../components/AdSlot";
-import InstallPrompt from "../components/InstallPrompt";
+import PlayStoreFooter from "../components/PlayStoreFooter";
 
 export const metadata = {
   title: "FirstJobly - Find Your First Job Fast",
@@ -30,6 +30,10 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  // 🔢 👉 PUT YOUR REAL RATING & REVIEW COUNT HERE
+  const rating = 4.8;      // e.g. your real rating from Play Store
+  const reviewCount = 120; // e.g. your real review count
+
   return (
     <html lang="en">
       <head>
@@ -64,10 +68,10 @@ export default function RootLayout({ children }) {
           crossOrigin="anonymous"
         />
 
-        {/* ✅ Navbar */}
+        {/* Navbar */}
         <Navbar />
 
-        {/* ✅ Main Layout */}
+        {/* Main Layout */}
         <div className="mx-auto max-w-6xl px-4 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 pt-4">
           <main>{children}</main>
 
@@ -81,7 +85,7 @@ export default function RootLayout({ children }) {
           </aside>
         </div>
 
-        {/* ✅ Right rail ads (XL screens) */}
+        {/* Right rail ads (XL screens) */}
         <div className="hidden xl:block">
           <aside
             className="fixed right-4 top-24 w-[336px] space-y-4 z-20"
@@ -101,7 +105,7 @@ export default function RootLayout({ children }) {
           </aside>
         </div>
 
-        {/* ✅ Mobile Bottom Ad (phones / small screens) */}
+        {/* Mobile Bottom Ad */}
         <div className="lg:hidden mx-auto max-w-3xl px-4 mt-6">
           <AdSlot
             slot="4489509306"
@@ -111,19 +115,32 @@ export default function RootLayout({ children }) {
           />
         </div>
 
-        {/* ✅ Desktop Bottom Ad (under content, matches earlier discussion) */}
+        {/* Desktop Bottom Ad */}
         <div className="hidden lg:block mx-auto max-w-5xl px-4 mt-8">
           <AdSlot
-            slot="2290721371" // you can use a dedicated slot if you prefer
+            slot="2290721371"
             layout="in-article"
             responsive
             style={{ display: "block", minHeight: 250 }}
           />
         </div>
 
-        {/* ✅ Footer + Install Prompt */}
+        {/* Desktop / tablet Google Play strip */}
+        <div className="hidden sm:block mx-auto max-w-4xl px-4 mt-10">
+          <PlayStoreFooter rating={rating} reviewCount={reviewCount} />
+        </div>
+
+        {/* Sticky mobile Google Play bar with slide-up animation */}
+        <div className="fixed bottom-0 left-0 right-0 z-30 sm:hidden animate-slideUp">
+          <PlayStoreFooter
+            rating={rating}
+            reviewCount={reviewCount}
+            compact={true}
+          />
+        </div>
+
+        {/* Footer */}
         <Footer />
-        <InstallPrompt />
       </body>
     </html>
   );

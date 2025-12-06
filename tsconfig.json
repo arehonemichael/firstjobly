@@ -28,7 +28,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "lib/playstore.js", "components/PlayStoreFooter.jsx"  ],
   "exclude": [
     "node_modules"
   ]

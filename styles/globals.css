@@ -1,3 +1,19 @@
+/* ✅ Slide Up Animation (added) */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.35s ease-out;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -18,7 +34,7 @@
   animation: fadeUp 0.35s ease-out;
 }
 
-/* ✅ New floating animation for subtle banner movement */
+/* ✅ Floating animation for subtle banner movement */
 @keyframes float {
   0%, 100% {
     transform: translateY(0);
