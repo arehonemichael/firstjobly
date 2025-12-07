@@ -31,7 +31,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   // 🔢 👉 PUT YOUR REAL RATING & REVIEW COUNT HERE
-  const rating = 4.8;      // e.g. your real rating from Play Store
+  const rating = 4.8; // e.g. your real rating from Play Store
   const reviewCount = 120; // e.g. your real review count
 
   return (
@@ -40,6 +40,26 @@ export default function RootLayout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body className="bg-white text-gray-800">
+        {/* Google Consent Mode defaults (Funding Choices will update these) */}
+        <Script
+          id="consent-defaults"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+
+              // Default: no consent until CMP (Funding Choices) updates it
+              gtag('consent', 'default', {
+                'ad_storage': 'denied',
+                'analytics_storage': 'denied',
+                'ad_user_data': 'denied',
+                'ad_personalization': 'denied'
+              });
+            `,
+          }}
+        />
+
         {/* Google Analytics */}
         <Script
           id="ga-loader"
@@ -51,8 +71,6 @@ export default function RootLayout({ children }) {
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
               gtag('config', 'G-HKHVEJR9N2');
             `,
