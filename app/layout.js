@@ -38,9 +38,55 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </head>
-      <body className="bg-white text-gray-800">
-        {/* Google Consent Mode defaults (Funding Choices will update these) */}
+
+        {/* ------------------------------------------------------------------ */}
+        {/* FUNDING CHOICES (Google CMP) - must load BEFORE AdSense/ads code */}
+        {/* ------------------------------------------------------------------ */}
+        <Script
+          id="funding-choices"
+          strategy="beforeInteractive"
+          async
+          src="https://fundingchoicesmessages.google.com/i/ca-pub-1505001993402465?ers=1"
+        />
+
+        {/* Small diagnostic handler for Funding Choices / TCF (optional) */}
+        <Script
+          id="fc-diagnostics"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                function logFCState(label) {
+                  try {
+                    if (window.FundingChoices && typeof window.FundingChoices === 'function') {
+                      window.FundingChoices('getTCData').then(function(tcData) {
+                        console.log('[FC] getTCData', label, tcData);
+                      }).catch(function(err){
+                        console.log('[FC] getTCData err', label, err);
+                      });
+                    } else if (typeof window.__tcfapi === 'function') {
+                      window.__tcfapi('getTCData', 2, function(tcData, success) {
+                        console.log('[__tcfapi] getTCData', label, 'success=', success, tcData);
+                      });
+                    } else {
+                      console.log('[FC] CMP not yet available (' + label + ')');
+                    }
+                  } catch(e) {
+                    console.warn('[FC] diagnostic exception', e);
+                  }
+                }
+
+                // log immediately and once on load
+                logFCState('immediate');
+                window.addEventListener('load', function(){ logFCState('load'); }, { once: true });
+                setTimeout(function(){ logFCState('timeout-3s'); }, 3000);
+              })();
+            `,
+          }}
+        />
+        {/* ------------------------------------------------------------------ */}
+
+        {/* Consent Mode defaults: ensure denied until Funding Choices updates consent */}
         <Script
           id="consent-defaults"
           strategy="beforeInteractive"
@@ -48,8 +94,7 @@ export default function RootLayout({ children }) {
             __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
-
-              // Default: no consent until CMP (Funding Choices) updates it
+              // Default to denied until CMP updates consent
               gtag('consent', 'default', {
                 'ad_storage': 'denied',
                 'analytics_storage': 'denied',
@@ -59,7 +104,9 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
+      </head>
 
+      <body className="bg-white text-gray-800">
         {/* Google Analytics */}
         <Script
           id="ga-loader"
@@ -71,13 +118,14 @@ export default function RootLayout({ children }) {
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
+              // Use existing gtag from consent-defaults
               gtag('js', new Date());
               gtag('config', 'G-HKHVEJR9N2');
             `,
           }}
         />
 
-        {/* Google AdSense */}
+        {/* Google AdSense (kept after CMP + consent defaults) */}
         <Script
           id="adsense-script"
           strategy="afterInteractive"
