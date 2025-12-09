@@ -30,76 +30,93 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  // 🔢 👉 PUT YOUR REAL RATING & REVIEW COUNT HERE
-  const rating = 4.8; // e.g. your real rating from Play Store
-  const reviewCount = 120; // e.g. your real review count
+  const rating = 4.8;
+  const reviewCount = 120;
 
   return (
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        {/* ------------------------------------------------------------------ */}
-        {/* FUNDING CHOICES (Google CMP) - must load BEFORE AdSense/ads code */}
-        {/* ------------------------------------------------------------------ */}
+        {/* =============================================================== */}
+        {/* FUNDING CHOICES (Google CMP) - MUST LOAD BEFORE ANY ADS/GA     */}
+        {/* =============================================================== */}
         <Script
-          id="funding-choices"
           strategy="beforeInteractive"
-          async
-          src="https://fundingchoicesmessages.google.com/i/ca-pub-1505001993402465?ers=1"
+          src="https://fundingchoicesmessages.google.com/i/pub-1505001993402465?ers=2"
         />
 
-        {/* Small diagnostic handler for Funding Choices / TCF (optional) */}
+        {/* Funding Choices Initializer */}
         <Script
-          id="fc-diagnostics"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              (function() {
-                function logFCState(label) {
-                  try {
-                    if (window.FundingChoices && typeof window.FundingChoices === 'function') {
-                      window.FundingChoices('getTCData').then(function(tcData) {
-                        console.log('[FC] getTCData', label, tcData);
-                      }).catch(function(err){
-                        console.log('[FC] getTCData err', label, err);
-                      });
-                    } else if (typeof window.__tcfapi === 'function') {
-                      window.__tcfapi('getTCData', 2, function(tcData, success) {
-                        console.log('[__tcfapi] getTCData', label, 'success=', success, tcData);
-                      });
-                    } else {
-                      console.log('[FC] CMP not yet available (' + label + ')');
-                    }
-                  } catch(e) {
-                    console.warn('[FC] diagnostic exception', e);
+              (function () {
+                function initFC() {
+                  if (typeof __fcInitMessaging === 'function') {
+                    __fcInitMessaging();
                   }
                 }
-
-                // log immediately and once on load
-                logFCState('immediate');
-                window.addEventListener('load', function(){ logFCState('load'); }, { once: true });
-                setTimeout(function(){ logFCState('timeout-3s'); }, 3000);
+                window.__fcConfig = { publisherId: 'pub-1505001993402465' };
+                initFC();
               })();
             `,
           }}
         />
-        {/* ------------------------------------------------------------------ */}
 
-        {/* Consent Mode defaults: ensure denied until Funding Choices updates consent */}
+        {/* =============================================================== */}
+        {/* CONSENT MODE v2 - DEFAULT DENIED + AUTO UPDATE FROM CMP        */}
+        {/* =============================================================== */}
         <Script
-          id="consent-defaults"
+          id="consent-setup"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              // Default to denied until CMP updates consent
+              function gtag() { dataLayer.push(arguments); }
+
+              // Default: everything denied until user consents
               gtag('consent', 'default', {
                 'ad_storage': 'denied',
                 'analytics_storage': 'denied',
                 'ad_user_data': 'denied',
-                'ad_personalization': 'denied'
+                'ad_personalization': 'denied',
+                'wait_for_update': 500
+              });
+
+              // Listen for CMP updates (TCF v2)
+              window.addEventListener('load', function () {
+                function updateConsentFromTCF() {
+                  if (typeof window.__tcfapi !== 'function') return;
+
+                  window.__tcfapi('addEventListener', 2, function (tcData, success) {
+                    if (!success || !tcData) return;
+
+                    if (
+                      tcData.eventStatus === 'useractioncomplete' ||
+                      tcData.eventStatus === 'tcloaded'
+                    ) {
+                      const hasAds = tcData.purpose?.consents?.[1] === true;
+                      const hasAnalytics = tcData.purpose?.consents?.[4] === true;
+
+                      gtag('consent', 'update', {
+                        ad_storage: hasAds ? 'granted' : 'denied',
+                        ad_user_data: hasAds ? 'granted' : 'denied',
+                        ad_personalization: hasAds ? 'granted' : 'denied',
+                        analytics_storage: hasAnalytics ? 'granted' : 'denied'
+                      });
+
+                      console.log('[Consent Updated]', {
+                        ad_storage: hasAds,
+                        analytics_storage: hasAnalytics
+                      });
+                    }
+                  });
+                }
+
+                updateConsentFromTCF();
+                setTimeout(updateConsentFromTCF, 2000);
+                setTimeout(updateConsentFromTCF, 5000);
               });
             `,
           }}
@@ -113,19 +130,19 @@ export default function RootLayout({ children }) {
           strategy="afterInteractive"
           src="https://www.googletagmanager.com/gtag/js?id=G-HKHVEJR9N2"
         />
+
         <Script
           id="ga-init"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              // Use existing gtag from consent-defaults
               gtag('js', new Date());
               gtag('config', 'G-HKHVEJR9N2');
             `,
           }}
         />
 
-        {/* Google AdSense (kept after CMP + consent defaults) */}
+        {/* Google AdSense */}
         <Script
           id="adsense-script"
           strategy="afterInteractive"
@@ -141,7 +158,7 @@ export default function RootLayout({ children }) {
         <div className="mx-auto max-w-6xl px-4 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 pt-4">
           <main>{children}</main>
 
-          {/* Left Ad Column (for lg screens) */}
+          {/* Left Ad Column */}
           <aside className="hidden lg:block xl:hidden sticky top-4 h-fit space-y-4">
             <AdSlot
               slot="2290721371"
@@ -151,7 +168,7 @@ export default function RootLayout({ children }) {
           </aside>
         </div>
 
-        {/* Right rail ads (XL screens) */}
+        {/* Right rail ads */}
         <div className="hidden xl:block">
           <aside
             className="fixed right-4 top-24 w-[336px] space-y-4 z-20"
@@ -171,7 +188,7 @@ export default function RootLayout({ children }) {
           </aside>
         </div>
 
-        {/* Mobile Bottom Ad */}
+        {/* Mobile bottom ad */}
         <div className="lg:hidden mx-auto max-w-3xl px-4 mt-6">
           <AdSlot
             slot="4489509306"
@@ -181,7 +198,7 @@ export default function RootLayout({ children }) {
           />
         </div>
 
-        {/* Desktop Bottom Ad */}
+        {/* Desktop bottom ad */}
         <div className="hidden lg:block mx-auto max-w-5xl px-4 mt-8">
           <AdSlot
             slot="2290721371"
@@ -191,12 +208,12 @@ export default function RootLayout({ children }) {
           />
         </div>
 
-        {/* Desktop / tablet Google Play strip */}
+        {/* Google Play Footer (Desktop) */}
         <div className="hidden sm:block mx-auto max-w-4xl px-4 mt-10">
           <PlayStoreFooter rating={rating} reviewCount={reviewCount} />
         </div>
 
-        {/* Sticky mobile Google Play bar with slide-up animation */}
+        {/* Play Footer Mobile */}
         <div className="fixed bottom-0 left-0 right-0 z-30 sm:hidden animate-slideUp">
           <PlayStoreFooter
             rating={rating}
