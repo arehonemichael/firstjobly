@@ -1,9 +1,12 @@
+// File: app/layout.jsx
+'use client';
 import "../styles/globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Script from "next/script";
 import AdSlot from "../components/AdSlot";
 import PlayStoreFooter from "../components/PlayStoreFooter";
+import GtagPageView from "../components/GtagPageView";
 
 export const metadata = {
   title: "FirstJobly - Find Your First Job Fast",
@@ -73,7 +76,7 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
-              function gtag() { dataLayer.push(arguments); }
+              function gtag(){ dataLayer.push(arguments); }
 
               // Default: everything denied until user consents
               gtag('consent', 'default', {
@@ -131,13 +134,28 @@ export default function RootLayout({ children }) {
           src="https://www.googletagmanager.com/gtag/js?id=G-HKHVEJR9N2"
         />
 
+        {/*
+          Wait-for-gtag: this wrapper ensures we only call gtag('config', ...) once
+          the gtag function is available. This avoids race conditions where the
+          config runs before the library loaded.
+        */}
         <Script
           id="ga-init"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              gtag('js', new Date());
-              gtag('config', 'G-HKHVEJR9N2');
+              (function waitForGtag(){
+                if (window.gtag && typeof window.gtag === 'function') {
+                  try {
+                    gtag('js', new Date());
+                    gtag('config', 'G-HKHVEJR9N2', { page_path: location.pathname });
+                  } catch (e) {
+                    console.error('gtag config error', e);
+                  }
+                } else {
+                  setTimeout(waitForGtag, 100);
+                }
+              })();
             `,
           }}
         />
@@ -153,6 +171,9 @@ export default function RootLayout({ children }) {
 
         {/* Navbar */}
         <Navbar />
+
+        {/* IMPORTANT: This client component sends page_view on route changes */}
+        <GtagPageView />
 
         {/* Main Layout */}
         <div className="mx-auto max-w-6xl px-4 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 pt-4">
@@ -228,3 +249,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
