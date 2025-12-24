@@ -1,13 +1,27 @@
 import { NextResponse } from 'next/server';
 
-export function middleware(req) {
-  const { pathname } = req.nextUrl;
+export function middleware(request) {
+  const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith('/jobs/')) {
-    const slug = pathname.split('/jobs/')[1];
-
-    if (slug && slug.length > 20 && !slug.includes('-')) {
-      return NextResponse.rewrite(new URL(`/jobs/${slug}`, req.url));
-    }
+  // Only run on /jobs/*
+  if (!pathname.startsWith('/jobs/')) {
+    return NextResponse.next();
   }
+
+  const slug = pathname.replace('/jobs/', '');
+
+  // Firebase-style IDs: long, random, no hyphens
+  const isOldFirebaseId =
+    slug.length > 20 && !slug.includes('-');
+
+  if (isOldFirebaseId) {
+    // Let the page handle redirect logic
+    return NextResponse.next();
+  }
+
+  return NextResponse.next();
 }
+
+export const config = {
+  matcher: ['/jobs/:path*'],
+};
