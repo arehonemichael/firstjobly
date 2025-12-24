@@ -1,6 +1,6 @@
 // app/api/old-id-redirect/route.js
 import { NextResponse } from 'next/server';
-import { getJobById } from '@/lib/jobs';
+import { getJobById } from '../../../lib/jobs';
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
