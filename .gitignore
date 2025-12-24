@@ -10,3 +10,5 @@ node_modules/
 
 # Ignore logs
 *.log
+.vercel
+.env*.local

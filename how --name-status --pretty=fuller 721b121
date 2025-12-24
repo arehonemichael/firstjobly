@@ -1,0 +1,48 @@
+* [33m77db371[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Initial commit
+* [33m63f894f[m Initial commit
+* [33me6062c4[m CMP + Consent Mode implementation
+* [33m5c82520[m Deploy FirstJobly with Play Store footer
+* [33m0fa98f1[m Deploy FirstJobly with Play Store footer
+* [33mbee2da3[m Some change
+* [33m7cae040[m Update ads layout and install prompt
+* [33md8bd1c0[m Update ads layout and install prompt
+* [33mc464613[m UI redesign: new layout, navbar, footer
+* [33m14ec58a[m UI redesign: new layout, navbar, footer
+* [33m16a437c[m add WhatsApp instaposter banner with floating animation
+* [33m2ba0edb[m[33m ([m[1;31morigin/restore-password-old[m[33m, [m[1;32mrestore-password-old[m[33m)[m notification bar
+* [33mace3080[m Update password notification logic
+* [33ma2c07e6[m Update password notification logic
+* [33m2a46d65[m Update password notification logic
+* [33m87960b8[m[33m ([m[1;32mrestore-password[m[33m)[m Update password notification logic
+* [33m6ea1482[m Update password notification logic
+* [33m24d90b7[m Update password notification logic
+* [33m82a44f8[m[33m ([m[1;32mrestore-old-password[m[33m)[m Update password notification logic
+* [33m36d5313[m Fix duplicate blog slugs and update lastmod to createdAt
+* [33m128c490[m Add blog posts to sitemap
+* [33mf13a226[m Add SEO-optimized blog pages with Firebase image support and structured data
+* [33m1d7fc7f[m Update password notification logic
+* [33m05e9db0[m Add SEO-optimized blog pages with Firebase image support and structured data
+* [33m06b71c3[m Update password notification logic
+* [33me877008[m Final updates before deployment
+* [33md8c4d98[m Prepare for production deployment
+* [33m721b121[m Ads: right-rail x2 + mobile footer + in-list after 1st job
+* [33m8bc741d[m Ads: sidebar + in-list after 1st job + mobile footer
+*   [33m2b6d1ee[m Merge branch 'main' of https://github.com/arehonemichael/firstjobly
+[32m|[m[33m\[m  
+[32m|[m * [33m0b82dd2[m Create README.md
+* [33m|[m [33m6c6c9a4[m Add ads.txt
+[33m|[m[33m/[m  
+* [33m7d20144[m Added AdSense verification script to layout
+* [33m2546efa[m Final updates before deployment
+* [33m2a217d0[m Final updates before deployment
+* [33mb3684b4[m Secure admin page + Apply link handling + bug fixes
+* [33m332cae9[m Updated job apply button with link check and improvements
+* [33m779c59c[m Final changes before deployment
+* [33m1881367[m Add job list with date and pagination
+* [33m29c3384[m Final updates before deployment
+* [33m6940ce0[m Fix import in category page and ensure jobs.js is included
+* [33mea0a8e6[m Fix: remove use client and allow metadata export
+* [33m04e0601[m Fix metadata export and import paths for Vercel
+* [33m26a3317[m Remove .next and node_modules from tracking
+* [33m78e28d4[m Add .gitignore to reduce push size
+* [33m5a55f83[m Initial commit

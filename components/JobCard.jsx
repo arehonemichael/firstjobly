@@ -17,22 +17,16 @@ function getRelativeTime(dateString) {
 
 function getShortText(text, wordLimit = 20) {
   if (!text) return "";
-  return text.split(" ").slice(0, wordLimit).join(" ") + (text.split(" ").length > wordLimit ? "..." : "");
+  const words = text.split(" ");
+  return words.slice(0, wordLimit).join(" ") + (words.length > wordLimit ? "..." : "");
 }
 
 export default function JobCard({ job, compact = false }) {
   const posted = job.createdAt ? getRelativeTime(job.createdAt) : "Posted recently";
 
   return (
-    <Link
-      href={`/jobs/${job.id}`}
-      className={`block border rounded hover:shadow transition relative ${
-        compact ? "p-3 sm:p-2" : "p-4 sm:p-4"
-      }`}
-    >
-      {/* Use flex-wrap to keep logo aligned on mobile */}
+    <Link href={`/jobs/${job.slug}`} className={`block border rounded hover:shadow transition relative ${compact ? "p-3 sm:p-2" : "p-4 sm:p-4"}`}>
       <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
-        {/* Job Details */}
         <div className="flex-1 min-w-0">
           <h3 className={`${compact ? "text-base" : "text-lg"} font-semibold truncate`}>
             {job.title}
@@ -46,13 +40,8 @@ export default function JobCard({ job, compact = false }) {
           </p>
         </div>
 
-        {/* Company Logo */}
         {job.logo && (
-          <div
-            className={`flex-shrink-0 flex items-center justify-center ${
-              compact ? "w-16 h-16 sm:w-20 sm:h-20" : "w-32 h-16 sm:w-40 sm:h-20"
-            }`}
-          >
+          <div className={`flex-shrink-0 flex items-center justify-center ${compact ? "w-16 h-16 sm:w-20 sm:h-20" : "w-32 h-16 sm:w-40 sm:h-20"}`}>
             <img
               src={job.logo}
               alt={`${job.company} logo`}
