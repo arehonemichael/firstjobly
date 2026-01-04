@@ -82,60 +82,73 @@ export default async function JobDetailPage({ params }) {
         }}
       />
 
-      <main className="bg-white max-w-3xl mx-auto p-6 rounded shadow mt-6 space-y-6">
-        {/* Company Logo */}
-        {job.logo && (
-          <div className="mb-2">
-            <img src={job.logo} alt={`${job.company} Logo`} className="h-16 object-contain" />
+      <main className="bg-white max-w-4xl mx-auto px-6 py-8">
+        <div className="max-w-3xl">
+          {/* Company Logo */}
+          {job.logo && (
+            <div className="mb-6">
+              <img src={job.logo} alt={`${job.company} Logo`} className="h-16 object-contain" />
+            </div>
+          )}
+
+          {/* Title + Meta */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold mb-2 text-gray-900">{job.title}</h1>
+            <div className="flex items-center gap-3 text-gray-600 mb-2">
+              <span className="bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-sm font-medium">
+                {job.category}
+              </span>
+              <span>·</span>
+              <span>{job.location}</span>
+            </div>
+            {job.company && <p className="text-lg font-medium text-gray-900">{job.company}</p>}
           </div>
-        )}
 
-        {/* Title + Meta */}
-        <div>
-          <h1 className="text-2xl font-bold mb-1">{job.title}</h1>
-          <p className="text-gray-600">{job.category} · {job.location}</p>
-          {job.company && <p className="text-lg font-medium text-blue-600 mt-1">{job.company}</p>}
-        </div>
+          {/* Requirements */}
+          {job.requirements && (
+            <section className="mb-8">
+              <h2 className="text-xl font-semibold mb-3 text-gray-900">Requirements</h2>
+              <div className="prose prose-sm max-w-none text-gray-700 leading-relaxed whitespace-pre-line">
+                {job.requirements}
+              </div>
+            </section>
+          )}
 
-        {/* Ad 1 */}
-        <div className="border rounded-md p-2">
-          <AdSlot slot="2290721371" layout="in-article" responsive style={{ display: "block", minHeight: 250 }} />
-        </div>
-
-        {/* Requirements */}
-        {job.requirements && (
-          <section className="space-y-2">
-            <h2 className="font-semibold">Requirements:</h2>
-            <p className="text-sm whitespace-pre-line">{job.requirements}</p>
+          {/* Description */}
+          <section className="mb-8">
+            <h2 className="text-xl font-semibold mb-3 text-gray-900">Job Description</h2>
+            <div className="prose prose-sm max-w-none text-gray-700 leading-relaxed whitespace-pre-line">
+              {job.description || "No description provided."}
+            </div>
           </section>
-        )}
 
-        {/* Ad 2 */}
-        <div className="border rounded-md p-2">
-          <AdSlot slot="4489509306" layout="in-article" responsive style={{ display: "block", minHeight: 250 }} />
-        </div>
+          {/* Ad 1 - Natural Integration */}
+          <div className="my-8 bg-gray-50 rounded-lg overflow-hidden">
+            <AdSlot 
+              slot="4489509306" 
+              layout="in-article" 
+              responsive 
+              style={{ display: "block", minHeight: 250 }} 
+            />
+          </div>
 
-        {/* Description */}
-        <section className="space-y-2">
-          <h2 className="font-semibold">Description:</h2>
-          <p className="text-sm whitespace-pre-line">
-            {job.description || "No description provided."}
-          </p>
-        </section>
-
-        {/* Company & Apply */}
-        <section className="text-sm space-y-2">
-          {job.company && <p><strong>Company:</strong> {job.company}</p>}
+          {/* Apply Button - Bottom */}
           {job.link && (
-            <div className="mt-4">
+            <div className="mb-8 p-6 bg-pink-50 border border-pink-200 rounded-lg">
+              <h3 className="font-semibold text-gray-900 mb-3">Ready to apply?</h3>
               <ApplyButton link={job.link} />
             </div>
           )}
-        </section>
 
-        {/* Ad 3 */}
-        <div className="border rounded-md p-2">
-          <AdSlot slot="8280865915" layout="in-article" responsive style={{ display: "block", minHeight: 250 }} />
+          {/* Ad 2 - Natural Integration */}
+          <div className="my-8 bg-gray-50 rounded-lg overflow-hidden">
+            <AdSlot 
+              slot="8280865915" 
+              layout="in-article" 
+              responsive 
+              style={{ display: "block", minHeight: 250 }} 
+            />
+          </div>
         </div>
       </main>
     </>
