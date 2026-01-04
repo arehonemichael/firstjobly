@@ -4,7 +4,7 @@ export default function AboutPage() {
       <h1 className="text-3xl font-bold mb-4">About FirstJobly</h1>
       <p className="text-gray-700 leading-relaxed">
         FirstJobly is a job discovery platform designed specifically for students, graduates, and entry-level job seekers.
-        Our goal is to connect youth to meaningful work opportunities — from internships and government jobs to remote work
+        Our goal is to connect youth to meaningful work opportunities  from internships and government jobs to remote work
         and graduate programs.
       </p>
       <p className="text-gray-700 mt-4 leading-relaxed">
