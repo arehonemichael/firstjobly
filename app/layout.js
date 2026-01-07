@@ -65,12 +65,9 @@ export default function RootLayout({ children }) {
           }}
         />
 
-        {/* Google AdSense */}
         <Script
-          id="adsense-script"
           strategy="afterInteractive"
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1505001993402465"
           crossOrigin="anonymous"
         />
 
