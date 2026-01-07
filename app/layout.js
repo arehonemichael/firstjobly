@@ -34,8 +34,18 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        {/* Advergic Script */}
+        <Script
+          id="advergic-script"
+          strategy="afterInteractive"
+          src="https://avads.live/s/av-firstjobly.js"
+        />
       </head>
       <body className="bg-white text-gray-800 relative">
+        {/* Advergic Anchor Ad (Sticky) */}
+        <div id="Firstjobly_Anchor_ATF"></div>
+
         {/* Google Analytics */}
         <Script
           id="ga-loader"
@@ -67,9 +77,20 @@ export default function RootLayout({ children }) {
         {/* Navbar */}
         <Navbar />
 
+        {/* Top Leaderboard (Advergic) */}
+        <div id="Firstjobly_Top_Leaderboard_ATF"></div>
+
         {/* Main Layout */}
         <div className="mx-auto max-w-6xl px-4 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 pt-4">
-          <main>{children}</main>
+          <main>
+            {/* In-Content Lazy Ad (Advergic) */}
+            <div id="Firstjobly_Incontent_Lazy"></div>
+
+            {/* In-Content Repeater (Optional) */}
+            <div className="lazy" parent-unit="Firstjobly_Incontent_Lazy"></div>
+
+            {children}
+          </main>
 
           {/* Left Ad Column (for lg screens) */}
           <aside className="hidden lg:block xl:hidden sticky top-4 h-fit space-y-4">
@@ -120,6 +141,9 @@ export default function RootLayout({ children }) {
             style={{ display: "block", minHeight: 250 }}
           />
         </div>
+
+        {/* Bottom Banner (Advergic) */}
+        <div id="Firstjobly_Bottom_BTF"></div>
 
         {/* Footer + Install Prompt */}
         <Footer />
