@@ -2,7 +2,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import JobCard from "../../components/JobCard";
-import AdSlot from "../../components/AdSlot";
 
 export default function JobsClient({ allJobs, searchParams }) {
   const router = useRouter();
@@ -10,7 +9,7 @@ export default function JobsClient({ allJobs, searchParams }) {
   const category = searchParams?.category || "";
   const page = parseInt(searchParams?.page || "1", 10);
 
-  // CHANGED: increase jobs per page
+  // Jobs per page
   const perPage = 20;
 
   const categories = [
@@ -44,10 +43,6 @@ export default function JobsClient({ allJobs, searchParams }) {
     router.push(`/jobs${query}`);
   };
 
-  // NEW: positions (0-based) where in-article ads should appear
-  // For 20 jobs: after 1st, 5th, 10th, 15th job
-  const adPositions = [0, 4, 9, 14];
-
   return (
     <main className="max-w-4xl mx-auto px-4 py-6 sm:py-8">
       {/* Header */}
@@ -71,23 +66,8 @@ export default function JobsClient({ allJobs, searchParams }) {
 
       {/* Job Listings */}
       <div className="space-y-3">
-        {visibleJobs.map((job, index) => (
-          <div key={job.id}>
-            <JobCard job={job} compact />
-
-            {/* In-article ads at a few positions */}
-            {adPositions.includes(index) && (
-              <div className="my-3">
-                <AdSlot
-                  // Use different slot IDs here if you have them in AdSense
-                  slot="7878892308"
-                  layout="in-article"
-                  responsive
-                  style={{ display: "block", minHeight: 200 }}
-                />
-              </div>
-            )}
-          </div>
+        {visibleJobs.map((job) => (
+          <JobCard key={job.id} job={job} compact />
         ))}
 
         {visibleJobs.length === 0 && (
@@ -96,18 +76,6 @@ export default function JobsClient({ allJobs, searchParams }) {
           </p>
         )}
       </div>
-
-      {/* Extra ad near bottom of listing (separate from in-article ones) */}
-      {visibleJobs.length > 0 && (
-        <div className="mt-6">
-          <AdSlot
-            slot="7878892308"
-            layout="in-article"
-            responsive
-            style={{ display: "block", minHeight: 250 }}
-          />
-        </div>
-      )}
 
       {/* Pagination */}
       {totalPages > 1 && (
