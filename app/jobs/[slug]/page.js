@@ -154,6 +154,9 @@ export default async function JobDetailPage({ params }) {
             </section>
           )}
 
+          {/* ✅ ADDED: Advergic In-Content Unit - Between paragraphs */}
+          <div id="Firstjobly_Incontent_Lazy" className="my-8"></div>
+
           {/* Description */}
           <section className="mb-8">
             <h2 className="text-xl font-semibold mb-3 text-gray-900">

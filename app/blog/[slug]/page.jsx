@@ -16,6 +16,20 @@ export default async function BlogPostPage({ params }) {
     );
   }
 
+  // Split content into paragraphs to insert ad in the middle
+  const contentParts = post.content ? post.content.split('</p>') : [];
+  const midPoint = Math.floor(contentParts.length / 2);
+  
+  // Reconstruct content with ad in the middle
+  let contentWithAd = '';
+  if (contentParts.length > 2) {
+    const firstHalf = contentParts.slice(0, midPoint).join('</p>') + '</p>';
+    const secondHalf = contentParts.slice(midPoint).join('</p>');
+    contentWithAd = firstHalf + '<div id="Firstjobly_Incontent_Lazy" class="my-8"></div>' + secondHalf;
+  } else {
+    contentWithAd = post.content;
+  }
+
   return (
     <>
       <Head>
@@ -51,9 +65,10 @@ export default async function BlogPostPage({ params }) {
           />
         )}
 
+        {/* ✅ Content with in-content ad inserted between paragraphs */}
         <div
           className="prose prose-lg max-w-none"
-          dangerouslySetInnerHTML={{ __html: post.content }}
+          dangerouslySetInnerHTML={{ __html: contentWithAd }}
         />
 
         {/* Optional JSON-LD structured data for SEO */}
