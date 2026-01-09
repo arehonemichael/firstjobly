@@ -16,7 +16,8 @@ export const metadata = {
   creator: "FirstJobly",
   publisher: "FirstJobly",
   openGraph: {
-    title: "FirstJobly - Find Graduate Jobs, Internships & Learnerships in South Africa",
+    title:
+      "FirstJobly - Find Graduate Jobs, Internships & Learnerships in South Africa",
     description:
       "Discover internships, learnerships, bursaries, and entry-level jobs for South African youth.",
     url: "https://firstjobly.co.za",
@@ -67,61 +68,44 @@ gtag('config', 'G-HKHVEJR9N2');`,
       </head>
 
       <body className="bg-white text-gray-800 relative">
-        {/* ✅ Mobile Anchor Ad ONLY (< lg) */}
-        <div
-          id="Firstjobly_Anchor_ATF"
-          className="block lg:hidden mb-6"
-        ></div>
+        {/* Anchor Ad */}
+        <div id="Firstjobly_Anchor_ATF" className="mb-6"></div>
 
-        {/* Navbar */}
         <Navbar />
 
-        {/* ✅ Desktop / Tablet Leaderboard (lg to xl only) */}
-        <div
-          id="Firstjobly_Top_Leaderboard_ATF"
-          className="hidden lg:block xl:hidden mb-6"
-        ></div>
+        {/* Top Leaderboard */}
+        <div id="Firstjobly_Top_Leaderboard_ATF" className="mb-6"></div>
 
         {/* Main Layout */}
         <div className="mx-auto max-w-6xl px-4 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 py-6">
           <main className="space-y-6">
-            {/* ✅ Single In-Content Lazy Ad */}
-            <div
-              id="Firstjobly_Incontent_Lazy"
-              className="my-6"
-            ></div>
-
-            {/* Page content */}
+            <div id="Firstjobly_Incontent_Lazy" className="my-6"></div>
             {children}
-
-            {/* Bottom Banner */}
-            <div
-              id="Firstjobly_Bottom_BTF"
-              className="mt-12"
-            ></div>
+            <div id="Firstjobly_Bottom_BTF" className="mt-12"></div>
           </main>
 
-          {/* Sidebar (lg to xl screens only) */}
-          <aside className="hidden lg:block xl:hidden sticky top-24 h-fit space-y-6">
+          <aside className="sticky top-24 h-fit space-y-6">
             <div id="Firstjobly_Sidebar_Top_ATF"></div>
           </aside>
         </div>
 
-        {/* Right Rail Ads (XL screens only) */}
-        <div className="hidden xl:block">
-          <aside
-            className="fixed right-4 top-36 w-[336px] space-y-6 z-20"
-            aria-label="Right rail ads"
-          >
-            <div id="Firstjobly_RightRail_ATF"></div>
-          </aside>
+        {/* Right Rail Ads */}
+        <aside
+          className="fixed right-4 top-36 w-[336px] space-y-6 z-20"
+          aria-label="Right rail ads"
+        >
+          <div id="Firstjobly_RightRail_ATF"></div>
+        </aside>
+
+        {/* Footer */}
+        <Footer />
+
+        {/* RIGHT-SIDE INSTALL PROMPT (Floating Tab) */}
+        <div className="fixed right-0 top-1/2 -translate-y-1/2 z-40">
+          <InstallPrompt variant="floating-right" />
         </div>
 
-        {/* Footer + Install Prompt */}
-        <Footer />
-        <InstallPrompt />
-
-        {/* Floating WhatsApp Channel Button */}
+        {/* Left-side WhatsApp Channel */}
         <div className="fixed left-0 top-1/2 -translate-y-1/2 z-40">
           <a
             href="https://whatsapp.com/channel/0029VbBbQOK4inoxcWKjHY2v"
