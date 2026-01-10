@@ -81,13 +81,18 @@ gtag('config', 'G-HKHVEJR9N2');`,
           <main className="space-y-6">
             <div id="Firstjobly_Incontent_Lazy" className="my-6"></div>
             {children}
-            <div id="Firstjobly_Bottom_BTF" className="mt-12"></div>
           </main>
 
           <aside className="sticky top-24 h-fit space-y-6">
             <div id="Firstjobly_Sidebar_Top_ATF"></div>
           </aside>
         </div>
+
+        {/* ✅ Bottom BTF — moved OUTSIDE the main container */}
+        <div
+          id="Firstjobly_Bottom_BTF"
+          className="w-full flex justify-center my-12"
+        ></div>
 
         {/* Right Rail Ads */}
         <aside
@@ -100,7 +105,7 @@ gtag('config', 'G-HKHVEJR9N2');`,
         {/* Footer */}
         <Footer />
 
-        {/* RIGHT-SIDE INSTALL PROMPT (Floating Tab) */}
+        {/* RIGHT-SIDE INSTALL PROMPT */}
         <div className="fixed right-0 top-1/2 -translate-y-1/2 z-40">
           <InstallPrompt variant="floating-right" />
         </div>

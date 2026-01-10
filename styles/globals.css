@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ✅ Existing fade-up animation */
 @keyframes fadeUp {
   from {
     transform: translateY(20px);
@@ -18,7 +17,6 @@
   animation: fadeUp 0.35s ease-out;
 }
 
-/* ✅ New floating animation for subtle banner movement */
 @keyframes float {
   0%, 100% {
     transform: translateY(0);
@@ -30,4 +28,8 @@
 
 .animate-float {
   animation: float 3s ease-in-out infinite;
+}
+
+iframe[id^="google_ads_iframe"] {
+  display: revert-layer !important;
 }
