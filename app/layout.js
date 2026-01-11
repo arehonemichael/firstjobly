@@ -88,7 +88,7 @@ gtag('config', 'G-HKHVEJR9N2');`,
           </aside>
         </div>
 
-        {/* ✅ Bottom BTF — moved OUTSIDE the main container */}
+        {/* Bottom BTF — moved OUTSIDE the main container */}
         <div
           id="Firstjobly_Bottom_BTF"
           className="w-full flex justify-center my-12"
