@@ -161,7 +161,7 @@ export default function Home() {
         {/* Popular Job Categories */}
         <section className="py-20 bg-gray-50 border-t border-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* ✅ MOVED: Advergic In-Content Unit - Now above categories */}
+            {/*  MOVED: Advergic In-Content Unit - Now above categories */}
             <div id="Firstjobly_Incontent_Lazy" className="mb-10"></div>
 
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
