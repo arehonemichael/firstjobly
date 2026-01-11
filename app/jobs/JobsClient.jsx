@@ -64,10 +64,20 @@ export default function JobsClient({ allJobs, searchParams }) {
         </select>
       </div>
 
-      {/* Job Listings */}
+      {/* 🎯 TOP IN-CONTENT AD - Before job listings */}
+      <div id="Firstjobly_Incontent_Lazy" className="my-6"></div>
+
+      {/* Job Listings with Ads Interspersed */}
       <div className="space-y-3">
-        {visibleJobs.map((job) => (
-          <JobCard key={job.id} job={job} compact />
+        {visibleJobs.map((job, index) => (
+          <div key={job.id}>
+            <JobCard job={job} compact />
+            
+            {/* 🎯 Insert ad every 5 jobs */}
+            {(index + 1) % 5 === 0 && index + 1 < visibleJobs.length && (
+              <div className="lazy my-6" parent-unit="Firstjobly_Incontent_Lazy"></div>
+            )}
+          </div>
         ))}
 
         {visibleJobs.length === 0 && (
@@ -76,6 +86,9 @@ export default function JobsClient({ allJobs, searchParams }) {
           </p>
         )}
       </div>
+
+      {/* 🎯 BOTTOM AD - After all listings, before pagination */}
+      <div className="lazy my-6" parent-unit="Firstjobly_Incontent_Lazy"></div>
 
       {/* Pagination */}
       {totalPages > 1 && (
@@ -93,6 +106,9 @@ export default function JobsClient({ allJobs, searchParams }) {
           ))}
         </div>
       )}
+
+      {/* 🎯 FINAL BOTTOM BANNER - After pagination */}
+      <div id="Firstjobly_Bottom_BTF" className="my-8"></div>
     </main>
   );
 }
