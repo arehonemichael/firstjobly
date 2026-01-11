@@ -43,17 +43,11 @@ export default function RootLayout({ children }) {
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        {/* Advergic Script - Load EARLY with beforeInteractive */}
+        {/* Advergic Script - Load EARLY */}
         <Script
           id="advergic-script"
           strategy="beforeInteractive"
           src="https://avads.live/s/av-firstjobly.js"
-          onLoad={() => {
-            console.log("✅ Advergic script loaded successfully");
-          }}
-          onError={() => {
-            console.error("❌ Failed to load Advergic script");
-          }}
         />
 
         {/* Google Analytics */}
