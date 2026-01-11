@@ -1,10 +1,23 @@
-// app/jobs/[slug]/page.js
+"use client"; // Needed for client-side hooks
 
+import { useEffect } from "react";
 import { notFound } from "next/navigation";
 import { getJobBySlug, getJobById } from "../../../lib/jobs";
 import ApplyButton from "../../../components/ApplyButton";
 
 export const revalidate = 600;
+
+// Reload Advergic ads on page mount
+function AdRefresh() {
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.Avads && typeof window.Avads.loadAds === "function") {
+      window.Avads.loadAds();
+      console.log("Advergic ads loaded on job detail page");
+    }
+  }, []);
+
+  return null;
+}
 
 export async function generateMetadata({ params }) {
   let job = await getJobBySlug(params.slug);
@@ -38,13 +51,9 @@ export default async function JobDetailPage({ params }) {
     job = await getJobById(params.slug);
   }
 
-  if (!job) {
-    notFound();
-  }
+  if (!job) notFound();
 
-  const validThrough = new Date(
-    Date.now() + 90 * 24 * 60 * 60 * 1000
-  )
+  const validThrough = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
     .toISOString()
     .split("T")[0];
 
@@ -54,6 +63,8 @@ export default async function JobDetailPage({ params }) {
 
   return (
     <>
+      <AdRefresh /> {/* ✅ Ensure ads load on this page */}
+
       {/* Structured Data for Google Jobs */}
       <script
         type="application/ld+json"
@@ -63,10 +74,7 @@ export default async function JobDetailPage({ params }) {
               "@context": "https://schema.org",
               "@type": "JobPosting",
               title: job.title,
-              description:
-                job.description ||
-                job.requirements ||
-                "No description available.",
+              description: job.description || job.requirements || "No description available.",
               identifier: {
                 "@type": "PropertyValue",
                 name: "FirstJobly",
@@ -74,9 +82,7 @@ export default async function JobDetailPage({ params }) {
               },
               datePosted,
               validThrough,
-              employmentType: job.category?.includes("Permanent")
-                ? "FULL_TIME"
-                : "INTERN",
+              employmentType: job.category?.includes("Permanent") ? "FULL_TIME" : "INTERN",
               hiringOrganization: {
                 "@type": "Organization",
                 name: job.company || "Confidential",
@@ -92,16 +98,11 @@ export default async function JobDetailPage({ params }) {
               baseSalary: {
                 "@type": "MonetaryAmount",
                 currency: "ZAR",
-                value: {
-                  "@type": "QuantitativeValue",
-                  unitText: "MONTH",
-                },
+                value: { "@type": "QuantitativeValue", unitText: "MONTH" },
               },
               applicationContact: {
                 "@type": "ContactPoint",
-                url:
-                  job.link ||
-                  `https://firstjobly.co.za/jobs/${job.slug}`,
+                url: job.link || `https://firstjobly.co.za/jobs/${job.slug}`,
               },
             },
             null,
@@ -125,43 +126,31 @@ export default async function JobDetailPage({ params }) {
 
           {/* Title + Meta */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2 text-gray-900">
-              {job.title}
-            </h1>
+            <h1 className="text-3xl font-bold mb-2 text-gray-900">{job.title}</h1>
             <div className="flex items-center gap-3 text-gray-600 mb-2">
-              <span className="bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-sm font-medium">
-                {job.category}
-              </span>
+              <span className="bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-sm font-medium">{job.category}</span>
               <span>·</span>
               <span>{job.location}</span>
             </div>
-            {job.company && (
-              <p className="text-lg font-medium text-gray-900">
-                {job.company}
-              </p>
-            )}
+            {job.company && <p className="text-lg font-medium text-gray-900">{job.company}</p>}
           </div>
 
           {/* Requirements */}
           {job.requirements && (
             <section className="mb-8">
-              <h2 className="text-xl font-semibold mb-3 text-gray-900">
-                Requirements
-              </h2>
+              <h2 className="text-xl font-semibold mb-3 text-gray-900">Requirements</h2>
               <div className="prose prose-sm max-w-none text-gray-700 whitespace-pre-line">
                 {job.requirements}
               </div>
             </section>
           )}
 
-          {/* ✅ ADDED: Advergic In-Content Unit - Between paragraphs */}
+          {/* ✅ Advergic In-Content Unit */}
           <div id="Firstjobly_Incontent_Lazy" className="my-8"></div>
 
           {/* Description */}
           <section className="mb-8">
-            <h2 className="text-xl font-semibold mb-3 text-gray-900">
-              Job Description
-            </h2>
+            <h2 className="text-xl font-semibold mb-3 text-gray-900">Job Description</h2>
             <div className="prose prose-sm max-w-none text-gray-700 whitespace-pre-line">
               {job.description || "No description provided."}
             </div>
@@ -170,9 +159,7 @@ export default async function JobDetailPage({ params }) {
           {/* Apply Button */}
           {job.link && (
             <div className="mb-8 p-6 bg-pink-50 border border-pink-200 rounded-lg">
-              <h3 className="font-semibold text-gray-900 mb-3">
-                Ready to apply?
-              </h3>
+              <h3 className="font-semibold text-gray-900 mb-3">Ready to apply?</h3>
               <ApplyButton link={job.link} />
             </div>
           )}

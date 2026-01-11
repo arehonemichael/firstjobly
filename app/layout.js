@@ -1,8 +1,12 @@
+"use client"; // Enable client-side hooks
+
 import "../styles/globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Script from "next/script";
 import InstallPrompt from "../components/InstallPrompt";
+import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 export const metadata = {
   title:
@@ -36,6 +40,20 @@ export const metadata = {
   },
 };
 
+// Component to reload Advergic ads on route change
+function AdReload() {
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.Avads && typeof window.Avads.loadAds === "function") {
+      window.Avads.loadAds();
+      console.log("Advergic ads reloaded for route:", pathname);
+    }
+  }, [pathname]);
+
+  return null;
+}
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -68,12 +86,12 @@ gtag('config', 'G-HKHVEJR9N2');`,
       </head>
 
       <body className="bg-white text-gray-800 relative">
-        {/* Anchor Ad */}
+        <AdReload /> {/* Reload ads on route changes */}
+
         <div id="Firstjobly_Anchor_ATF" className="mb-6"></div>
 
         <Navbar />
 
-        {/* Top Leaderboard */}
         <div id="Firstjobly_Top_Leaderboard_ATF" className="mb-6"></div>
 
         {/* Main Layout */}
@@ -88,13 +106,11 @@ gtag('config', 'G-HKHVEJR9N2');`,
           </aside>
         </div>
 
-        {/* Bottom BTF — moved OUTSIDE the main container */}
         <div
           id="Firstjobly_Bottom_BTF"
           className="w-full flex justify-center my-12"
         ></div>
 
-        {/* Right Rail Ads */}
         <aside
           className="fixed right-4 top-36 w-[336px] space-y-6 z-20"
           aria-label="Right rail ads"
