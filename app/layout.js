@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import Script from "next/script";
 import InstallPrompt from "../components/InstallPrompt";
 import AdLoader from "../components/AdLoader";
+import VisibilityAdReloader from "../components/VisibilityAdReloader";
 
 export const metadata = {
   title:
@@ -69,21 +70,20 @@ gtag('config', 'G-HKHVEJR9N2');`,
       </head>
 
       <body className="bg-white text-gray-800 relative">
-        {/* Global Ad Loader - handles all route changes */}
+        {/* 🔥 ENHANCED: Aggressive ad reloading on route changes */}
         <AdLoader />
+        
+        {/* 🔥 NEW: Reload ads when user returns to tab */}
+        <VisibilityAdReloader />
 
-        {/* 🎯 ANCHOR AD - Sticky at top/bottom (right after body tag) */}
+        {/* 🎯 ANCHOR AD - Sticky at top/bottom */}
         <div id="Firstjobly_Anchor_ATF" className="mb-6"></div>
 
         <Navbar />
 
-        {/* 🎯 TOP LEADERBOARD - Below header (this appears on all pages from layout) */}
-        {/* Job pages will have their own Top_Leaderboard_ATF, so we'll only show this on non-job pages */}
-        
         {/* Main Layout */}
         <div className="mx-auto max-w-6xl px-4 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 py-6">
           <main className="space-y-6">
-            {/* ✅ REMOVED duplicate Incontent_Lazy - each page should handle its own */}
             {children}
           </main>
 
@@ -92,9 +92,6 @@ gtag('config', 'G-HKHVEJR9N2');`,
             <div id="Firstjobly_Sidebar_Top_ATF"></div>
           </aside>
         </div>
-
-        {/* 🎯 BOTTOM BANNER - Above footer (only on layout, job pages have their own) */}
-        {/* Removed from here since job pages will include their own */}
 
         {/* 🎯 RIGHT RAIL AD - Fixed position on right side */}
         <aside
