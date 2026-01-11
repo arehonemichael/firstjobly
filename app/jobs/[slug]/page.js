@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { getJobBySlug, getJobById } from "../../../lib/jobs";
 import ApplyButton from "../../../components/ApplyButton";
-import AdRefresh from "../../../components/AdRefresh";
 
 export const revalidate = 600;
 
@@ -49,8 +48,6 @@ export default async function JobDetailPage({ params }) {
 
   return (
     <>
-      <AdRefresh /> {/* ✅ Ensure ads load on this page */}
-
       {/* Structured Data for Google Jobs */}
       <script
         type="application/ld+json"

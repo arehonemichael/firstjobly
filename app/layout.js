@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Script from "next/script";
 import InstallPrompt from "../components/InstallPrompt";
-import AdReload from "../components/AdReload";
+import AdManager from "../components/AdManager";
 
 export const metadata = {
   title:
@@ -43,11 +43,17 @@ export default function RootLayout({ children }) {
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        {/* Advergic Script */}
+        {/* Advergic Script - Load EARLY with beforeInteractive */}
         <Script
           id="advergic-script"
-          strategy="afterInteractive"
+          strategy="beforeInteractive"
           src="https://avads.live/s/av-firstjobly.js"
+          onLoad={() => {
+            console.log("✅ Advergic script loaded successfully");
+          }}
+          onError={() => {
+            console.error("❌ Failed to load Advergic script");
+          }}
         />
 
         {/* Google Analytics */}
@@ -69,7 +75,8 @@ gtag('config', 'G-HKHVEJR9N2');`,
       </head>
 
       <body className="bg-white text-gray-800 relative">
-        <AdReload /> {/* Reload ads on route changes */}
+        {/* Global Ad Manager - handles all route changes */}
+        <AdManager />
 
         <div id="Firstjobly_Anchor_ATF" className="mb-6"></div>
 
