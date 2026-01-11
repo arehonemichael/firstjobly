@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Script from "next/script";
 import InstallPrompt from "../components/InstallPrompt";
-import AdManager from "../components/AdManager";
+import AdLoader from "../components/AdLoader";
 
 export const metadata = {
   title:
@@ -75,8 +75,8 @@ gtag('config', 'G-HKHVEJR9N2');`,
       </head>
 
       <body className="bg-white text-gray-800 relative">
-        {/* Global Ad Manager - handles all route changes */}
-        <AdManager />
+        {/* Global Ad Loader - handles all route changes */}
+        <AdLoader />
 
         <div id="Firstjobly_Anchor_ATF" className="mb-6"></div>
 
