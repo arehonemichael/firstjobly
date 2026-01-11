@@ -46,6 +46,11 @@ export default async function JobDetailPage({ params }) {
     ? job.createdAt.toISOString().split("T")[0]
     : new Date().toISOString().split("T")[0];
 
+  // Split description into paragraphs for ad insertion
+  const descriptionParagraphs = (job.description || "No description provided.")
+    .split('\n')
+    .filter(p => p.trim().length > 0);
+
   return (
     <>
       {/* Structured Data for Google Jobs */}
@@ -94,6 +99,9 @@ export default async function JobDetailPage({ params }) {
         }}
       />
 
+      {/* 🎯 TOP LEADERBOARD AD - High visibility at top of page */}
+      <div id="Firstjobly_Top_Leaderboard_ATF" className="mb-6"></div>
+
       <main className="bg-white max-w-4xl mx-auto px-6 py-8">
         <div className="max-w-3xl">
           {/* Company Logo */}
@@ -118,6 +126,9 @@ export default async function JobDetailPage({ params }) {
             {job.company && <p className="text-lg font-medium text-gray-900">{job.company}</p>}
           </div>
 
+          {/* 🎯 FIRST IN-CONTENT AD - Right after title/header */}
+          <div id="Firstjobly_Incontent_Lazy" className="my-8"></div>
+
           {/* Requirements */}
           {job.requirements && (
             <section className="mb-8">
@@ -128,16 +139,31 @@ export default async function JobDetailPage({ params }) {
             </section>
           )}
 
-          {/* ✅ Advergic In-Content Unit */}
-          <div id="Firstjobly_Incontent_Lazy" className="my-8"></div>
+          {/* 🎯 IN-CONTENT REPEATER #1 - After requirements */}
+          <div className="lazy my-8" parent-unit="Firstjobly_Incontent_Lazy"></div>
 
           {/* Description */}
           <section className="mb-8">
             <h2 className="text-xl font-semibold mb-3 text-gray-900">Job Description</h2>
             <div className="prose prose-sm max-w-none text-gray-700 whitespace-pre-line">
-              {job.description || "No description provided."}
+              {descriptionParagraphs.slice(0, Math.ceil(descriptionParagraphs.length / 2)).join('\n')}
             </div>
           </section>
+
+          {/* 🎯 IN-CONTENT REPEATER #2 - Middle of description */}
+          <div className="lazy my-8" parent-unit="Firstjobly_Incontent_Lazy"></div>
+
+          {/* Rest of Description */}
+          {descriptionParagraphs.length > 1 && (
+            <section className="mb-8">
+              <div className="prose prose-sm max-w-none text-gray-700 whitespace-pre-line">
+                {descriptionParagraphs.slice(Math.ceil(descriptionParagraphs.length / 2)).join('\n')}
+              </div>
+            </section>
+          )}
+
+          {/* 🎯 IN-CONTENT REPEATER #3 - Before apply button */}
+          <div className="lazy my-8" parent-unit="Firstjobly_Incontent_Lazy"></div>
 
           {/* Apply Button */}
           {job.link && (
@@ -146,6 +172,9 @@ export default async function JobDetailPage({ params }) {
               <ApplyButton link={job.link} />
             </div>
           )}
+
+          {/* 🎯 BOTTOM BANNER AD - Just before end of content */}
+          <div id="Firstjobly_Bottom_BTF" className="my-8"></div>
         </div>
       </main>
     </>

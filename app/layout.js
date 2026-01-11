@@ -72,31 +72,33 @@ gtag('config', 'G-HKHVEJR9N2');`,
         {/* Global Ad Loader - handles all route changes */}
         <AdLoader />
 
+        {/* 🎯 ANCHOR AD - Sticky at top/bottom (right after body tag) */}
         <div id="Firstjobly_Anchor_ATF" className="mb-6"></div>
 
         <Navbar />
 
-        <div id="Firstjobly_Top_Leaderboard_ATF" className="mb-6"></div>
-
+        {/* 🎯 TOP LEADERBOARD - Below header (this appears on all pages from layout) */}
+        {/* Job pages will have their own Top_Leaderboard_ATF, so we'll only show this on non-job pages */}
+        
         {/* Main Layout */}
         <div className="mx-auto max-w-6xl px-4 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 py-6">
           <main className="space-y-6">
-            <div id="Firstjobly_Incontent_Lazy" className="my-6"></div>
+            {/* ✅ REMOVED duplicate Incontent_Lazy - each page should handle its own */}
             {children}
           </main>
 
+          {/* 🎯 SIDEBAR AD - Sticky sidebar */}
           <aside className="sticky top-24 h-fit space-y-6">
             <div id="Firstjobly_Sidebar_Top_ATF"></div>
           </aside>
         </div>
 
-        <div
-          id="Firstjobly_Bottom_BTF"
-          className="w-full flex justify-center my-12"
-        ></div>
+        {/* 🎯 BOTTOM BANNER - Above footer (only on layout, job pages have their own) */}
+        {/* Removed from here since job pages will include their own */}
 
+        {/* 🎯 RIGHT RAIL AD - Fixed position on right side */}
         <aside
-          className="fixed right-4 top-36 w-[336px] space-y-6 z-20"
+          className="fixed right-4 top-36 w-[336px] space-y-6 z-20 hidden xl:block"
           aria-label="Right rail ads"
         >
           <div id="Firstjobly_RightRail_ATF"></div>
