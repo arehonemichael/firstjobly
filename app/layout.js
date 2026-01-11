@@ -1,12 +1,9 @@
-"use client"; // Enable client-side hooks
-
 import "../styles/globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Script from "next/script";
 import InstallPrompt from "../components/InstallPrompt";
-import { useEffect } from "react";
-import { usePathname } from "next/navigation";
+import AdReload from "../components/AdReload";
 
 export const metadata = {
   title:
@@ -39,20 +36,6 @@ export const metadata = {
     canonical: "https://firstjobly.co.za",
   },
 };
-
-// Component to reload Advergic ads on route change
-function AdReload() {
-  const pathname = usePathname();
-
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.Avads && typeof window.Avads.loadAds === "function") {
-      window.Avads.loadAds();
-      console.log("Advergic ads reloaded for route:", pathname);
-    }
-  }, [pathname]);
-
-  return null;
-}
 
 export default function RootLayout({ children }) {
   return (

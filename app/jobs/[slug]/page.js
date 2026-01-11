@@ -1,23 +1,9 @@
-"use client"; // Needed for client-side hooks
-
-import { useEffect } from "react";
 import { notFound } from "next/navigation";
 import { getJobBySlug, getJobById } from "../../../lib/jobs";
 import ApplyButton from "../../../components/ApplyButton";
+import AdRefresh from "../../../components/AdRefresh";
 
 export const revalidate = 600;
-
-// Reload Advergic ads on page mount
-function AdRefresh() {
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.Avads && typeof window.Avads.loadAds === "function") {
-      window.Avads.loadAds();
-      console.log("Advergic ads loaded on job detail page");
-    }
-  }, []);
-
-  return null;
-}
 
 export async function generateMetadata({ params }) {
   let job = await getJobBySlug(params.slug);
