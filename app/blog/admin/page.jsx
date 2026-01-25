@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { addPost, getPosts, deletePost } from "../../../lib/blog";
 import { useRouter } from "next/navigation";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { app } from "../../../lib/firebaseConfig";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { app, storage } from "../../../lib/firebaseConfig";
 import Image from "next/image";
 
 export default function BlogAdminPage() {
@@ -18,6 +19,7 @@ export default function BlogAdminPage() {
   const [imageFile, setImageFile] = useState(null);
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   // Check authentication & fetch posts
   useEffect(() => {
@@ -32,7 +34,7 @@ export default function BlogAdminPage() {
     };
     fetchPosts();
     return () => unsubscribe();
-  }, []);
+  }, [router]);
 
   const handleChange = (e) => {
     setPost({ ...post, [e.target.name]: e.target.value });
@@ -40,28 +42,37 @@ export default function BlogAdminPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setUploading(true);
+    setError("");
+
     try {
       let imageUrl = "";
 
-      // Upload image first
+      // Upload image directly from client
       if (imageFile) {
-        const formData = new FormData();
-        formData.append("image", imageFile);
+        // Clean filename
+        const ext = imageFile.name.split(".").pop();
+        const baseName = imageFile.name
+          .replace(/\.[^/.]+$/, "")
+          .toLowerCase()
+          .replace(/\s+/g, "-")
+          .replace(/[^a-z0-9-]/g, "");
 
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
+        const filename = `${baseName}-${Date.now()}.${ext}`;
+
+        // Upload to Firebase Storage
+        const storageRef = ref(storage, `blog-images/${filename}`);
+        
+        await uploadBytes(storageRef, imageFile, {
+          contentType: imageFile.type,
         });
 
-        const data = await res.json();
-        if (data.url) imageUrl = data.url;
-        else {
-          setError("Image upload failed");
-          return;
-        }
+        // Get public URL
+        imageUrl = await getDownloadURL(storageRef);
+        console.log("Upload successful:", imageUrl);
       }
 
-      // Save post with local image URL
+      // Save post with Firebase Storage URL
       await addPost({ ...post, image: imageUrl });
 
       // Reset form
@@ -71,10 +82,11 @@ export default function BlogAdminPage() {
       // Refresh posts list
       const updatedPosts = await getPosts();
       setPosts(updatedPosts);
-      setError("");
     } catch (err) {
       console.error(err);
-      setError("Failed to add post.");
+      setError("Failed to add post: " + err.message);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -149,9 +161,10 @@ export default function BlogAdminPage() {
 
         <button
           type="submit"
-          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+          disabled={uploading}
+          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition disabled:bg-gray-400"
         >
-          Publish
+          {uploading ? "Publishing..." : "Publish"}
         </button>
       </form>
 

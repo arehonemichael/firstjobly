@@ -1,21 +1,19 @@
-import path from "path";
-import { promises as fs } from "fs";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../../../lib/firebaseConfig";
 
 export const POST = async (req) => {
   try {
     const formData = await req.formData();
     const file = formData.get("image");
 
+    console.log("Received file:", file?.name, file?.size);
+
     if (!file || !file.name) {
       return new Response(
         JSON.stringify({ error: "No file uploaded" }),
-        { status: 400 }
+        { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
-
-    // Ensure /public/images exists
-    const imagesDir = path.join(process.cwd(), "public/images");
-    await fs.mkdir(imagesDir, { recursive: true });
 
     // Clean filename
     const ext = file.name.split(".").pop();
@@ -26,22 +24,38 @@ export const POST = async (req) => {
       .replace(/[^a-z0-9-]/g, "");
 
     const filename = `${baseName}-${Date.now()}.${ext}`;
-    const filepath = path.join(imagesDir, filename);
 
-    // Write file
-    const buffer = Buffer.from(await file.arrayBuffer());
-    await fs.writeFile(filepath, buffer);
+    // Upload to Firebase Storage
+    const storageRef = ref(storage, `blog-images/${filename}`);
+    
+    const buffer = await file.arrayBuffer();
+    await uploadBytes(storageRef, buffer, {
+      contentType: file.type,
+    });
 
-    // ✅ RETURN RELATIVE PATH
+    // Get public URL
+    const downloadURL = await getDownloadURL(storageRef);
+
+    console.log("Upload successful:", downloadURL);
+
     return new Response(
-      JSON.stringify({ url: `/images/${filename}` }),
-      { status: 200 }
+      JSON.stringify({ url: downloadURL }),
+      { 
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      }
     );
   } catch (err) {
     console.error("Upload error:", err);
     return new Response(
-      JSON.stringify({ error: "Upload failed" }),
-      { status: 500 }
+      JSON.stringify({ 
+        error: "Upload failed", 
+        details: err.message 
+      }),
+      { 
+        status: 500,
+        headers: { "Content-Type": "application/json" }
+      }
     );
   }
 };

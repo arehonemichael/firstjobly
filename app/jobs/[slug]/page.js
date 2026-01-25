@@ -83,6 +83,9 @@ export default async function JobDetailPage({ params }) {
     ? job.description.match(/.{1,500}(\s|$)/g) || [job.description]
     : [];
 
+  let adCounter = 0;
+  const maxAds = 5;
+
   return (
     <>
       {/* Structured Data */}
@@ -121,39 +124,54 @@ export default async function JobDetailPage({ params }) {
           <p className="text-lg text-gray-600 mb-6">{job.company} · {job.location}</p>
 
           {/* 🎯 TOP IN-CONTENT AD — After Job Header */}
-          <div id="Firstjobly_Incontent_Lazy" className="my-6"></div>
+          {adCounter < maxAds && (
+            <div className="my-6" id="Firstjobly_Incontent_Lazy"></div>
+          )}
+          {adCounter++}
 
           {/* Requirements Section */}
           {job.requirements && (
             <section className="mb-12">
               <h2 className="text-2xl font-bold mb-4">Requirements</h2>
               {formatRequirements(job.requirements)}
+
               {/* 🎯 Insert ad after requirements */}
-              <div className="lazy my-6" parent-unit="Firstjobly_Incontent_Lazy"></div>
+              {adCounter < maxAds && (
+                <div className="lazy my-6" parent-unit="Firstjobly_Incontent_Lazy"></div>
+              )}
+              {adCounter++}
             </section>
           )}
 
           {/* Job Description Section */}
           <section className="mb-12 space-y-4 text-gray-800">
-            <h2 className="text-2xl font-bold mb-4">Job Description</h2> {/* Bold heading */}
+            <h2 className="text-2xl font-bold mb-4">Job Description</h2>
             {descriptionChunks.map((chunk, idx) => (
               <div key={idx}>
                 <div dangerouslySetInnerHTML={{ __html: chunk }} />
+
                 {/* 🎯 Insert ad every 2 chunks */}
-                {(idx + 1) % 2 === 0 && idx + 1 < descriptionChunks.length && (
-                  <div className="lazy my-6" parent-unit="Firstjobly_Incontent_Lazy"></div>
-                )}
+                {(idx + 1) % 2 === 0 &&
+                  idx + 1 < descriptionChunks.length &&
+                  adCounter < maxAds && (
+                    <div className="lazy my-6" parent-unit="Firstjobly_Incontent_Lazy"></div>
+                  )}
+                {((idx + 1) % 2 === 0 && adCounter < maxAds) && adCounter++}
               </div>
             ))}
           </section>
 
           {/* Optional Extra Ad for Very Long Content */}
-          {descriptionChunks.length > 4 && (
+          {descriptionChunks.length > 4 && adCounter < maxAds && (
             <div className="lazy my-8" parent-unit="Firstjobly_Incontent_Lazy"></div>
           )}
+          {descriptionChunks.length > 4 && adCounter < maxAds && adCounter++}
 
           {/* 🎯 BOTTOM AD — Before Apply Button */}
-          <div className="lazy my-8" parent-unit="Firstjobly_Incontent_Lazy"></div>
+          {adCounter < maxAds && (
+            <div className="lazy my-8" parent-unit="Firstjobly_Incontent_Lazy"></div>
+          )}
+          {adCounter < maxAds && adCounter++}
 
           {/* ✅ APPLY BUTTON — At the Bottom */}
           {job.link && (
@@ -166,7 +184,6 @@ export default async function JobDetailPage({ params }) {
 
           {/* 🎯 FINAL BTF Banner */}
           <div id="Firstjobly_Bottom_BTF" className="my-10"></div>
-
         </div>
       </main>
     </>

@@ -1,10 +1,13 @@
 // app/blog/page.jsx
-import React from "react";
 import { getPosts } from "../../lib/blog";
 import Link from "next/link";
-import Head from "next/head";
 
-export const revalidate = 60; // optional ISR
+export const revalidate = 60;
+
+export const metadata = {
+  title: "FirstJobly Blog – Latest Posts",
+  description: "Read the latest career tips, job updates, and opportunities on FirstJobly.",
+};
 
 export default async function BlogPage() {
   const posts = await getPosts();
@@ -14,30 +17,23 @@ export default async function BlogPage() {
   }
 
   return (
-    <>
-      <Head>
-        <title>FirstJobly Blog – Latest Posts</title>
-        <meta
-          name="description"
-          content="Read the latest career tips, job updates, and opportunities on FirstJobly."
-        />
-        <link rel="canonical" href="https://firstjobly.co.za/blog" />
-      </Head>
+    <main className="max-w-4xl mx-auto p-6 space-y-8">
+      <h1 className="text-3xl font-bold mb-6">Latest Blog Posts</h1>
 
-      <main className="max-w-4xl mx-auto p-6 space-y-8">
-        <h1 className="text-3xl font-bold mb-6">Latest Blog Posts</h1>
-
+      <div className="space-y-6">
         {posts.map((post, index) => (
-          <React.Fragment key={post.id}>
-            {/* Blog post */}
-            <article className="border-b pb-6 mb-6">
-              <h2 className="text-2xl font-semibold">
-                <Link
-                  href={`/blog/${post.slug}`}
-                  className="hover:underline text-blue-700"
-                >
-                  {post.title}
-                </Link>
+          <article 
+            key={post.id} 
+            className="border-b pb-6"
+          >
+            {/* Make entire card clickable */}
+            <Link 
+              href={`/blog/${post.slug}`}
+              className="block p-4 rounded hover:bg-gray-50 transition cursor-pointer"
+              style={{ pointerEvents: 'auto' }} // Force clickable
+            >
+              <h2 className="text-2xl font-semibold mb-2 text-blue-700 hover:underline">
+                {post.title}
               </h2>
 
               {post.createdAt && (
@@ -54,29 +50,29 @@ export default async function BlogPage() {
                   src={post.image}
                   alt={post.title}
                   className="w-full h-auto rounded mb-4"
+                  style={{ pointerEvents: 'none' }} // Prevent image from blocking clicks
                 />
               )}
 
               <p className="text-sm text-gray-700">
                 {post.description}
               </p>
-            </article>
+            </Link>
 
-            {/* After 2nd post → In-content parent unit */}
+            {/* Ad placements */}
             {index === 1 && (
-              <div id="Firstjobly_Incontent_Lazy"></div>
+              <div id="Firstjobly_Incontent_Lazy" />
             )}
 
-            {/* After every 4th post → Repeater unit */}
             {(index + 1) % 4 === 0 && (
               <div
                 className="lazy"
                 parent-unit="Firstjobly_Incontent_Lazy"
-              ></div>
+              />
             )}
-          </React.Fragment>
+          </article>
         ))}
-      </main>
-    </>
+      </div>
+    </main>
   );
 }

@@ -1,12 +1,43 @@
 // app/blog/[slug]/page.jsx
 import { getBlogBySlug } from "../../../lib/blog";
-import Head from "next/head";
 import Image from "next/image";
 
 export const revalidate = 60; // ISR: automatically refresh new posts
 
+// Generate metadata for SEO
+export async function generateMetadata({ params }) {
+  const { slug } = await params; // AWAIT params
+  const post = await getBlogBySlug(slug);
+
+  if (!post) {
+    return {
+      title: "Blog Not Found",
+    };
+  }
+
+  const absoluteImageUrl = post.image && post.image.startsWith("/images/")
+    ? `https://firstjobly.co.za${post.image}`
+    : post.image;
+
+  return {
+    title: post.title,
+    description: post.description || "",
+    openGraph: {
+      title: post.title,
+      description: post.description || "",
+      type: "article",
+      url: `https://firstjobly.co.za/blog/${slug}`,
+      images: absoluteImageUrl ? [absoluteImageUrl] : [],
+    },
+    alternates: {
+      canonical: `https://firstjobly.co.za/blog/${slug}`,
+    },
+  };
+}
+
 export default async function BlogPostPage({ params }) {
-  const post = await getBlogBySlug(params.slug);
+  const { slug } = await params; // AWAIT params
+  const post = await getBlogBySlug(slug);
 
   if (!post) {
     return (
@@ -17,29 +48,12 @@ export default async function BlogPostPage({ params }) {
     );
   }
 
-  // Absolute URL for SEO / OG (only for local images)
-  const absoluteImageUrl =
-    post.image && post.image.startsWith("/images/")
-      ? `https://yourdomain.com${post.image}`
-      : null;
+  const absoluteImageUrl = post.image && post.image.startsWith("/images/")
+    ? `https://firstjobly.co.za${post.image}`
+    : post.image;
 
   return (
     <>
-      <Head>
-        <title>{post.title}</title>
-        <meta name="description" content={post.description || ""} />
-        <meta property="og:title" content={post.title} />
-        <meta property="og:description" content={post.description || ""} />
-        {absoluteImageUrl && (
-          <meta property="og:image" content={absoluteImageUrl} />
-        )}
-        <meta property="og:type" content="article" />
-        <link
-          rel="canonical"
-          href={`https://yourdomain.com/blog/${post.slug}`}
-        />
-      </Head>
-
       <main className="max-w-3xl mx-auto p-6">
         <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
 
@@ -52,15 +66,16 @@ export default async function BlogPostPage({ params }) {
           </p>
         )}
 
-        {/* Render only local uploaded images */}
-        {post.image && post.image.startsWith("/images/") && (
+        {/* Render all images - both local and Firebase Storage */}
+        {post.image && (
           <Image
-            src={post.image} // e.g., "/images/job1-1675309123.jpg"
+            src={post.image}
             alt={post.title}
-            width={800} // adjust to layout
-            height={600} // adjust to layout
+            width={800}
+            height={600}
             priority={true}
             className="rounded mb-4"
+            unoptimized
           />
         )}
 
@@ -68,35 +83,35 @@ export default async function BlogPostPage({ params }) {
           className="prose prose-lg max-w-none"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
-
-        {/* Structured data for SEO */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "BlogPosting",
-              headline: post.title,
-              image: absoluteImageUrl ? [absoluteImageUrl] : [],
-              author: { "@type": "Person", name: "Your Name" },
-              publisher: {
-                "@type": "Organization",
-                name: "Your Blog Name",
-                logo: {
-                  "@type": "ImageObject",
-                  url: "https://yourdomain.com/logo.png",
-                },
-              },
-              datePublished: post.createdAt,
-              description: post.description || "",
-              mainEntityOfPage: {
-                "@type": "WebPage",
-                "@id": `https://yourdomain.com/blog/${post.slug}`,
-              },
-            }),
-          }}
-        />
       </main>
+
+      {/* Structured data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            headline: post.title,
+            image: absoluteImageUrl ? [absoluteImageUrl] : [],
+            author: { "@type": "Person", name: "FirstJobly" },
+            publisher: {
+              "@type": "Organization",
+              name: "FirstJobly",
+              logo: {
+                "@type": "ImageObject",
+                url: "https://firstjobly.co.za/logo.png",
+              },
+            },
+            datePublished: post.createdAt,
+            description: post.description || "",
+            mainEntityOfPage: {
+              "@type": "WebPage",
+              "@id": `https://firstjobly.co.za/blog/${slug}`,
+            },
+          }),
+        }}
+      />
     </>
   );
 }
