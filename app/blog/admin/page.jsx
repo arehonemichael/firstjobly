@@ -1,9 +1,11 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { addPost, getPosts, deletePost } from "../../../lib/blog";
 import { useRouter } from "next/navigation";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from "../../../lib/firebaseConfig";
+import Image from "next/image";
 
 export default function BlogAdminPage() {
   const router = useRouter();
@@ -11,12 +13,13 @@ export default function BlogAdminPage() {
     title: "",
     slug: "",
     description: "",
-    image: "",
     content: "",
   });
+  const [imageFile, setImageFile] = useState(null);
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState("");
 
+  // Check authentication & fetch posts
   useEffect(() => {
     const auth = getAuth(app);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -27,7 +30,6 @@ export default function BlogAdminPage() {
       const data = await getPosts();
       setPosts(data);
     };
-
     fetchPosts();
     return () => unsubscribe();
   }, []);
@@ -39,16 +41,37 @@ export default function BlogAdminPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await addPost(post);
-      setPost({
-        title: "",
-        slug: "",
-        description: "",
-        image: "",
-        content: "",
-      });
-      const updated = await getPosts();
-      setPosts(updated);
+      let imageUrl = "";
+
+      // Upload image first
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append("image", imageFile);
+
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await res.json();
+        if (data.url) imageUrl = data.url;
+        else {
+          setError("Image upload failed");
+          return;
+        }
+      }
+
+      // Save post with local image URL
+      await addPost({ ...post, image: imageUrl });
+
+      // Reset form
+      setPost({ title: "", slug: "", description: "", content: "" });
+      setImageFile(null);
+
+      // Refresh posts list
+      const updatedPosts = await getPosts();
+      setPosts(updatedPosts);
+      setError("");
     } catch (err) {
       console.error(err);
       setError("Failed to add post.");
@@ -57,14 +80,15 @@ export default function BlogAdminPage() {
 
   const handleDelete = async (id) => {
     await deletePost(id);
-    const updated = await getPosts();
-    setPosts(updated);
+    const updatedPosts = await getPosts();
+    setPosts(updatedPosts);
   };
 
   return (
     <main className="max-w-2xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">Add New Blog Post</h1>
       {error && <p className="text-red-600 mb-4">{error}</p>}
+
       <form onSubmit={handleSubmit} className="space-y-4 mb-10">
         <input
           type="text"
@@ -78,7 +102,7 @@ export default function BlogAdminPage() {
         <input
           type="text"
           name="slug"
-          placeholder="URL Slug (e.g. first-job-tips)"
+          placeholder="URL Slug (e.g., first-job-tips)"
           value={post.slug}
           onChange={handleChange}
           required
@@ -93,15 +117,26 @@ export default function BlogAdminPage() {
           required
           className="w-full border px-4 py-2 rounded"
         />
+
+        {/* Image upload */}
         <input
-          type="url"
-          name="image"
-          placeholder="Image URL"
-          value={post.image}
-          onChange={handleChange}
-          required
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImageFile(e.target.files[0])}
           className="w-full border px-4 py-2 rounded"
         />
+
+        {/* Preview */}
+        {imageFile && (
+          <Image
+            src={URL.createObjectURL(imageFile)}
+            alt="Preview"
+            width={200}
+            height={150}
+            className="mt-2 rounded border"
+          />
+        )}
+
         <textarea
           name="content"
           placeholder="HTML Content"
@@ -111,6 +146,7 @@ export default function BlogAdminPage() {
           rows={6}
           className="w-full border px-4 py-2 rounded"
         />
+
         <button
           type="submit"
           className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
@@ -123,6 +159,15 @@ export default function BlogAdminPage() {
       {posts.map((post) => (
         <div key={post.id} className="border p-4 rounded mb-4">
           <h3 className="font-semibold">{post.title}</h3>
+          {post.image && (
+            <Image
+              src={post.image}
+              alt={post.title}
+              width={200}
+              height={150}
+              className="mt-2 rounded"
+            />
+          )}
           <button
             onClick={() => handleDelete(post.id)}
             className="text-red-600 text-sm mt-2"

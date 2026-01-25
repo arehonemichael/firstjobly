@@ -1,8 +1,9 @@
 // app/blog/[slug]/page.jsx
 import { getBlogBySlug } from "../../../lib/blog";
 import Head from "next/head";
+import Image from "next/image";
 
-export const revalidate = 60; // ISR for static regeneration
+export const revalidate = 60; // ISR: automatically refresh new posts
 
 export default async function BlogPostPage({ params }) {
   const post = await getBlogBySlug(params.slug);
@@ -16,6 +17,12 @@ export default async function BlogPostPage({ params }) {
     );
   }
 
+  // Absolute URL for SEO / OG (only for local images)
+  const absoluteImageUrl =
+    post.image && post.image.startsWith("/images/")
+      ? `https://yourdomain.com${post.image}`
+      : null;
+
   return (
     <>
       <Head>
@@ -23,7 +30,9 @@ export default async function BlogPostPage({ params }) {
         <meta name="description" content={post.description || ""} />
         <meta property="og:title" content={post.title} />
         <meta property="og:description" content={post.description || ""} />
-        {post.image && <meta property="og:image" content={post.image} />}
+        {absoluteImageUrl && (
+          <meta property="og:image" content={absoluteImageUrl} />
+        )}
         <meta property="og:type" content="article" />
         <link
           rel="canonical"
@@ -43,11 +52,15 @@ export default async function BlogPostPage({ params }) {
           </p>
         )}
 
-        {post.image && (
-          <img
-            src={post.image}
+        {/* Render only local uploaded images */}
+        {post.image && post.image.startsWith("/images/") && (
+          <Image
+            src={post.image} // e.g., "/images/job1-1675309123.jpg"
             alt={post.title}
-            className="w-full h-auto rounded mb-4"
+            width={800} // adjust to layout
+            height={600} // adjust to layout
+            priority={true}
+            className="rounded mb-4"
           />
         )}
 
@@ -56,6 +69,7 @@ export default async function BlogPostPage({ params }) {
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
 
+        {/* Structured data for SEO */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -63,21 +77,21 @@ export default async function BlogPostPage({ params }) {
               "@context": "https://schema.org",
               "@type": "BlogPosting",
               headline: post.title,
-              image: post.image ? [post.image] : [],
+              image: absoluteImageUrl ? [absoluteImageUrl] : [],
               author: { "@type": "Person", name: "Your Name" },
               publisher: {
                 "@type": "Organization",
                 name: "Your Blog Name",
                 logo: {
                   "@type": "ImageObject",
-                  url: "https://firstjobly.co.za/logo.png",
+                  url: "https://yourdomain.com/logo.png",
                 },
               },
               datePublished: post.createdAt,
               description: post.description || "",
               mainEntityOfPage: {
                 "@type": "WebPage",
-                "@id": `https://firstjobly.co.za/blog/${post.slug}`,
+                "@id": `https://yourdomain.com/blog/${post.slug}`,
               },
             }),
           }}
