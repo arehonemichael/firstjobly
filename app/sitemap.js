@@ -1,8 +1,5 @@
 // app/sitemap.js
-// Unified sitemap with static pages, jobs, and blogs
-
-import { getJobs } from "../lib/jobs";
-import { getPosts } from "../lib/blog";
+// Server-safe sitemap generation
 
 export default async function sitemap() {
   const baseUrl = "https://firstjobly.co.za";
@@ -59,58 +56,84 @@ export default async function sitemap() {
     },
   ];
 
-  // ========== JOB POSTS (DYNAMIC FROM FIRESTORE) ==========
   let jobPosts = [];
-  try {
-    const jobs = await getJobs();
-    
-    jobPosts = jobs.map((job) => {
-      // Normalize createdAt to JS Date
-      let date;
-      if (job.createdAt && typeof job.createdAt.toDate === "function") {
-        date = job.createdAt.toDate(); // Firestore Timestamp
-      } else {
-        date = job.createdAt ? new Date(job.createdAt) : new Date();
-      }
-
-      return {
-        url: `${baseUrl}/jobs/${job.slug}`,
-        lastModified: date,
-        changeFrequency: "weekly",
-        priority: 0.8,
-      };
-    });
-    
-    console.log(`✅ Added ${jobPosts.length} job posts to sitemap`);
-  } catch (error) {
-    console.error("❌ Error fetching jobs for sitemap:", error);
-  }
-
-  // ========== BLOG POSTS (DYNAMIC FROM FIRESTORE) ==========
   let blogPosts = [];
-  try {
-    const posts = await getPosts();
-    
-    blogPosts = posts.map((post) => {
-      // Normalize createdAt to JS Date
-      let date;
-      if (post.createdAt && typeof post.createdAt.toDate === "function") {
-        date = post.createdAt.toDate(); // Firestore Timestamp
-      } else {
-        date = post.createdAt ? new Date(post.createdAt) : new Date();
-      }
 
-      return {
-        url: `${baseUrl}/blog/${post.slug}`,
-        lastModified: date,
-        changeFrequency: "weekly",
-        priority: 0.7,
-      };
-    });
-    
-    console.log(`✅ Added ${blogPosts.length} blog posts to sitemap`);
+  // ========== SAFE FIREBASE IMPORTS (only on server) ==========
+  try {
+    // Import Firebase only during build (server-side)
+    const { initializeApp, getApps } = await import("firebase/app");
+    const { getFirestore, collection, getDocs, query, orderBy } = await import("firebase/firestore");
+
+    // Initialize Firebase for server-side
+    const firebaseConfig = {
+      apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyDF9ZnoPNrxpkjJ1LyoGpJtATtFlySXfEs",
+      authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "firstjobly-web.firebaseapp.com",
+      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "firstjobly-web",
+      storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "firstjobly-web.firebasestorage.app",
+      messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "317321164448",
+      appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:317321164448:web:919b00a784fad102c8fbc5"
+    };
+
+    const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+    const db = getFirestore(app);
+
+    // ========== FETCH JOBS ==========
+    try {
+      const jobsCollection = collection(db, "jobs");
+      const jobsSnapshot = await getDocs(query(jobsCollection, orderBy("createdAt", "desc")));
+      
+      jobPosts = jobsSnapshot.docs.map((doc) => {
+        const data = doc.data();
+        let date;
+        if (data.createdAt && typeof data.createdAt.toDate === "function") {
+          date = data.createdAt.toDate();
+        } else {
+          date = data.createdAt ? new Date(data.createdAt) : new Date();
+        }
+
+        return {
+          url: `${baseUrl}/jobs/${data.slug}`,
+          lastModified: date,
+          changeFrequency: "weekly",
+          priority: 0.8,
+        };
+      });
+
+      console.log(`✅ Added ${jobPosts.length} job posts to sitemap`);
+    } catch (error) {
+      console.error("❌ Error fetching jobs:", error);
+    }
+
+    // ========== FETCH BLOG POSTS ==========
+    try {
+      const postsCollection = collection(db, "posts");
+      const postsSnapshot = await getDocs(query(postsCollection, orderBy("createdAt", "desc")));
+      
+      blogPosts = postsSnapshot.docs.map((doc) => {
+        const data = doc.data();
+        let date;
+        if (data.createdAt && typeof data.createdAt.toDate === "function") {
+          date = data.createdAt.toDate();
+        } else {
+          date = data.createdAt ? new Date(data.createdAt) : new Date();
+        }
+
+        return {
+          url: `${baseUrl}/blog/${data.slug}`,
+          lastModified: date,
+          changeFrequency: "weekly",
+          priority: 0.7,
+        };
+      });
+
+      console.log(`✅ Added ${blogPosts.length} blog posts to sitemap`);
+    } catch (error) {
+      console.error("❌ Error fetching blog posts:", error);
+    }
+
   } catch (error) {
-    console.error("❌ Error fetching blog posts for sitemap:", error);
+    console.error("❌ Firebase initialization error:", error);
   }
 
   // ========== COMBINE ALL ==========
