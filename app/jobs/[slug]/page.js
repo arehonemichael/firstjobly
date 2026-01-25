@@ -4,65 +4,30 @@ import ApplyButton from "../../../components/ApplyButton";
 
 export const revalidate = 600;
 
-/* ---------------------------
-   South Africa SEO helpers
----------------------------- */
-const SA_PROVINCES = [
-  { name: "Gauteng", codes: ["gp", "gauteng", "johannesburg", "pretoria", "sandton"] },
-  { name: "Western Cape", codes: ["wc", "western cape", "cape town"] },
-  { name: "KwaZulu-Natal", codes: ["kzn", "kwazulu-natal", "durban"] },
-  { name: "Eastern Cape", codes: ["ec", "eastern cape", "gqeberha", "port elizabeth"] },
-  { name: "Free State", codes: ["fs", "free state", "bloemfontein"] },
-  { name: "Limpopo", codes: ["lp", "limpopo", "polokwane"] },
-  { name: "Mpumalanga", codes: ["mp", "mpumalanga", "nelspruit"] },
-  { name: "North West", codes: ["nw", "north west"] },
-  { name: "Northern Cape", codes: ["nc", "northern cape"] },
-];
-
-function extractSALocation(...texts) {
-  const fullText = texts.join(" ").toLowerCase();
-
-  const province = SA_PROVINCES.find(p =>
-    p.codes.some(code => fullText.includes(code))
-  );
-
-  return {
-    province: province?.name || "South Africa",
-    city: province?.name || "South Africa",
-  };
-}
-
-/* ---------------------------
-   Shared job resolver
----------------------------- */
-async function resolveJob(slug) {
-  return (
-    (await getJobBySlug(slug)) ??
-    (slug.length >= 20 && /^[A-Za-z0-9]+$/.test(slug)
-      ? await getJobById(slug)
-      : null)
-  );
-}
-
-/* ---------------------------
-   Metadata (SEO)
----------------------------- */
+/**
+ * Metadata now reuses the same cached data
+ * — no double DB / API hits
+ */
 export async function generateMetadata({ params }) {
-  const job = await resolveJob(params.slug);
-  if (!job) return { title: "Job Not Found | FirstJobly" };
+  const job =
+    (await getJobBySlug(params.slug)) ??
+    (params.slug.length >= 20 && /^[A-Za-z0-9]+$/.test(params.slug)
+      ? await getJobById(params.slug)
+      : null);
 
-  const { city, province } = extractSALocation(
-    job.title,
-    job.description,
-    job.location
-  );
+  if (!job) {
+    return { title: "Job Not Found | FirstJobly" };
+  }
 
-  const shortDesc = (job.description || job.requirements || job.title)
-    .slice(0, 155)
-    .concat("...");
+  const shortDesc =
+    (job.description || job.requirements || job.title)
+      .slice(0, 157)
+      .concat("...");
 
   return {
-    title: `${job.title} in ${city}, ${province} | FirstJobly`,
+    title: `${job.title} at ${job.company || "Confidential"} – ${
+      job.location || "South Africa"
+    } | FirstJobly`,
     description: shortDesc,
     alternates: {
       canonical: `/jobs/${job.slug}`,
@@ -70,39 +35,41 @@ export async function generateMetadata({ params }) {
   };
 }
 
-/* ---------------------------
-   Page
----------------------------- */
 export default async function JobDetailPage({ params }) {
-  const job = await resolveJob(params.slug);
+  /**
+   * Single data resolution path
+   * — shared with metadata via React cache()
+   */
+  const job =
+    (await getJobBySlug(params.slug)) ??
+    (params.slug.length >= 20 && /^[A-Za-z0-9]+$/.test(params.slug)
+      ? await getJobById(params.slug)
+      : null);
+
   if (!job) notFound();
 
-  const { city, province } = extractSALocation(
-    job.title,
-    job.description,
-    job.location
-  );
+  const validThrough = new Date(
+    Date.now() + 90 * 24 * 60 * 60 * 1000
+  )
+    .toISOString()
+    .split("T")[0];
 
   const datePosted = job.createdAt
     ? new Date(job.createdAt).toISOString().split("T")[0]
     : new Date().toISOString().split("T")[0];
-
-  const validThrough = new Date(
-    Date.now() + 90 * 24 * 60 * 60 * 1000
-  ).toISOString().split("T")[0];
 
   const formatRequirements = (text) => {
     if (!text) return null;
 
     const lines = text
       .split("\n")
-      .map(l => l.trim())
+      .map((l) => l.trim())
       .filter(Boolean);
 
     const isList =
       lines.length > 4 ||
       lines.every(
-        l =>
+        (l) =>
           l.startsWith("- ") ||
           l.startsWith("• ") ||
           l.startsWith("* ") ||
@@ -142,22 +109,25 @@ export default async function JobDetailPage({ params }) {
               job.description ||
               job.requirements ||
               "No description available.",
+            identifier: {
+              "@type": "PropertyValue",
+              name: "FirstJobly",
+              value: job.id,
+            },
             datePosted,
             validThrough,
-            employmentType: job.title?.toLowerCase().includes("intern")
-              ? "INTERN"
-              : "FULL_TIME",
+            employmentType: job.category?.includes("Permanent")
+              ? "FULL_TIME"
+              : "INTERN",
             hiringOrganization: {
               "@type": "Organization",
-              name: job.company || "FirstJobly",
-              logo: job.logo || "https://firstjobly.co.za/logo.png",
+              name: job.company || "Confidential",
             },
             jobLocation: {
               "@type": "Place",
               address: {
                 "@type": "PostalAddress",
-                addressLocality: city,
-                addressRegion: province,
+                addressLocality: job.location || "South Africa",
                 addressCountry: "ZA",
               },
             },
@@ -180,7 +150,7 @@ export default async function JobDetailPage({ params }) {
           </h1>
 
           <p className="text-lg text-gray-600 mb-6">
-            {job.company} · {city}, {province}
+            {job.company} · {job.location}
           </p>
 
           {job.requirements && (
