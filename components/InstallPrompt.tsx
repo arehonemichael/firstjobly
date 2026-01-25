@@ -1,19 +1,27 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { X } from "lucide-react";
 
-export default function InstallPrompt() {
+// Props interface
+interface InstallPromptProps {
+  variant?: 'floating-right' | 'default' | string;
+}
+
+export default function InstallPrompt({ variant = 'default' }: InstallPromptProps) {
   const [visible, setVisible] = useState(false);
+
+  // Determine CSS class based on variant
+  const positionClass = variant === 'floating-right' ? 'right-4' : 'right-1/2 translate-x-1/2';
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     const ua = window.navigator.userAgent.toLowerCase();
     const isAndroid = ua.includes("android");
-    const isMobileWidth = window.innerWidth < 1024; // mobile / small tablet
+    const isMobileWidth = window.innerWidth < 1024;
 
     // Only target Android + mobile
     if (!isAndroid || !isMobileWidth) return;
@@ -32,7 +40,6 @@ export default function InstallPrompt() {
 
       const scrolledRatio = docHeight > 0 ? scrollTop / docHeight : 0;
 
-      // Show when user has scrolled at least 40% of the page
       if (scrolledRatio >= 0.4) {
         setVisible(true);
         window.removeEventListener("scroll", handleScroll);
@@ -41,17 +48,14 @@ export default function InstallPrompt() {
 
     window.addEventListener("scroll", handleScroll);
 
-    // In case user is already far down (from navigation / back button)
+    // Check immediately in case user is already scrolled
     handleScroll();
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleDismiss = () => {
     setVisible(false);
-
     if (typeof window !== "undefined") {
       const count = parseInt(
         window.localStorage.getItem("fj_install_prompt_count") || "0",
@@ -67,7 +71,7 @@ export default function InstallPrompt() {
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-20 right-4 z-50 lg:hidden">
+    <div className={`fixed bottom-20 z-50 lg:hidden ${positionClass}`}>
       <div className="bg-white shadow-xl rounded-2xl p-3 flex items-center gap-3 w-[260px] border border-gray-200 animate-slideUp">
         <Image
           src="/icon-192.png"

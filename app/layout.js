@@ -1,4 +1,3 @@
-import { Inter } from 'next/font/google'
 import "../styles/globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -6,14 +5,6 @@ import Script from "next/script";
 import InstallPrompt from "../components/InstallPrompt";
 import AdLoader from "../components/AdLoader";
 import VisibilityAdReloader from "../components/VisibilityAdReloader";
-
-// Optimize font loading
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap', // Prevents invisible text while font loads
-  preload: true, // Preload font for faster display
-  variable: '--font-inter', // CSS variable for custom usage
-})
 
 export const metadata = {
   title:
@@ -49,7 +40,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -78,7 +69,7 @@ gtag('config', 'G-HKHVEJR9N2');`,
         />
       </head>
 
-      <body className={`bg-white text-gray-800 relative ${inter.className}`}>
+      <body className="bg-white text-gray-800 relative">
         {/* 🔥 ENHANCED: Aggressive ad reloading on route changes */}
         <AdLoader />
         
