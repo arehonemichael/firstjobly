@@ -29,7 +29,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "app/layout.js"  ],
+, "app/layout.js", "lib/jobs.ts"  ],
   "exclude": [
     "node_modules"
   ]

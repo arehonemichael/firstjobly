@@ -1,16 +1,23 @@
 import JobsClient from "./JobsClient";
-import { getJobs } from "../../lib/jobs";
+import { getJobsListing } from "../../lib/jobs";
 
-export const dynamic = "force-dynamic";
+// ✅ OPTIMIZED: Cache for 5 minutes
+export const revalidate = 300;
+
+// ✅ IMPORTANT: Enable static generation for instant loading
+export const dynamic = 'force-static';
+
+// ✅ Add metadata
+export async function generateMetadata() {
+  return {
+    title: "Browse Jobs - Internships, Learnerships & Graduate Jobs | FirstJobly",
+    description: "Browse the latest internships, learnerships, bursaries, and entry-level jobs in South Africa. Find opportunities for graduates and youth.",
+  };
+}
 
 export default async function JobsPage({ searchParams }) {
-  const allJobsRaw = await getJobs();
-
-  const allJobs = allJobsRaw.map((job) => ({
-    ...job,
-    // createdAt is already a JS Date from getJobs(), no need to convert again
-    createdAt: job.createdAt || null,
-  }));
+  // ✅ Use optimized listing function
+  const allJobs = await getJobsListing();
 
   return <JobsClient allJobs={allJobs} searchParams={searchParams} />;
 }

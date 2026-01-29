@@ -8,30 +8,28 @@ import {
   FaBookOpen,
 } from "react-icons/fa";
 
+// 1. ELITE METADATA: Removed keyword stuffing. Focused on intent & length.
 export const metadata = {
-  title: "FirstJobly - Jobs in South Africa | Internships, Learnerships, Graduate Jobs & Entry-Level Positions 2025",
+  metadataBase: new URL("https://firstjobly.co.za"),
+  title: "FirstJobly: Internships & Graduate Jobs in South Africa",
   description:
-    "Find internships, learnerships, bursaries, graduate jobs, and entry-level positions in South Africa. Browse government jobs, permanent roles, and opportunities for youth. Your first job starts here.",
-  keywords: "jobs in South Africa, internships South Africa, learnerships, graduate jobs, entry level jobs, government jobs, bursaries, youth employment, first job, graduate opportunities, SA jobs, careers South Africa, internship programs, learnership opportunities, permanent jobs South Africa",
+    "Apply for 2026 internships, learnerships, and graduate jobs in South Africa. Government & private sector opportunities for youth and first-time job seekers.",
   openGraph: {
-    title: "FirstJobly - Find Graduate Jobs, Internships & Learnerships in South Africa",
-    description:
-      "Discover internships, learnerships, bursaries, and entry-level jobs for South African youth and graduates. Start your career journey today.",
+    title: "FirstJobly - Find Your First Job in South Africa",
+    description: "Daily updates on internships, learnerships, and entry-level careers.",
     url: "https://firstjobly.co.za",
     siteName: "FirstJobly",
-    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "FirstJobly South Africa" }],
     type: "website",
     locale: "en_ZA",
   },
   twitter: {
     card: "summary_large_image",
-    title: "FirstJobly - Graduate Jobs & Internships in South Africa",
-    description:
-      "Find internships, learnerships, and entry-level jobs for South African youth.",
+    title: "FirstJobly - Graduate Jobs in SA",
     images: ["/og-image.png"],
   },
   alternates: {
-    canonical: "https://firstjobly.co.za",
+    canonical: "/",
   },
 };
 
@@ -39,119 +37,105 @@ export default function Home() {
   const categories = [
     {
       title: "Internships",
-      desc: "Start your career with real-world experience.",
+      desc: "Paid and unpaid programs for SA graduates.",
       href: "/jobs?category=Internships",
       icon: <FaBriefcase className="text-pink-600 w-10 h-10 mb-3" />,
     },
     {
       title: "Entry-Level Jobs",
-      desc: "Roles designed for fresh graduates and youth.",
+      desc: "Roles for youth with 0-2 years experience.",
       href: "/jobs?category=Entry-Level",
       icon: <FaSuitcaseRolling className="text-pink-600 w-10 h-10 mb-3" />,
     },
     {
       title: "Bursaries",
-      desc: "Funding programs to help you study and grow.",
+      desc: "2026 funding for university and college students.",
       href: "/jobs?category=Bursary",
       icon: <FaUniversity className="text-pink-600 w-10 h-10 mb-3" />,
     },
     {
       title: "Government Jobs",
-      desc: "Public sector internships and entry-level positions.",
+      desc: "Latest Z83 positions and public sector roles.",
       href: "/jobs?category=Government",
       icon: <FaBuilding className="text-pink-600 w-10 h-10 mb-3" />,
     },
     {
       title: "Permanent Jobs",
-      desc: "Long-term roles to build your career foundation.",
+      desc: "Full-time career foundations across all provinces.",
       href: "/jobs?category=Permanent",
       icon: <FaBriefcase className="text-pink-600 w-10 h-10 mb-3" />,
     },
     {
       title: "Learnerships",
-      desc: "Earn while you learn through hands-on programs.",
+      desc: "SETA-approved learnerships to earn while you learn.",
       href: "/jobs?category=Learnership",
       icon: <FaBookOpen className="text-pink-600 w-10 h-10 mb-3" />,
     },
   ];
 
-  // JSON-LD Structured Data for SEO
-  const structuredData = {
+  // 2. SEARCH INTENT SCHEMA: ItemList makes your categories "rich" in Google Search
+  const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "FirstJobly",
-    "url": "https://firstjobly.co.za",
-    "description": "South Africa's leading job portal for internships, learnerships, graduate jobs, and entry-level positions for youth and graduates.",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://firstjobly.co.za/jobs?search={search_term_string}",
-      "query-input": "required name=search_term_string"
-    },
-    "areaServed": {
-      "@type": "Country",
-      "name": "South Africa"
-    }
-  };
-
-  const organizationData = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "FirstJobly",
-    "url": "https://firstjobly.co.za",
-    "logo": "https://firstjobly.co.za/logo.png",
-    "description": "FirstJobly connects South African youth and graduates with internships, learnerships, bursaries, and entry-level job opportunities.",
-    "areaServed": "ZA",
-    "sameAs": [
-      "https://whatsapp.com/channel/0029VbBbQOK4inoxcWKjHY2v"
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "name": "FirstJobly",
+        "url": "https://firstjobly.co.za",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://firstjobly.co.za/jobs?search={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "ItemList",
+        "name": "Popular Job Categories in South Africa",
+        "itemListElement": categories.map((cat, i) => ({
+          "@type": "ListItem",
+          "position": i + 1,
+          "name": cat.title,
+          "url": `https://firstjobly.co.za${cat.href}`
+        }))
+      }
     ]
   };
 
   return (
     <>
-      {/* JSON-LD Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationData) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <main className="bg-white min-h-screen text-gray-800 overflow-hidden">
+      <main className="bg-white min-h-screen text-gray-800">
         {/* Hero Section */}
-        <section className="relative bg-pink-50 min-h-screen flex items-center">
+        <section className="relative bg-pink-50 min-h-[80vh] flex items-center">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-            <div className="grid lg:grid-cols-2 gap-10 items-center">
-              {/* Text Content */}
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="order-2 lg:order-1">
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-5">
-                  Your Career{" "}
-                  <span className="text-pink-600">Starts Here.</span>
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6 tracking-tight">
+                  Your South African Career <span className="text-pink-600">Starts Here.</span>
                 </h1>
-
-                <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                  Explore internships, learnerships, bursaries, and entry-level jobs
-                  for South African youth and graduates. Start your career journey today
-                  with opportunities across all provinces.
+                <p className="text-xl text-gray-600 mb-10 leading-relaxed max-w-xl">
+                  Connect with the latest <strong>2026 internships</strong>, SETA-approved <strong>learnerships</strong>, and government opportunities across Gauteng, Western Cape, and all SA provinces.
                 </p>
-
-                <Link href="/jobs">
-                  <button className="bg-pink-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-pink-700 transition shadow-md">
-                    Browse Jobs in South Africa
-                  </button>
+                <Link 
+                  href="/jobs" 
+                  className="inline-block bg-pink-600 text-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-pink-700 transition-all shadow-lg hover:shadow-pink-200 active:scale-95"
+                >
+                  Browse Jobs in South Africa
                 </Link>
               </div>
 
-              {/* Image */}
               <div className="order-1 lg:order-2">
                 <Image
                   src="/images/hero-image.png"
-                  alt="South African graduates and youth finding jobs, internships and learnerships"
-                  width={1600}
-                  height={1280}
-                  className="rounded-2xl shadow-lg w-full"
+                  alt="South African graduates finding career opportunities"
+                  width={800}
+                  height={600}
+                  className="rounded-3xl shadow-2xl w-full object-cover"
                   priority
+                  sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>
             </div>
@@ -159,30 +143,27 @@ export default function Home() {
         </section>
 
         {/* Popular Job Categories */}
-        <section className="py-20 bg-gray-50 border-t border-gray-100">
+        <section className="py-24 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/*  MOVED: Advergic In-Content Unit - Now above categories */}
-            <div id="Firstjobly_Incontent_Lazy" className="mb-10"></div>
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                Explore Top Job Categories
+              </h2>
+              <p className="text-gray-600 text-lg">
+                Find the right path for your skills. From financial bursaries to technical learnerships, we curate the best for South African youth.
+              </p>
+            </div>
 
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Popular Job Categories in South Africa
-            </h2>
-            <p className="text-gray-600 mb-10">
-              Browse the latest opportunities for graduates, youth, and first-time job seekers across South Africa
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {categories.map((cat) => (
-                <Link key={cat.title} href={cat.href}>
-                  <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition cursor-pointer">
-                    <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0">{cat.icon}</div>
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                          {cat.title}
-                        </h3>
-                        <p className="text-gray-600 text-sm">{cat.desc}</p>
-                      </div>
+                <Link key={cat.title} href={cat.href} className="group">
+                  <div className="bg-white border border-gray-100 rounded-2xl p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full">
+                    <div className="flex flex-col h-full">
+                      {cat.icon}
+                      <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-pink-600 transition-colors">
+                        {cat.title}
+                      </h3>
+                      <p className="text-gray-600 leading-snug">{cat.desc}</p>
                     </div>
                   </div>
                 </Link>
@@ -191,95 +172,26 @@ export default function Home() {
           </div>
         </section>
 
-        {/* SEO-Rich Content Section */}
-        <section className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="prose prose-lg max-w-none">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                Your Gateway to Employment Opportunities in South Africa
-              </h2>
-              
-              <div className="grid md:grid-cols-2 gap-8 text-gray-600">
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                    Internships for South African Graduates
-                  </h3>
-                  <p className="mb-4">
-                    FirstJobly connects you with internship programs from leading companies across South Africa. 
-                    Whether you're in Johannesburg, Cape Town, Durban, or Pretoria, find paid and unpaid internships 
-                    that offer real-world experience in your field of study.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                    Learnerships & Skills Development
-                  </h3>
-                  <p className="mb-4">
-                    Discover learnership opportunities that combine theoretical learning with practical experience. 
-                    Our platform features SETA-approved learnerships across various industries, helping you gain 
-                    nationally recognized qualifications while earning an income.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                    Entry-Level & Graduate Jobs
-                  </h3>
-                  <p className="mb-4">
-                    Browse entry-level positions perfect for recent graduates and first-time job seekers. From 
-                    administrative roles to technical positions, find opportunities that match your qualifications 
-                    and career aspirations across South Africa's job market.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                    Government & Public Sector Jobs
-                  </h3>
-                  <p className="mb-4">
-                    Access the latest government job listings, including positions in national departments, 
-                    provincial administrations, and municipalities. Stay updated on public sector internships, 
-                    graduate programs, and permanent appointments.
-                  </p>
-                </div>
+        {/* SEO-Rich Contextual Section */}
+        <section className="py-24 bg-white border-t border-gray-100">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <article className="prose prose-pink lg:prose-lg mx-auto">
+              <h2 className="text-center">South Africa's Leading Youth Employment Portal</h2>
+              <p>
+                At <strong>FirstJobly</strong>, we bridge the gap between education and employment. Our platform is specifically designed for the South African job market, focusing on:
+              </p>
+              <ul>
+                <li><strong>Graduate Internships:</strong> Gain experience at top-tier SA firms.</li>
+                <li><strong>Learnerships & Skills Development:</strong> Earn an NQF qualification while receiving a stipend.</li>
+                <li><strong>Public Sector Opportunities:</strong> Direct access to Government Internships and Departmental roles.</li>
+              </ul>
+              <div className="bg-gray-900 text-white p-8 rounded-2xl mt-12 not-prose shadow-xl">
+                <h3 className="text-2xl font-bold mb-4">Protecting Your Job Search</h3>
+                <p className="text-gray-300 mb-0">
+                  We manually verify every listing. FirstJobly will <strong>never</strong> ask you to pay for a job application. Join thousands of South Africans who started their careers right here.
+                </p>
               </div>
-
-              <div className="mt-10 bg-pink-50 p-8 rounded-lg">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Why Choose FirstJobly for Your Job Search?
-                </h3>
-                <ul className="space-y-3 text-gray-600">
-                  <li className="flex items-start">
-                    <span className="text-pink-600 mr-2">✓</span>
-                    <span><strong>Daily Updates:</strong> New opportunities added every day from employers across South Africa</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-pink-600 mr-2">✓</span>
-                    <span><strong>Youth-Focused:</strong> Specialized in opportunities for graduates and first-time job seekers</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-pink-600 mr-2">✓</span>
-                    <span><strong>Free Access:</strong> Browse and apply to unlimited jobs at no cost</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-pink-600 mr-2">✓</span>
-                    <span><strong>Verified Listings:</strong> All opportunities screened to protect you from scams</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-pink-600 mr-2">✓</span>
-                    <span><strong>Mobile-Friendly:</strong> Search and apply from anywhere in South Africa</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Keywords-Rich Footer Section */}
-        <section className="py-12 bg-gray-50 border-t">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
+            </article>
           </div>
         </section>
       </main>

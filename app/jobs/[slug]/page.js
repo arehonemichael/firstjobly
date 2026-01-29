@@ -4,6 +4,7 @@ import ApplyButton from "../../../components/ApplyButton";
 
 export const revalidate = 600;
 
+/* ---------------- METADATA ---------------- */
 export async function generateMetadata({ params }) {
   const job =
     (await getJobBySlug(params.slug)) ??
@@ -15,22 +16,15 @@ export async function generateMetadata({ params }) {
     return { title: "Job Not Found | FirstJobly" };
   }
 
-  const shortDesc =
-    (job.description || job.requirements || job.title)
-      .slice(0, 157)
-      .concat("...");
-
   return {
-    title: `${job.title} at ${job.company || "Confidential"} – ${
-      job.location || "South Africa"
-    } | FirstJobly`,
-    description: shortDesc,
-    alternates: {
-      canonical: `/jobs/${job.slug}`,
-    },
+    title: `${job.title} at ${job.company || "Confidential"} | FirstJobly`,
+    description: (job.description || job.requirements || "")
+      .slice(0, 155)
+      .concat("..."),
   };
 }
 
+/* ---------------- PAGE ---------------- */
 export default async function JobDetailPage({ params }) {
   const job =
     (await getJobBySlug(params.slug)) ??
@@ -40,152 +34,106 @@ export default async function JobDetailPage({ params }) {
 
   if (!job) notFound();
 
-  const validThrough = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
-    .toISOString()
-    .split("T")[0];
-
-  const datePosted = job.createdAt
-    ? new Date(job.createdAt).toISOString().split("T")[0]
-    : new Date().toISOString().split("T")[0];
-
-  const formatRequirements = (text) => {
+  /* -------- CLEAN LIST (REMOVES NUMBERING) -------- */
+  const cleanList = (text) => {
     if (!text) return null;
+
     const lines = text
       .split("\n")
-      .map((l) => l.trim())
+      .map((l) =>
+        l
+          .replace(/^\d+\.\s*/, "")
+          .replace(/^[-•*]\s*/, "")
+          .trim()
+      )
       .filter(Boolean);
 
-    const isList =
-      lines.length > 4 ||
-      lines.every(
-        (l) =>
-          l.startsWith("- ") ||
-          l.startsWith("• ") ||
-          l.startsWith("* ") ||
-          /^\d+\.\s/.test(l)
-      );
-
-    if (isList) {
-      return (
-        <ul className="list-disc pl-6 space-y-3 text-gray-700">
-          {lines.map((line, i) => (
-            <li key={i}>{line.replace(/^[-•*]\s?/, "").trim()}</li>
-          ))}
-        </ul>
-      );
-    }
-
-    return <div className="whitespace-pre-line text-gray-700">{text}</div>;
+    return (
+      <ul className="space-y-3">
+        {lines.map((line, i) => (
+          <li key={i} className="flex gap-3">
+            <span className="text-pink-600 mt-1">✓</span>
+            <span className="text-gray-700 leading-relaxed">{line}</span>
+          </li>
+        ))}
+      </ul>
+    );
   };
 
-  // Split job description into chunks for in-feed ads
-  const descriptionChunks = job.description
-    ? job.description.match(/.{1,500}(\s|$)/g) || [job.description]
-    : [];
-
-  let adCounter = 0;
-  const maxAds = 5;
-
   return (
-    <>
-      {/* Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "JobPosting",
-            title: job.title,
-            description: job.description || job.requirements || "No description available.",
-            identifier: { "@type": "PropertyValue", name: "FirstJobly", value: job.id },
-            datePosted,
-            validThrough,
-            employmentType: job.category?.includes("Permanent") ? "FULL_TIME" : "INTERN",
-            hiringOrganization: { "@type": "Organization", name: job.company || "Confidential" },
-            jobLocation: { "@type": "Place", address: { "@type": "PostalAddress", addressLocality: job.location || "South Africa", addressCountry: "ZA" } },
-          }),
-        }}
-      />
+    <div className="min-h-screen bg-gray-50">
+      <main className="max-w-4xl mx-auto px-4 py-10">
 
-      <main className="bg-white max-w-4xl mx-auto px-6 py-10">
-        <div className="max-w-3xl mx-auto">
+        {/* HEADER */}
+        <div className="bg-white rounded-2xl border shadow-sm p-8 mb-10">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
+            {job.title}
+          </h1>
 
-          {/* Company Logo */}
-          {job.logo && (
-            <img
-              src={job.logo}
-              alt={`${job.company || "Company"} logo`}
-              className="h-20 mb-8 object-contain"
-            />
-          )}
-
-          {/* Job Title & Company */}
-          <h1 className="text-4xl font-bold mb-4">{job.title}</h1>
-          <p className="text-lg text-gray-600 mb-6">{job.company} · {job.location}</p>
-
-          {/* 🎯 TOP IN-CONTENT AD — After Job Header */}
-          {adCounter < maxAds && (
-            <div className="my-6" id="Firstjobly_Incontent_Lazy"></div>
-          )}
-          {adCounter++}
-
-          {/* Requirements Section */}
-          {job.requirements && (
-            <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-4">Requirements</h2>
-              {formatRequirements(job.requirements)}
-
-              {/* 🎯 Insert ad after requirements */}
-              {adCounter < maxAds && (
-                <div className="lazy my-6" parent-unit="Firstjobly_Incontent_Lazy"></div>
-              )}
-              {adCounter++}
-            </section>
-          )}
-
-          {/* Job Description Section */}
-          <section className="mb-12 space-y-4 text-gray-800">
-            <h2 className="text-2xl font-bold mb-4">Job Description</h2>
-            {descriptionChunks.map((chunk, idx) => (
-              <div key={idx}>
-                <div dangerouslySetInnerHTML={{ __html: chunk }} />
-
-                {/* 🎯 Insert ad every 2 chunks */}
-                {(idx + 1) % 2 === 0 &&
-                  idx + 1 < descriptionChunks.length &&
-                  adCounter < maxAds && (
-                    <div className="lazy my-6" parent-unit="Firstjobly_Incontent_Lazy"></div>
-                  )}
-                {((idx + 1) % 2 === 0 && adCounter < maxAds) && adCounter++}
-              </div>
-            ))}
-          </section>
-
-          {/* Optional Extra Ad for Very Long Content */}
-          {descriptionChunks.length > 4 && adCounter < maxAds && (
-            <div className="lazy my-8" parent-unit="Firstjobly_Incontent_Lazy"></div>
-          )}
-          {descriptionChunks.length > 4 && adCounter < maxAds && adCounter++}
-
-          {/* 🎯 BOTTOM AD — Before Apply Button */}
-          {adCounter < maxAds && (
-            <div className="lazy my-8" parent-unit="Firstjobly_Incontent_Lazy"></div>
-          )}
-          {adCounter < maxAds && adCounter++}
-
-          {/* ✅ APPLY BUTTON — At the Bottom */}
-          {job.link && (
-            <div className="mb-10">
-              <ApplyButton link={job.link} className="px-10 py-5 text-lg font-bold w-full sm:w-auto">
-                Click here to apply
-              </ApplyButton>
-            </div>
-          )}
-
-          {/* 🎯 FINAL BTF Banner */}
-          <div id="Firstjobly_Bottom_BTF" className="my-10"></div>
+          <div className="flex flex-wrap gap-3 text-gray-600">
+            <span>{job.company || "Confidential"}</span>
+            <span></span>
+            {job.category && (
+              <>
+                <span>•</span>
+                <span className="text-pink-600 font-medium">
+                  {job.category}
+                </span>
+              </>
+            )}
+          </div>
         </div>
+
+        {/* REQUIREMENTS */}
+        {job.requirements && (
+          <section className="bg-white rounded-2xl border p-8 mb-10">
+            <h2 className="text-2xl font-semibold mb-6">
+              Requirements
+            </h2>
+            {cleanList(job.requirements)}
+          </section>
+        )}
+
+        {/* DESCRIPTION */}
+        {job.description && (
+          <section className="bg-white rounded-2xl border p-8 mb-10">
+            <h2 className="text-2xl font-semibold mb-6">
+              About This Role
+            </h2>
+
+            <div className="space-y-4 text-gray-700 leading-relaxed">
+              {job.description
+                .replace(/^\d+\.\s*/gm, "")
+                .split("\n")
+                .filter(Boolean)
+                .map((p, i) => (
+                  <p key={i}>{p}</p>
+                ))}
+            </div>
+          </section>
+        )}
+
+        {/* APPLY CTA (NON-AD LOOK) */}
+        {job.link && (
+          <div className="bg-white border border-pink-200 rounded-xl p-6 sm:p-8 text-center shadow-sm">
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              Ready to apply?
+            </h3>
+
+            <p className="text-gray-600 mb-4 text-sm">
+              Apply directly on {job.company || "the employer"}’s website.
+            </p>
+
+            <ApplyButton
+              link={job.link}
+              className="inline-flex items-center justify-center bg-pink-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-pink-700 transition"
+            >
+              Apply Now
+            </ApplyButton>
+          </div>
+        )}
+
       </main>
-    </>
+    </div>
   );
 }
