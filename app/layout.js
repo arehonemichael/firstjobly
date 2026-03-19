@@ -70,6 +70,10 @@ gtag('config', 'G-HKHVEJR9N2');`,
       </head>
 
       <body className="bg-white text-gray-800 relative">
+
+        {/* 🎯 TOP SCROLL AD - Start of body */}
+        <div id="Firstjobly_Top_Scroll"></div>
+
         {/* 🔥 ENHANCED: Aggressive ad reloading on route changes */}
         <AdLoader />
         

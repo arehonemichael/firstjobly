@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import { getJobBySlug, getJobById } from "../../../lib/jobs";
 import ApplyButton from "../../../components/ApplyButton";
 
@@ -34,17 +35,12 @@ export default async function JobDetailPage({ params }) {
 
   if (!job) notFound();
 
-  /* -------- CLEAN LIST (REMOVES NUMBERING) -------- */
   const cleanList = (text) => {
     if (!text) return null;
-
     const lines = text
       .split("\n")
       .map((l) =>
-        l
-          .replace(/^\d+\.\s*/, "")
-          .replace(/^[-•*]\s*/, "")
-          .trim()
+        l.replace(/^\d+\.\s*/, "").replace(/^[-•*]\s*/, "").trim()
       )
       .filter(Boolean);
 
@@ -66,30 +62,55 @@ export default async function JobDetailPage({ params }) {
 
         {/* HEADER */}
         <div className="bg-white rounded-2xl border shadow-sm p-8 mb-10">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
-            {job.title}
-          </h1>
+          <div className="flex items-center gap-6">
 
-          <div className="flex flex-wrap gap-3 text-gray-600">
-            <span>{job.company || "Confidential"}</span>
-            <span></span>
-            {job.category && (
-              <>
-                <span>•</span>
-                <span className="text-pink-600 font-medium">
-                  {job.category}
+            {/* Company Logo */}
+            {job.logo ? (
+              <div className="w-20 h-20 rounded-xl border border-gray-100 shadow-sm overflow-hidden flex-shrink-0 bg-white flex items-center justify-center p-1">
+                <Image
+                  src={job.logo}
+                  alt={`${job.company || "Company"} logo`}
+                  width={80}
+                  height={80}
+                  className="object-contain w-full h-full"
+                />
+              </div>
+            ) : (
+              <div className="w-20 h-20 rounded-xl border border-gray-100 shadow-sm flex-shrink-0 bg-pink-50 flex items-center justify-center">
+                <span className="text-2xl font-bold text-pink-600">
+                  {(job.company || "?").charAt(0).toUpperCase()}
                 </span>
-              </>
+              </div>
             )}
+
+            {/* Title + Meta */}
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+                {job.title}
+              </h1>
+              <div className="flex flex-wrap gap-3 text-gray-600">
+                <span>{job.company || "Confidential"}</span>
+                {job.location && (
+                  <>
+                    <span>•</span>
+                    <span>{job.location}</span>
+                  </>
+                )}
+                {job.category && (
+                  <>
+                    <span>•</span>
+                    <span className="text-pink-600 font-medium">{job.category}</span>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
         {/* REQUIREMENTS */}
         {job.requirements && (
           <section className="bg-white rounded-2xl border p-8 mb-10">
-            <h2 className="text-2xl font-semibold mb-6">
-              Requirements
-            </h2>
+            <h2 className="text-2xl font-semibold mb-6">Requirements</h2>
             {cleanList(job.requirements)}
           </section>
         )}
@@ -97,10 +118,7 @@ export default async function JobDetailPage({ params }) {
         {/* DESCRIPTION */}
         {job.description && (
           <section className="bg-white rounded-2xl border p-8 mb-10">
-            <h2 className="text-2xl font-semibold mb-6">
-              About This Role
-            </h2>
-
+            <h2 className="text-2xl font-semibold mb-6">About This Role</h2>
             <div className="space-y-4 text-gray-700 leading-relaxed">
               {job.description
                 .replace(/^\d+\.\s*/gm, "")
@@ -113,17 +131,15 @@ export default async function JobDetailPage({ params }) {
           </section>
         )}
 
-        {/* APPLY CTA (NON-AD LOOK) */}
+        {/* APPLY CTA */}
         {job.link && (
           <div className="bg-white border border-pink-200 rounded-xl p-6 sm:p-8 text-center shadow-sm">
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               Ready to apply?
             </h3>
-
             <p className="text-gray-600 mb-4 text-sm">
-              Apply directly on {job.company || "the employer"}’s website.
+              Apply directly on {job.company || "the employer"}'s website.
             </p>
-
             <ApplyButton
               link={job.link}
               className="inline-flex items-center justify-center bg-pink-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-pink-700 transition"

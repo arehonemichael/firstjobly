@@ -2,53 +2,34 @@
 const nextConfig = {
   // React Strict Mode
   reactStrictMode: true,
-
   // SWC compiler optimizations
   swcMinify: true,
-
   // Enable compression
   compress: true,
-
   // Image Optimization
   images: {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    unoptimized: false, // Keep image optimization enabled
+    unoptimized: false,
     minimumCacheTTL: 60 * 60 * 24 * 365, // 1 year
     remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**', // allows ALL https image sources
+      },
       {
         protocol: 'http',
         hostname: 'localhost',
         port: '3000',
         pathname: '/uploads/**',
       },
-      {
-        protocol: 'https',
-        hostname: 'firstjobly.co.za',
-        pathname: '/uploads/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'www.firstjobly.co.za',
-        pathname: '/uploads/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'firebasestorage.googleapis.com',
-      },
-      {
-        protocol: 'https',
-        hostname: '**.wordpress.com',
-      },
     ],
   },
-
   // Compiler Options
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
-
   // Cache headers for static assets
   async headers() {
     return [
@@ -73,5 +54,4 @@ const nextConfig = {
     ];
   },
 };
-
 module.exports = nextConfig;
