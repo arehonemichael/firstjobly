@@ -1,15 +1,15 @@
 "use client";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import JobCard from "../../components/JobCard";
 
-export default function JobsClient({ allJobs, searchParams }) {
+export default function JobsClient({ allJobs }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const category = searchParams?.category || "";
-  const page = parseInt(searchParams?.page || "1", 10);
+  const category = searchParams.get("category") || "";
+  const page = parseInt(searchParams.get("page") || "1", 10);
 
-  // Jobs per page
   const perPage = 20;
 
   const categories = [
@@ -43,11 +43,18 @@ export default function JobsClient({ allJobs, searchParams }) {
     router.push(`/jobs${query}`);
   };
 
+  const handlePageChange = (newPage) => {
+    const query = category
+      ? `?category=${category}&page=${newPage}`
+      : `?page=${newPage}`;
+    router.push(`/jobs${query}`);
+  };
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-pink-50/50 via-white to-purple-50/30">
       <div className="max-w-4xl mx-auto px-4 py-6 sm:py-10">
-        
-        {/* Header with improved styling */}
+
+        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
@@ -57,7 +64,7 @@ export default function JobsClient({ allJobs, searchParams }) {
               {filteredJobs.length} opportunities available
             </p>
           </div>
-          
+
           <select
             value={category}
             onChange={handleCategoryChange}
@@ -77,16 +84,16 @@ export default function JobsClient({ allJobs, searchParams }) {
           <div id="Firstjobly_Incontent_Lazy"></div>
         </div>
 
-        {/* Job Listings with improved spacing */}
+        {/* Job Listings */}
         <div className="space-y-4">
           {visibleJobs.map((job, index) => (
-            <div 
+            <div
               key={job.id}
               className="animate-fade-in"
               style={{ animationDelay: `${index * 0.03}s` }}
             >
               <JobCard job={job} compact />
-              
+
               {/* 🎯 Insert ad every 5 jobs */}
               {(index + 1) % 5 === 0 && index + 1 < visibleJobs.length && (
                 <div className="my-8">
@@ -116,13 +123,13 @@ export default function JobsClient({ allJobs, searchParams }) {
           </div>
         )}
 
-        {/* Pagination with improved design */}
+        {/* Pagination */}
         {totalPages > 1 && (
           <div className="flex flex-wrap justify-center mt-10 gap-2">
             {Array.from({ length: totalPages }, (_, i) => (
-              <a
+              <button
                 key={i}
-                href={`?category=${category}&page=${i + 1}`}
+                onClick={() => handlePageChange(i + 1)}
                 className={`px-4 py-2 rounded-lg font-medium transition-all ${
                   i + 1 === page
                     ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-md scale-105"
@@ -130,7 +137,7 @@ export default function JobsClient({ allJobs, searchParams }) {
                 }`}
               >
                 {i + 1}
-              </a>
+              </button>
             ))}
           </div>
         )}
