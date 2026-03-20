@@ -164,6 +164,11 @@ export default async function JobDetailPage({ params }) {
           </div>
         )}
 
+        {/* 🎯 AD 4 — Below apply button */}
+        <div className="mt-6">
+          <div id="Firstjobly_Bottom_BTF"></div>
+        </div>
+
       </main>
     </div>
   );
