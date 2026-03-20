@@ -61,7 +61,7 @@ export default async function JobDetailPage({ params }) {
       <main className="max-w-4xl mx-auto px-4 py-10">
 
         {/* HEADER */}
-        <div className="bg-white rounded-2xl border shadow-sm p-8 mb-10">
+        <div className="bg-white rounded-2xl border shadow-sm p-8 mb-6">
           <div className="flex items-center gap-6">
 
             {/* Company Logo */}
@@ -107,17 +107,27 @@ export default async function JobDetailPage({ params }) {
           </div>
         </div>
 
+        {/* 🎯 AD 1 — After header, before requirements */}
+        <div className="mb-6">
+          <div id="Firstjobly_Incontent_Lazy"></div>
+        </div>
+
         {/* REQUIREMENTS */}
         {job.requirements && (
-          <section className="bg-white rounded-2xl border p-8 mb-10">
+          <section className="bg-white rounded-2xl border p-8 mb-6">
             <h2 className="text-2xl font-semibold mb-6">Requirements</h2>
             {cleanList(job.requirements)}
           </section>
         )}
 
+        {/* 🎯 AD 2 — Between requirements and description */}
+        <div className="mb-6">
+          <div className="lazy" parent-unit="Firstjobly_Incontent_Lazy"></div>
+        </div>
+
         {/* DESCRIPTION */}
         {job.description && (
-          <section className="bg-white rounded-2xl border p-8 mb-10">
+          <section className="bg-white rounded-2xl border p-8 mb-6">
             <h2 className="text-2xl font-semibold mb-6">About This Role</h2>
             <div className="space-y-4 text-gray-700 leading-relaxed">
               {job.description
@@ -130,6 +140,11 @@ export default async function JobDetailPage({ params }) {
             </div>
           </section>
         )}
+
+        {/* 🎯 AD 3 — After description, before apply CTA */}
+        <div className="mb-6">
+          <div className="lazy" parent-unit="Firstjobly_Incontent_Lazy"></div>
+        </div>
 
         {/* APPLY CTA */}
         {job.link && (
