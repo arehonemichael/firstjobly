@@ -109,7 +109,7 @@ export default async function JobDetailPage({ params }) {
 
         {/* 🎯 AD 1 — After header, before requirements */}
         <div className="mb-6">
-          <div id="Firstjobly_Incontent_Lazy"></div>
+          <div id="Firstjobly_Incontent_Lazy" className="av-lazy"></div>
         </div>
 
         {/* REQUIREMENTS */}
@@ -166,7 +166,7 @@ export default async function JobDetailPage({ params }) {
 
         {/* 🎯 AD 4 — Below apply button */}
         <div className="mt-6">
-          <div id="Firstjobly_Bottom_BTF"></div>
+          <div id="Firstjobly_Bottom_BTF" className="av-lazy"></div>
         </div>
 
       </main>

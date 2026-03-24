@@ -72,7 +72,7 @@ gtag('config', 'G-HKHVEJR9N2');`,
       <body className="bg-white text-gray-800 relative">
 
         {/* 🎯 TOP SCROLL AD - Start of body */}
-        <div id="Firstjobly_Top_Scroll"></div>
+        <div id="Firstjobly_Top_Scroll" className="av-lazy"></div>
 
         {/* 🔥 ENHANCED: Aggressive ad reloading on route changes */}
         <AdLoader />
@@ -81,7 +81,7 @@ gtag('config', 'G-HKHVEJR9N2');`,
         <VisibilityAdReloader />
 
         {/* 🎯 ANCHOR AD - Sticky at top/bottom */}
-        <div id="Firstjobly_Anchor_ATF" className="mb-6"></div>
+        <div id="Firstjobly_Anchor_ATF" className="av-lazy mb-6"></div>
 
         <Navbar />
 
@@ -93,7 +93,7 @@ gtag('config', 'G-HKHVEJR9N2');`,
 
           {/* 🎯 SIDEBAR AD - Sticky sidebar */}
           <aside className="sticky top-24 h-fit space-y-6">
-            <div id="Firstjobly_Sidebar_Top_ATF"></div>
+            <div id="Firstjobly_Sidebar_Top_ATF" className="av-lazy"></div>
           </aside>
         </div>
 
@@ -102,7 +102,7 @@ gtag('config', 'G-HKHVEJR9N2');`,
           className="fixed right-4 top-36 w-[336px] space-y-6 z-20 hidden xl:block"
           aria-label="Right rail ads"
         >
-          <div id="Firstjobly_RightRail_ATF"></div>
+          <div id="Firstjobly_RightRail_ATF" className="av-lazy"></div>
         </aside>
 
         {/* Footer */}

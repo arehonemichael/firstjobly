@@ -81,7 +81,7 @@ export default function JobsClient({ allJobs }) {
 
         {/* 🎯 TOP IN-CONTENT AD */}
         <div className="mb-8 rounded-xl overflow-hidden">
-          <div id="Firstjobly_Incontent_Lazy"></div>
+          <div id="Firstjobly_Incontent_Lazy" className="av-lazy"></div>
         </div>
 
         {/* Job Listings */}
@@ -144,7 +144,7 @@ export default function JobsClient({ allJobs }) {
 
         {/* 🎯 FINAL BOTTOM BANNER */}
         <div className="mt-10">
-          <div id="Firstjobly_Bottom_BTF"></div>
+          <div id="Firstjobly_Bottom_BTF" className="av-lazy"></div>
         </div>
       </div>
 

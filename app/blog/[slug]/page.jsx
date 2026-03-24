@@ -125,7 +125,7 @@ export default async function BlogPostPage({ params }) {
         {/* 🎯 TOP IN-CONTENT AD */}
         {adCounter < maxAds && (
           <>
-            <div id="Firstjobly_Incontent_Lazy" className="my-6"></div>
+            <div id="Firstjobly_Incontent_Lazy" className="av-lazy my-6"></div>
             {(() => { adCounter++; return null; })()}
           </>
         )}
@@ -171,7 +171,7 @@ export default async function BlogPostPage({ params }) {
         )}
 
         {/* 🎯 FINAL BTF Banner */}
-        <div id="Firstjobly_Bottom_BTF" className="my-10"></div>
+        <div id="Firstjobly_Bottom_BTF" className="av-lazy my-10"></div>
       </main>
 
       {/* Structured data for SEO */}
