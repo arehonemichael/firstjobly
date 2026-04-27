@@ -1,13 +1,9 @@
 import JobsClient from "./JobsClient";
 import { getJobsListing } from "../../lib/jobs";
 
-// ✅ OPTIMIZED: Cache for 5 minutes
-export const revalidate = 300;
+// Fetch fresh data on every request — prevents empty jobs at night
+export const dynamic = 'force-dynamic';
 
-// ✅ IMPORTANT: Enable static generation for instant loading
-export const dynamic = 'force-static';
-
-// ✅ Add metadata
 export async function generateMetadata() {
   return {
     title: "Browse Jobs - Internships, Learnerships & Graduate Jobs | FirstJobly",
@@ -16,8 +12,11 @@ export async function generateMetadata() {
 }
 
 export default async function JobsPage({ searchParams }) {
-  // ✅ Use optimized listing function
-  const allJobs = await getJobsListing();
-
-  return <JobsClient allJobs={allJobs} searchParams={searchParams} />;
+  try {
+    const allJobs = await getJobsListing();
+    return <JobsClient allJobs={allJobs} searchParams={searchParams} />;
+  } catch (error) {
+    console.error('Failed to load jobs:', error);
+    return <JobsClient allJobs={[]} searchParams={searchParams} />;
+  }
 }
