@@ -109,7 +109,7 @@ export default async function JobDetailPage({ params }) {
           </div>
 
           {/* Key detail badges */}
-          <div className="flex flex-wrap gap-2 mb-6">
+          <div className="flex flex-wrap gap-2">
             {job.category && <Badge variant="pink">🏷 {job.category}</Badge>}
             {job.jobType  && <Badge variant="default">⏱ {job.jobType}</Badge>}
             {job.salary   && <Badge variant="green">💰 {job.salary}</Badge>}
@@ -117,20 +117,7 @@ export default async function JobDetailPage({ params }) {
             {job.location && <Badge variant="default">📍 {job.location}</Badge>}
           </div>
 
-          {/* Primary CTA — always visible in header */}
-          {job.link && (
-            <div className="flex flex-col sm:flex-row gap-3">
-              <ApplyButton
-                link={job.link}
-                className="flex-1 sm:flex-none inline-flex items-center justify-center bg-pink-600 text-white font-semibold px-6 py-3 rounded-xl hover:bg-pink-700 active:scale-95 transition text-sm sm:text-base"
-              >
-                Apply Now →
-              </ApplyButton>
-              <p className="text-xs text-gray-400 self-center">
-                You'll be redirected to {job.company || "the employer"}'s site
-              </p>
-            </div>
-          )}
+
         </div>
 
         {/* ── AD 1 — after header ── */}
