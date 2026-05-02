@@ -1,9 +1,8 @@
-
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { useState, useEffect } from "react";
 import { getJobBySlug, getJobById } from "../../../lib/jobs";
 import ApplyButton from "../../../components/ApplyButton";
+import StickyApplyBar from "../../../components/StickyApplyBar";
 
 export const revalidate = 600;
 
@@ -23,38 +22,6 @@ export async function generateMetadata({ params }) {
       .slice(0, 155)
       .concat("..."),
   };
-}
-
-/* ---------------- STICKY APPLY BAR (client component) ---------------- */
-function StickyApplyBar({ job }) {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 320);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  if (!job.link) return null;
-
-  return (
-    <div
-      className={`fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg px-4 py-3 flex items-center justify-between gap-4 transition-transform duration-300 sm:hidden ${
-        visible ? "translate-y-0" : "translate-y-full"
-      }`}
-    >
-      <div className="min-w-0">
-        <p className="text-sm font-semibold text-gray-900 truncate">{job.title}</p>
-        <p className="text-xs text-gray-500 truncate">{job.company || "Confidential"}</p>
-      </div>
-      <ApplyButton
-        link={job.link}
-        className="flex-shrink-0 bg-pink-600 text-white font-semibold text-sm px-5 py-2.5 rounded-lg hover:bg-pink-700 active:scale-95 transition"
-      >
-        Apply Now
-      </ApplyButton>
-    </div>
-  );
 }
 
 /* ---------------- HELPERS ---------------- */
@@ -144,8 +111,8 @@ export default async function JobDetailPage({ params }) {
           {/* Key detail badges */}
           <div className="flex flex-wrap gap-2 mb-6">
             {job.category && <Badge variant="pink">🏷 {job.category}</Badge>}
-            {job.jobType && <Badge variant="default">⏱ {job.jobType}</Badge>}
-            {job.salary && <Badge variant="green">💰 {job.salary}</Badge>}
+            {job.jobType  && <Badge variant="default">⏱ {job.jobType}</Badge>}
+            {job.salary   && <Badge variant="green">💰 {job.salary}</Badge>}
             {job.deadline && <Badge variant="amber">📅 Closes {job.deadline}</Badge>}
             {job.location && <Badge variant="default">📍 {job.location}</Badge>}
           </div>
@@ -205,7 +172,7 @@ export default async function JobDetailPage({ params }) {
               Interested in this role?
             </h3>
             <p className="text-gray-500 text-sm mb-5">
-              Apply directly on {job.company || "the employer"}'s website — it only takes a few minutes.
+              Apply directly on {job.company || "the employer"}'s website it only takes a few minutes.
             </p>
             <ApplyButton
               link={job.link}
@@ -223,8 +190,12 @@ export default async function JobDetailPage({ params }) {
 
       </main>
 
-      {/* ── STICKY MOBILE APPLY BAR ── */}
-      <StickyApplyBar job={job} />
+      {/* ── STICKY MOBILE APPLY BAR (client component) ── */}
+      <StickyApplyBar
+        title={job.title}
+        company={job.company}
+        link={job.link}
+      />
     </div>
   );
 }
