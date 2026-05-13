@@ -36,6 +36,14 @@ export const metadata = {
   alternates: {
     canonical: "https://firstjobly.co.za",
   },
+  // Required for Google Discover large image cards on every page
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      "max-image-preview": "large",
+    },
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -43,11 +51,13 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* Required for Google Discover large image previews */}
+        <meta name="robots" content="max-image-preview:large" />
 
-        {/* Advergic Script - Load EARLY */}
+        {/* Advergic Script - afterInteractive prevents blocking page render */}
         <Script
           id="advergic-script"
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
           src="https://avads.live/s/av-firstjobly.js"
         />
 
@@ -71,16 +81,48 @@ gtag('config', 'G-HKHVEJR9N2');`,
 
       <body className="bg-white text-gray-800 relative">
 
-        {/* 🎯 TOP SCROLL AD - Start of body */}
+        {/* ORGANISATION SCHEMA — trust signal for Google + AI search engines.
+            Lives in layout so it applies to every page automatically.
+            Tells Google who FirstJobly is as an entity — critical for
+            E-E-A-T scoring and appearing in AI search answers. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "FirstJobly",
+              "url": "https://firstjobly.co.za",
+              "logo": "https://firstjobly.co.za/logo.png",
+              "description": "South Africa's leading youth employment portal. Find internships, learnerships, bursaries, and entry-level jobs for graduates.",
+              "foundingLocation": {
+                "@type": "Place",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressCountry": "ZA",
+                },
+              },
+              "areaServed": {
+                "@type": "Country",
+                "name": "South Africa",
+              },
+              "sameAs": [
+                "https://whatsapp.com/channel/0029VbBbQOK4inoxcWKjHY2v",
+              ],
+            }),
+          }}
+        />
+
+        {/* TOP SCROLL AD */}
         <div id="Firstjobly_Top_Scroll" className="av-lazy"></div>
 
-        {/* 🔥 ENHANCED: Aggressive ad reloading on route changes */}
+        {/* Ad loader on route changes */}
         <AdLoader />
-        
-        {/* 🔥 NEW: Reload ads when user returns to tab */}
+
+        {/* Reload ads when user returns to tab */}
         <VisibilityAdReloader />
 
-        {/* 🎯 ANCHOR AD - Sticky at top/bottom */}
+        {/* ANCHOR AD */}
         <div id="Firstjobly_Anchor_ATF" className="av-lazy mb-6"></div>
 
         <Navbar />
@@ -91,29 +133,23 @@ gtag('config', 'G-HKHVEJR9N2');`,
             {children}
           </main>
 
-          {/* 🎯 SIDEBAR AD - Sticky sidebar */}
+          {/* SIDEBAR AD */}
           <aside className="sticky top-24 h-fit space-y-6">
             <div id="Firstjobly_Sidebar_Top_ATF" className="av-lazy"></div>
           </aside>
         </div>
 
-        {/* 🎯 RIGHT RAIL AD - Fixed position on right side */}
-        <aside
-          className="fixed right-4 top-36 w-[336px] space-y-6 z-20 hidden xl:block"
-          aria-label="Right rail ads"
-        >
-          <div id="Firstjobly_RightRail_ATF" className="av-lazy"></div>
-        </aside>
+        {/* Right rail removed — was overlapping sidebar on lg screens
+            and causing ad auction dilution across 4 simultaneous slots */}
 
-        {/* Footer */}
         <Footer />
 
-        {/* RIGHT-SIDE INSTALL PROMPT */}
+        {/* Install Prompt */}
         <div className="fixed right-0 top-1/2 -translate-y-1/2 z-40">
           <InstallPrompt variant="floating-right" />
         </div>
 
-        {/* Left-side WhatsApp Channel */}
+        {/* WhatsApp Channel */}
         <div className="fixed left-0 top-1/2 -translate-y-1/2 z-40">
           <a
             href="https://whatsapp.com/channel/0029VbBbQOK4inoxcWKjHY2v"

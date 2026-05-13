@@ -1,29 +1,36 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+
+const COOLDOWN_MS = 30000; // minimum 30 seconds between reloads
 
 export default function VisibilityAdReloader() {
+  const lastReloadTime = useRef(0);
+
   useEffect(() => {
     const handleVisibilityChange = () => {
-      // When user returns to the tab
-      if (!document.hidden && typeof window !== "undefined") {
-        console.log("👀 Tab became visible, reloading ads...");
-        
-        // Wait a moment for any rendering to finish
-        setTimeout(() => {
-          if (window.Avads && typeof window.Avads.loadAds === "function") {
-            try {
-              window.Avads.loadAds();
-              console.log("✅ Ads reloaded on visibility change");
-            } catch (error) {
-              console.error("❌ Error reloading ads on visibility:", error);
-            }
+      // Only act when user returns to the tab
+      if (document.hidden) return;
+
+      const now = Date.now();
+      const timeSinceLastReload = now - lastReloadTime.current;
+
+      // Skip if we reloaded too recently — prevents fraud signals
+      if (timeSinceLastReload < COOLDOWN_MS) return;
+
+      // Small delay to let any rendering finish before loading ads
+      setTimeout(() => {
+        if (window.Avads && typeof window.Avads.loadAds === "function") {
+          try {
+            window.Avads.loadAds();
+            lastReloadTime.current = Date.now();
+          } catch (error) {
+            // Silent fail
           }
-        }, 500);
-      }
+        }
+      }, 500);
     };
 
-    // Listen for visibility changes
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {

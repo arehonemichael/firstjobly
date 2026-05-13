@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://firstjobly.co.za/sitemap.xml

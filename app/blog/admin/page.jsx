@@ -4,9 +4,10 @@ import { useState, useEffect } from "react";
 import { addPost, getPosts, deletePost } from "../../../lib/blog";
 import { useRouter } from "next/navigation";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { app, storage } from "../../../lib/firebaseConfig";
+import { app } from "../../../lib/firebaseConfig";
 import Image from "next/image";
+
+// Firebase Storage imports removed — no longer needed with URL-based images
 
 export default function BlogAdminPage() {
   const router = useRouter();
@@ -15,13 +16,12 @@ export default function BlogAdminPage() {
     slug: "",
     description: "",
     content: "",
+    image: "", // Image is now a URL string, not a file
   });
-  const [imageFile, setImageFile] = useState(null);
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState("");
-  const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-  // Check authentication & fetch posts
   useEffect(() => {
     const auth = getAuth(app);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -42,62 +42,37 @@ export default function BlogAdminPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setUploading(true);
+    setSaving(true);
     setError("");
 
     try {
-      let imageUrl = "";
+      // No upload needed — just save the post with the image URL directly
+      await addPost(post);
 
-      // Upload image directly from client
-      if (imageFile) {
-        // Clean filename
-        const ext = imageFile.name.split(".").pop();
-        const baseName = imageFile.name
-          .replace(/\.[^/.]+$/, "")
-          .toLowerCase()
-          .replace(/\s+/g, "-")
-          .replace(/[^a-z0-9-]/g, "");
+      setPost({ title: "", slug: "", description: "", content: "", image: "" });
 
-        const filename = `${baseName}-${Date.now()}.${ext}`;
-
-        // Upload to Firebase Storage
-        const storageRef = ref(storage, `blog-images/${filename}`);
-        
-        await uploadBytes(storageRef, imageFile, {
-          contentType: imageFile.type,
-        });
-
-        // Get public URL
-        imageUrl = await getDownloadURL(storageRef);
-        console.log("Upload successful:", imageUrl);
-      }
-
-      // Save post with Firebase Storage URL
-      await addPost({ ...post, image: imageUrl });
-
-      // Reset form
-      setPost({ title: "", slug: "", description: "", content: "" });
-      setImageFile(null);
-
-      // Refresh posts list
       const updatedPosts = await getPosts();
       setPosts(updatedPosts);
     } catch (err) {
-      console.error(err);
       setError("Failed to add post: " + err.message);
     } finally {
-      setUploading(false);
+      setSaving(false);
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, title) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${title}"? This cannot be undone.`
+    );
+    if (!confirmed) return;
+
     await deletePost(id);
     const updatedPosts = await getPosts();
     setPosts(updatedPosts);
   };
 
   return (
-    <main className="max-w-2xl mx-auto p-6">
+    <div className="max-w-2xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">Add New Blog Post</h1>
       {error && <p className="text-red-600 mb-4">{error}</p>}
 
@@ -130,23 +105,32 @@ export default function BlogAdminPage() {
           className="w-full border px-4 py-2 rounded"
         />
 
-        {/* Image upload */}
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setImageFile(e.target.files[0])}
-          className="w-full border px-4 py-2 rounded"
-        />
-
-        {/* Preview */}
-        {imageFile && (
-          <Image
-            src={URL.createObjectURL(imageFile)}
-            alt="Preview"
-            width={200}
-            height={150}
-            className="mt-2 rounded border"
+        {/* Replaced file upload with URL input */}
+        <div>
+          <input
+            type="url"
+            name="image"
+            placeholder="Image URL (e.g., https://images.unsplash.com/...)"
+            value={post.image}
+            onChange={handleChange}
+            className="w-full border px-4 py-2 rounded"
           />
+          <p className="text-xs text-gray-400 mt-1">
+            Paste any public image URL. Use Unsplash, Pexels, or your own hosted image. Must be at least 1200px wide for Google Discover.
+          </p>
+        </div>
+
+        {/* Live preview from URL */}
+        {post.image && (
+          <div className="relative w-full h-48 rounded border overflow-hidden bg-gray-100">
+            <Image
+              src={post.image}
+              alt="Preview"
+              fill
+              className="object-cover"
+              unoptimized // External URLs may not be in next.config domains
+            />
+          </div>
         )}
 
         <textarea
@@ -161,34 +145,36 @@ export default function BlogAdminPage() {
 
         <button
           type="submit"
-          disabled={uploading}
+          disabled={saving}
           className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition disabled:bg-gray-400"
         >
-          {uploading ? "Publishing..." : "Publish"}
+          {saving ? "Publishing..." : "Publish"}
         </button>
       </form>
 
       <h2 className="text-xl font-semibold mb-4">Published Posts</h2>
-      {posts.map((post) => (
-        <div key={post.id} className="border p-4 rounded mb-4">
-          <h3 className="font-semibold">{post.title}</h3>
-          {post.image && (
-            <Image
-              src={post.image}
-              alt={post.title}
-              width={200}
-              height={150}
-              className="mt-2 rounded"
-            />
+      {posts.map((p) => (
+        <div key={p.id} className="border p-4 rounded mb-4">
+          <h3 className="font-semibold">{p.title}</h3>
+          {p.image && (
+            <div className="relative w-48 h-32 mt-2 rounded overflow-hidden bg-gray-100">
+              <Image
+                src={p.image}
+                alt={p.title}
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            </div>
           )}
           <button
-            onClick={() => handleDelete(post.id)}
-            className="text-red-600 text-sm mt-2"
+            onClick={() => handleDelete(p.id, p.title)}
+            className="text-red-600 text-sm mt-2 block"
           >
             Delete
           </button>
         </div>
       ))}
-    </main>
+    </div>
   );
 }
