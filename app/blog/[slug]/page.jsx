@@ -18,14 +18,12 @@ export async function generateMetadata({ params }) {
   return {
     title: post.title,
     description: post.description || "",
-    // Fixed: added max-image-preview for Google Discover large card eligibility
     robots: "max-image-preview:large",
     openGraph: {
       title: post.title,
       description: post.description || "",
       type: "article",
       url: `https://firstjobly.co.za/blog/${slug}`,
-      // Fixed: added width/height — required for Google Discover cards
       images: absoluteImageUrl
         ? [{ url: absoluteImageUrl, width: 1200, height: 630 }]
         : [],
@@ -63,7 +61,16 @@ export default async function BlogPostPage({ params }) {
 
   const optimizedContent = optimizeContentImages(post.content);
 
-  const contentChunks = optimizedContent
+  // Detect if this post uses our custom article-wrap styling
+  // If yes — render raw so CSS classes work
+  // If no — use prose chunks with ads injected between them
+  const isStyledPost = optimizedContent && optimizedContent.includes("article-wrap");
+
+  const AD_EVERY_N_CHUNKS = 6;
+  const MAX_ADS = 4;
+
+  // Only chunk plain posts — styled posts render as one block
+  const contentChunks = !isStyledPost && optimizedContent
     ? optimizedContent
         .split(/(<\/p>|<\/h[1-6]>|<\/div>|<\/li>|<\/blockquote>)/gi)
         .reduce((acc, item, index, array) => {
@@ -78,88 +85,98 @@ export default async function BlogPostPage({ params }) {
   const finalChunks =
     contentChunks.length > 0
       ? contentChunks
-      : optimizedContent
+      : (!isStyledPost && optimizedContent)
       ? optimizedContent.split(/\n\n+/).filter((chunk) => chunk.trim())
       : [];
 
-  // Fixed: removed adCounter mutation in JSX — use index math instead
-  const AD_EVERY_N_CHUNKS = 6; // Reduced frequency from 3 to 6
-  const MAX_ADS = 4;
-
   return (
     <>
-      {/* Removed wrapping <main> — layout.js already provides one */}
       <div className="max-w-3xl mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
 
-        {post.createdAt && (
-          <p className="text-gray-500 text-sm mb-4">
-            {new Intl.DateTimeFormat("en-ZA", {
-              dateStyle: "medium",
-              timeStyle: "short",
-            }).format(new Date(post.createdAt))}
-          </p>
+        {/* Only show title and image for plain posts
+            Styled posts include their own headline and hero inside the HTML */}
+        {!isStyledPost && (
+          <>
+            <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
+
+            {post.createdAt && (
+              <p className="text-gray-500 text-sm mb-4">
+                {new Intl.DateTimeFormat("en-ZA", {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                }).format(new Date(post.createdAt))}
+              </p>
+            )}
+
+            {post.image && (
+              <div className="relative w-full h-96 mb-6 bg-gray-200 rounded overflow-hidden">
+                <Image
+                  src={post.image}
+                  alt={post.title}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 768px, 800px"
+                  className="object-cover"
+                  priority={true}
+                  quality={85}
+                  placeholder="blur"
+                  blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAwIiBoZWlnaHQ9IjQ3NSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNzAwIiBoZWlnaHQ9IjQ3NSIgZmlsbD0iI2UyZThmMCIvPjwvc3ZnPg=="
+                />
+              </div>
+            )}
+          </>
         )}
 
-        {post.image && (
-          <div className="relative w-full h-96 mb-6 bg-gray-200 rounded overflow-hidden">
-            <Image
-              src={post.image}
-              alt={post.title}
-              fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 768px, 800px"
-              className="object-cover"
-              priority={true}
-              quality={85}
-              placeholder="blur"
-              blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAwIiBoZWlnaHQ9IjQ3NSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNzAwIiBoZWlnaHQ9IjQ3NSIgZmlsbD0iI2UyZThmMCIvPjwvc3ZnPg=="
-            />
-          </div>
-        )}
-
-        {/* TOP IN-CONTENT AD — Fixed: av-lazy not lazy */}
+        {/* TOP AD */}
         <div id="Firstjobly_Incontent_Lazy" className="av-lazy my-6"></div>
 
-        <article className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-ul:my-6 prose-ol:my-6 prose-li:my-2 prose-img:rounded-lg prose-img:shadow-md prose-img:my-6 prose-img:mx-auto prose-img:max-w-full prose-img:h-auto">
-          {finalChunks.length > 0 ? (
-            finalChunks.map((chunk, idx) => {
-              // Fixed: pure index math, no mutation in render
-              const chunkNumber = idx + 1;
-              const shouldShowAd =
-                chunkNumber % AD_EVERY_N_CHUNKS === 0 &&
-                chunkNumber < finalChunks.length &&
-                Math.floor(chunkNumber / AD_EVERY_N_CHUNKS) <= MAX_ADS;
+        {isStyledPost ? (
+          // ── STYLED POST — render raw HTML so article-wrap CSS works ──
+          // The <style> block inside the post HTML injects scoped styles
+          // No prose wrapper — Tailwind prose would override the custom CSS
+          <div
+            dangerouslySetInnerHTML={{ __html: optimizedContent }}
+          />
+        ) : (
+          // ── PLAIN POST — render with prose styles and injected ads ──
+          <article className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-ul:my-6 prose-ol:my-6 prose-li:my-2 prose-img:rounded-lg prose-img:shadow-md prose-img:my-6 prose-img:mx-auto prose-img:max-w-full prose-img:h-auto">
+            {finalChunks.length > 0 ? (
+              finalChunks.map((chunk, idx) => {
+                const chunkNumber = idx + 1;
+                const shouldShowAd =
+                  chunkNumber % AD_EVERY_N_CHUNKS === 0 &&
+                  chunkNumber < finalChunks.length &&
+                  Math.floor(chunkNumber / AD_EVERY_N_CHUNKS) <= MAX_ADS;
 
-              return (
-                <div key={idx}>
-                  <div
-                    dangerouslySetInnerHTML={{ __html: chunk }}
-                    className="mb-4"
-                  />
-                  {/* Fixed: av-lazy not lazy */}
-                  {shouldShowAd && (
+                return (
+                  <div key={idx}>
                     <div
-                      className="av-lazy my-6"
-                      parent-unit="Firstjobly_Incontent_Lazy"
-                    ></div>
-                  )}
-                </div>
-              );
-            })
-          ) : (
-            <div dangerouslySetInnerHTML={{ __html: optimizedContent || "" }} />
-          )}
-        </article>
+                      dangerouslySetInnerHTML={{ __html: chunk }}
+                      className="mb-4"
+                    />
+                    {shouldShowAd && (
+                      <div
+                        className="av-lazy my-6"
+                        parent-unit="Firstjobly_Incontent_Lazy"
+                      ></div>
+                    )}
+                  </div>
+                );
+              })
+            ) : (
+              <div dangerouslySetInnerHTML={{ __html: optimizedContent || "" }} />
+            )}
+          </article>
+        )}
 
-        {/* Extra ad for long posts — Fixed: av-lazy not lazy */}
-        {finalChunks.length > 6 && (
+        {/* Extra ad for long plain posts */}
+        {!isStyledPost && finalChunks.length > 6 && (
           <div
             className="av-lazy my-8"
             parent-unit="Firstjobly_Incontent_Lazy"
           ></div>
         )}
 
-        {/* BOTTOM AD — Fixed: av-lazy not lazy */}
+        {/* BOTTOM AD */}
         <div
           className="av-lazy my-8"
           parent-unit="Firstjobly_Incontent_Lazy"
@@ -178,7 +195,7 @@ export default async function BlogPostPage({ params }) {
             "@type": "BlogPosting",
             headline: post.title,
             image: absoluteImageUrl ? [absoluteImageUrl] : [],
-            author: { "@type": "Person", name: "FirstJobly" },
+            author: { "@type": "Organization", name: "FirstJobly" },
             publisher: {
               "@type": "Organization",
               name: "FirstJobly",
