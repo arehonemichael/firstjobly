@@ -70,7 +70,7 @@ export default function RootLayout({ children }) {
         <Script
           id="ga-init"
           strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
+          suppressHydrationWarning dangerouslySetInnerHTML={{
             __html: `window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
@@ -87,7 +87,7 @@ gtag('config', 'G-HKHVEJR9N2');`,
             E-E-A-T scoring and appearing in AI search answers. */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
+          suppressHydrationWarning dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
