@@ -61,15 +61,13 @@ export default async function BlogPostPage({ params }) {
 
   const optimizedContent = optimizeContentImages(post.content);
 
-  // Detect if this post uses our custom article-wrap styling
-  // If yes — render raw so CSS classes work
-  // If no — use prose chunks with ads injected between them
+  // Detect styled posts — renders raw HTML so article-wrap CSS works
+  // Plain posts get prose wrapper with ads injected between chunks
   const isStyledPost = optimizedContent && optimizedContent.includes("article-wrap");
 
   const AD_EVERY_N_CHUNKS = 6;
   const MAX_ADS = 4;
 
-  // Only chunk plain posts — styled posts render as one block
   const contentChunks = !isStyledPost && optimizedContent
     ? optimizedContent
         .split(/(<\/p>|<\/h[1-6]>|<\/div>|<\/li>|<\/blockquote>)/gi)
@@ -93,12 +91,11 @@ export default async function BlogPostPage({ params }) {
     <>
       <div className="max-w-3xl mx-auto p-6">
 
-        {/* Only show title and image for plain posts
-            Styled posts include their own headline and hero inside the HTML */}
+        {/* Plain posts only: show title and date
+            Styled posts have their own headline inside the HTML */}
         {!isStyledPost && (
           <>
             <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
-
             {post.createdAt && (
               <p className="text-gray-500 text-sm mb-4">
                 {new Intl.DateTimeFormat("en-ZA", {
@@ -107,37 +104,37 @@ export default async function BlogPostPage({ params }) {
                 }).format(new Date(post.createdAt))}
               </p>
             )}
-
-            {post.image && (
-              <div className="relative w-full h-96 mb-6 bg-gray-200 rounded overflow-hidden">
-                <Image
-                  src={post.image}
-                  alt={post.title}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 768px, 800px"
-                  className="object-cover"
-                  priority={true}
-                  quality={85}
-                  placeholder="blur"
-                  blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAwIiBoZWlnaHQ9IjQ3NSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNzAwIiBoZWlnaHQ9IjQ3NSIgZmlsbD0iI2UyZThmMCIvPjwvc3ZnPg=="
-                />
-              </div>
-            )}
           </>
+        )}
+
+        {/* Hero image — shows for ALL posts including styled ones.
+            Critical for Google Discover — the image must appear in the
+            actual page content, not just the og:image meta tag.
+            Google crawls the page to find the image for the Discover card. */}
+        {post.image && (
+          <div className="relative w-full h-96 mb-6 bg-gray-200 rounded overflow-hidden">
+            <Image
+              src={post.image}
+              alt={post.title}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 768px, 800px"
+              className="object-cover"
+              priority={true}
+              quality={85}
+              placeholder="blur"
+              blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAwIiBoZWlnaHQ9IjQ3NSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNzAwIiBoZWlnaHQ9IjQ3NSIgZmlsbD0iI2UyZThmMCIvPjwvc3ZnPg=="
+            />
+          </div>
         )}
 
         {/* TOP AD */}
         <div id="Firstjobly_Incontent_Lazy" className="av-lazy my-6"></div>
 
         {isStyledPost ? (
-          // ── STYLED POST — render raw HTML so article-wrap CSS works ──
-          // The <style> block inside the post HTML injects scoped styles
-          // No prose wrapper — Tailwind prose would override the custom CSS
-          <div
-            dangerouslySetInnerHTML={{ __html: optimizedContent }}
-          />
+          // Styled post — render raw so article-wrap CSS works fully
+          <div dangerouslySetInnerHTML={{ __html: optimizedContent }} />
         ) : (
-          // ── PLAIN POST — render with prose styles and injected ads ──
+          // Plain post — prose wrapper with ads injected between chunks
           <article className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-ul:my-6 prose-ol:my-6 prose-li:my-2 prose-img:rounded-lg prose-img:shadow-md prose-img:my-6 prose-img:mx-auto prose-img:max-w-full prose-img:h-auto">
             {finalChunks.length > 0 ? (
               finalChunks.map((chunk, idx) => {
