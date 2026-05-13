@@ -70,7 +70,6 @@ export default async function JobDetailPage({ params }) {
 
   if (!job) notFound();
 
-  // Removed wrapping <main> — layout.js already provides one
   return (
     <div className="min-h-screen bg-gray-50 pb-24 sm:pb-10">
       <div className="max-w-3xl mx-auto px-4 py-8 sm:py-12">
@@ -148,7 +147,6 @@ export default async function JobDetailPage({ params }) {
 
         {/* ── AD 2 — after description ── */}
         <div className="mb-5">
-          {/* Fixed: was "lazy", must be "av-lazy" for Advergic to pick it up */}
           <div className="av-lazy" parent-unit="Firstjobly_Incontent_Lazy" />
         </div>
 
@@ -177,47 +175,36 @@ export default async function JobDetailPage({ params }) {
 
       </div>
 
-      {/* ── STICKY MOBILE APPLY BAR (client component) ── */}
+      {/* ── STICKY MOBILE APPLY BAR ── */}
       <StickyApplyBar
         title={job.title}
         company={job.company}
         link={job.link}
       />
 
-      {/* ── JOB POSTING SCHEMA — unlocks Google for Jobs panel ── */}
-      {/* All fields are automatic — pulled from the same Firestore job data */}
+      {/* ── JOB POSTING SCHEMA ── */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org/",
             "@type": "JobPosting",
-
-            // Basic info — always present
             "title": job.title,
             "description": job.description || job.requirements || "",
             "datePosted": job.createdAt
               ? new Date(job.createdAt).toISOString().split("T")[0]
               : new Date().toISOString().split("T")[0],
-
-            // Closing date — if not set, defaults to end of year
             "validThrough": job.deadline
               ? new Date(job.deadline).toISOString().split("T")[0]
               : "2026-12-31",
-
-            // Full-time, Part-time etc — maps from your jobType field
             "employmentType": job.jobType
               ? job.jobType.toUpperCase().replace(/\s+/g, "_")
               : "FULL_TIME",
-
-            // Company info
             "hiringOrganization": {
               "@type": "Organization",
               "name": job.company || "Confidential",
               "logo": job.logo || "https://firstjobly.co.za/logo.png",
             },
-
-            // Location — uses job.location, falls back to South Africa
             "jobLocation": {
               "@type": "Place",
               "address": {
@@ -226,8 +213,6 @@ export default async function JobDetailPage({ params }) {
                 "addressCountry": "ZA",
               },
             },
-
-            // Salary — only added if your job has a salary field
             ...(job.salary && {
               "baseSalary": {
                 "@type": "MonetaryAmount",
@@ -239,8 +224,6 @@ export default async function JobDetailPage({ params }) {
                 },
               },
             }),
-
-            // Direct link to apply
             "url": `https://firstjobly.co.za/jobs/${job.slug}`,
             "applicantLocationRequirements": {
               "@type": "Country",
@@ -250,7 +233,7 @@ export default async function JobDetailPage({ params }) {
         }}
       />
 
-      {/* ── BREADCRUMB SCHEMA — shows path in Google search results ── */}
+      {/* ── BREADCRUMB SCHEMA ── */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -258,24 +241,9 @@ export default async function JobDetailPage({ params }) {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             "itemListElement": [
-              {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Home",
-                "item": "https://firstjobly.co.za",
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Jobs",
-                "item": "https://firstjobly.co.za/jobs",
-              },
-              {
-                "@type": "ListItem",
-                "position": 3,
-                "name": job.title,
-                "item": `https://firstjobly.co.za/jobs/${job.slug}`,
-              },
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://firstjobly.co.za" },
+              { "@type": "ListItem", "position": 2, "name": "Jobs", "item": "https://firstjobly.co.za/jobs" },
+              { "@type": "ListItem", "position": 3, "name": job.title, "item": `https://firstjobly.co.za/jobs/${job.slug}` },
             ],
           }),
         }}
