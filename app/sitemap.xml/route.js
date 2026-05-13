@@ -1,7 +1,7 @@
 // app/sitemap.xml/route.js
 import { NextResponse } from 'next/server';
-import { getJobsListing } from '../../../lib/jobs';
-import { getPosts } from '../../../lib/blog';
+import { getJobsListing } from '../../lib/jobs';
+import { getPosts } from '.../../lib/blog';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 3600; // Revalidate every hour
