@@ -1,3 +1,4 @@
+ï»¿// utf8
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getJobBySlug, getJobById } from "../../../lib/jobs";
@@ -17,7 +18,7 @@ export async function generateMetadata({ params }) {
 
 function cleanList(text) {
   if (!text) return null;
-  const lines = text.split("\n").map((l) => l.replace(/^\d+\.\s*/, "").replace(/^[-•*]\s*/, "").trim()).filter(Boolean);
+  const lines = text.split("\n").map((l) => l.replace(/^\d+\.\s*/, "").replace(/^[-ï¿½*]\s*/, "").trim()).filter(Boolean);
   return (
     <ul className="space-y-3">
       {lines.map((line, i) => (
@@ -55,7 +56,7 @@ export default async function JobDetailPage({ params }) {
             )}
             <div className="flex-1 min-w-0">
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1 leading-snug">{job.title}</h1>
-              <p className="text-gray-500 text-sm sm:text-base">{job.company || "Confidential"}{job.location && <span> · {job.location}</span>}</p>
+              <p className="text-gray-500 text-sm sm:text-base">{job.company || "Confidential"}{job.location && <span> ï¿½ {job.location}</span>}</p>
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
