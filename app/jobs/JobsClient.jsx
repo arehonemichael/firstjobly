@@ -10,7 +10,7 @@ export default function JobsClient({ allJobs }) {
   const category = searchParams.get("category") || "";
   const page = parseInt(searchParams.get("page") || "1", 10);
 
-  const perPage = 10;
+  const perPage = 30;
 
   const categories = [
     "Internships",
