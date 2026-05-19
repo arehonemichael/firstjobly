@@ -23,7 +23,7 @@ function cleanList(text) {
     <ul className="space-y-3">
       {lines.map((line, i) => (
         <li key={i} className="flex gap-3">
-          <span className="text-pink-600 mt-0.5 flex-shrink-0">?</span>
+          <span className="text-pink-600 mt-0.5 flex-shrink-0">&#10003;</span>
           <span className="text-gray-700 leading-relaxed">{line}</span>
         </li>
       ))}
@@ -60,11 +60,11 @@ export default async function JobDetailPage({ params }) {
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
-            {job.category && <Badge variant="pink">?? {job.category}</Badge>}
-            {job.jobType && <Badge variant="default">? {job.jobType}</Badge>}
-            {job.salary && <Badge variant="green">?? {job.salary}</Badge>}
-            {job.deadline && <Badge variant="amber">?? Closes {job.deadline}</Badge>}
-            {job.location && <Badge variant="default">?? {job.location}</Badge>}
+            {job.category && <Badge variant="pink">&#127991; {job.category}</Badge>}
+            {job.jobType && <Badge variant="default">&#9201; {job.jobType}</Badge>}
+            {job.salary && <Badge variant="green">&#128176; {job.salary}</Badge>}
+            {job.deadline && <Badge variant="amber">&#128197; Closes {job.deadline}</Badge>}
+            {job.location && <Badge variant="default">&#128205; {job.location}</Badge>}
           </div>
         </div>
         <div className="mb-5"><div id="Firstjobly_Incontent_Lazy" className="av-lazy" /></div>

@@ -28,7 +28,7 @@ export const metadata = {
     images: ["/og-image.png"],
   },
   alternates: {
-    canonical: "https://firstjobly.co.za", // Fixed: absolute URL
+    canonical: "https://firstjobly.co.za",
   },
 };
 
@@ -98,10 +98,10 @@ export default function Home() {
     ]
   };
 
-  // Fixed: removed wrapping <main> — layout.js already provides one
   return (
     <>
       <script
+        suppressHydrationWarning
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
@@ -140,6 +140,11 @@ export default function Home() {
         </div>
       </section>
 
+      {/* AD — between hero and categories, high visibility position */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div id="Firstjobly_Incontent_Lazy" className="av-lazy"></div>
+      </div>
+
       {/* Popular Job Categories */}
       <section className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -170,6 +175,11 @@ export default function Home() {
         </div>
       </section>
 
+      {/* AD — between categories and SEO section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="av-lazy" parent-unit="Firstjobly_Incontent_Lazy"></div>
+      </div>
+
       {/* SEO-Rich Contextual Section */}
       <section className="py-24 bg-white border-t border-gray-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -180,7 +190,7 @@ export default function Home() {
             </p>
             <ul>
               <li><strong>Graduate Internships:</strong> Gain experience at top-tier SA firms.</li>
-              <li><strong>Learnerships & Skills Development:</strong> Earn an NQF qualification while receiving a stipend.</li>
+              <li><strong>Learnerships &amp; Skills Development:</strong> Earn an NQF qualification while receiving a stipend.</li>
               <li><strong>Public Sector Opportunities:</strong> Direct access to Government Internships and Departmental roles.</li>
             </ul>
             <div className="bg-gray-900 text-white p-8 rounded-2xl mt-12 not-prose shadow-xl">
@@ -192,6 +202,11 @@ export default function Home() {
           </article>
         </div>
       </section>
+
+      {/* AD — bottom of homepage */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div id="Firstjobly_Bottom_BTF" className="av-lazy"></div>
+      </div>
     </>
   );
 }

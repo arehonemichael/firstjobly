@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import JobCard from "../../components/JobCard";
@@ -10,7 +10,7 @@ export default function JobsClient({ allJobs }) {
   const category = searchParams.get("category") || "";
   const page = parseInt(searchParams.get("page") || "1", 10);
 
-  const perPage = 20;
+  const perPage = 10;
 
   const categories = [
     "Internships",
@@ -50,22 +50,14 @@ export default function JobsClient({ allJobs }) {
     router.push(`/jobs${query}`);
   };
 
-  // Removed wrapping <main> — layout.js already provides one
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50/50 via-white to-purple-50/30">
       <div className="max-w-4xl mx-auto px-4 py-6 sm:py-10">
-
-        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
-              {formattedCategory}
-            </h1>
-            <p className="text-gray-600 text-sm">
-              {filteredJobs.length} opportunities available
-            </p>
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">{formattedCategory}</h1>
+            <p className="text-gray-600 text-sm">{filteredJobs.length} opportunities available</p>
           </div>
-
           <select
             value={category}
             onChange={handleCategoryChange}
@@ -73,32 +65,21 @@ export default function JobsClient({ allJobs }) {
           >
             <option value="">All Categories</option>
             {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
+              <option key={cat} value={cat}>{cat}</option>
             ))}
           </select>
         </div>
 
-        {/* TOP IN-CONTENT AD */}
         <div className="mb-8 rounded-xl overflow-hidden">
           <div id="Firstjobly_Incontent_Lazy" className="av-lazy"></div>
         </div>
 
-        {/* Job Listings */}
         <div className="space-y-4">
           {visibleJobs.map((job, index) => (
-            <div
-              key={job.id}
-              className="animate-fade-in"
-              style={{ animationDelay: `${index * 0.03}s` }}
-            >
+            <div key={job.id} className="animate-fade-in" style={{ animationDelay: `${index * 0.03}s` }}>
               <JobCard job={job} compact />
-
-              {/* Insert ad every 8 jobs — reduced from 5 to avoid auction dilution */}
-              {(index + 1) % 8 === 0 && index + 1 < visibleJobs.length && (
+              {(index + 1) % 5 === 0 && index + 1 < visibleJobs.length && (
                 <div className="my-8">
-                  {/* Fixed: was "lazy", must be "av-lazy" for Advergic to pick it up */}
                   <div className="av-lazy" parent-unit="Firstjobly_Incontent_Lazy"></div>
                 </div>
               )}
@@ -107,26 +88,18 @@ export default function JobsClient({ allJobs }) {
 
           {visibleJobs.length === 0 && (
             <div className="text-center py-16 bg-white/50 rounded-2xl border border-gray-100">
-              <div className="text-5xl mb-4">🔍</div>
-              <p className="text-gray-600 text-lg font-medium mb-2">
-                No jobs found in this category
-              </p>
-              <p className="text-gray-500 text-sm">
-                Try selecting a different category or check back soon!
-              </p>
+              <p className="text-gray-600 text-lg font-medium mb-2">No jobs found in this category</p>
+              <p className="text-gray-500 text-sm">Try selecting a different category or check back soon!</p>
             </div>
           )}
         </div>
 
-        {/* BOTTOM AD */}
         {visibleJobs.length > 0 && (
           <div className="my-8">
-            {/* Fixed: was "lazy", must be "av-lazy" for Advergic to pick it up */}
             <div className="av-lazy" parent-unit="Firstjobly_Incontent_Lazy"></div>
           </div>
         )}
 
-        {/* Pagination */}
         {totalPages > 1 && (
           <div className="flex flex-wrap justify-center mt-10 gap-2">
             {Array.from({ length: totalPages }, (_, i) => (
@@ -145,7 +118,6 @@ export default function JobsClient({ allJobs }) {
           </div>
         )}
 
-        {/* FINAL BOTTOM BANNER */}
         <div className="mt-10">
           <div id="Firstjobly_Bottom_BTF" className="av-lazy"></div>
         </div>
@@ -153,16 +125,9 @@ export default function JobsClient({ allJobs }) {
 
       <style jsx>{`
         @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
         }
-
         .animate-fade-in {
           animation: fade-in 0.4s ease-out forwards;
           opacity: 0;
