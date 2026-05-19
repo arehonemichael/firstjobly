@@ -1,11 +1,11 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
 const MAX_RETRIES = 5;
 const RETRY_DELAY_MS = 800;
-const INITIAL_DELAY_MS = 600;
+const INITIAL_DELAY_MS = 300;
 
 export default function AdLoader() {
   const pathname = usePathname();
