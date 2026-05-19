@@ -1,4 +1,4 @@
-import { getBlogBySlug } from "../../../lib/blog";
+﻿import { getBlogBySlug } from "../../../lib/blog";
 import Image from "next/image";
 
 export const revalidate = 3600;
@@ -73,7 +73,7 @@ export default async function BlogPostPage({ params }) {
 
   return (
     <>
-      <div className="max-w-3xl mx-auto p-6">
+      <div className="w-full max-w-3xl p-6">
         {!isStyledPost && (
           <>
             <h1 className="text-3xl font-bold mb-2">{post.title}</h1>

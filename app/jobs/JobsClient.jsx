@@ -52,7 +52,7 @@ export default function JobsClient({ allJobs }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50/50 via-white to-purple-50/30">
-      <div className="max-w-4xl mx-auto px-4 py-6 sm:py-10">
+      <div className="w-full px-4 py-6 sm:py-10">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">{formattedCategory}</h1>
@@ -71,7 +71,7 @@ export default function JobsClient({ allJobs }) {
         </div>
 
         <div className="mb-8 rounded-xl overflow-hidden">
-          <div id="Firstjobly_Incontent_Lazy" className="av-lazy"></div>
+          <div id="Firstjobly_Incontent_Lazy" className="av-lazy min-h-[250px]"></div>
         </div>
 
         <div className="space-y-4">

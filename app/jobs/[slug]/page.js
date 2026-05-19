@@ -73,7 +73,7 @@ export default async function JobDetailPage({ params }) {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24 sm:pb-10">
-      <div className="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+      <div className="w-full px-4 py-8 sm:py-12">
 
         {/* HEADER CARD */}
         <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8 mb-5">
@@ -106,7 +106,7 @@ export default async function JobDetailPage({ params }) {
 
         {/* AD 1 — after header */}
         <div className="mb-5">
-          <div id="Firstjobly_Incontent_Lazy" className="av-lazy" />
+          <div id="Firstjobly_Incontent_Lazy" className="av-lazy min-h-[250px]" />
         </div>
 
         {/* REQUIREMENTS */}

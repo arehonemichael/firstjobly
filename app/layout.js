@@ -1,4 +1,4 @@
-import "../styles/globals.css";
+﻿import "../styles/globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Script from "next/script";
@@ -128,7 +128,7 @@ gtag('config', 'G-HKHVEJR9N2');`,
         <Navbar />
 
         {/* Main Layout */}
-        <div className="mx-auto max-w-6xl px-4 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 py-6">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 py-6">
           <main className="space-y-6">
             {children}
           </main>
