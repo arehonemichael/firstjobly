@@ -117,11 +117,6 @@ export default async function JobDetailPage({ params }) {
             {cleanList(job.requirements)}
           </section>
         )}
-
-        {/* AD 2 — between requirements and description */}
-        <div className="mb-5">
-          <div className="av-lazy" parent-unit="Firstjobly_Incontent_Lazy" />
-        </div>
         {/* DESCRIPTION */}
         {job.description && (
           <section className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 mb-5">
