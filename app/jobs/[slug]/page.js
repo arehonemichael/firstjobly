@@ -122,10 +122,7 @@ export default async function JobDetailPage({ params }) {
         <div className="mb-5">
           <div className="av-lazy" parent-unit="Firstjobly_Incontent_Lazy" />
         </div>
-
         {/* DESCRIPTION */}
-        <AdsenseFluid />
-
         {job.description && (
           <section className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 mb-5">
             <h2 className="text-xl font-semibold text-gray-900 mb-5">About This Role</h2>
@@ -143,6 +140,10 @@ export default async function JobDetailPage({ params }) {
         <div className="mb-5">
           <div className="av-lazy" parent-unit="Firstjobly_Incontent_Lazy" />
         </div>
+
+        {/* ADSENSE — high intent placement above apply */}
+        <AdsenseFluid />
+
 
         {/* APPLY CTA */}
         {job.link && (
