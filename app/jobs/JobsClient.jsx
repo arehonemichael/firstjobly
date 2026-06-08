@@ -84,9 +84,14 @@ export default function JobsClient({ allJobs }) {
           </select>
         </div>
 
-        {/* Ad — top of listings */}
+        {/* AdSense — top of listings */}
         <div className="mb-8 rounded-xl overflow-hidden">
           <AdsenseFluid />
+        </div>
+
+        {/* Advergic — top in-content */}
+        <div className="mb-8 min-h-[250px]">
+          <div id="Firstjobly_Incontent_Lazy" className="av-lazy min-h-[250px]" />
         </div>
 
         <div className="space-y-4">
@@ -94,8 +99,8 @@ export default function JobsClient({ allJobs }) {
             <div key={job.id} className="animate-fade-in" style={{ animationDelay: `${index * 0.03}s` }}>
               <JobCard job={job} compact />
               {(index + 1) % 5 === 0 && index + 1 < visibleJobs.length && (
-                <div className="my-8">
-                  <AdsenseFluid />
+                <div className="my-8 min-h-[250px]">
+                  <div className="av-lazy min-h-[250px]" parent-unit="Firstjobly_Incontent_Lazy" />
                 </div>
               )}
             </div>
@@ -109,9 +114,10 @@ export default function JobsClient({ allJobs }) {
           )}
         </div>
 
+        {/* Advergic — after listings */}
         {visibleJobs.length > 0 && (
-          <div className="my-8">
-            <AdsenseFluid />
+          <div className="my-8 min-h-[250px]">
+            <div className="av-lazy min-h-[250px]" parent-unit="Firstjobly_Incontent_Lazy" />
           </div>
         )}
 
@@ -133,8 +139,9 @@ export default function JobsClient({ allJobs }) {
           </div>
         )}
 
-        <div className="mt-10">
-          <AdsenseFluid />
+        {/* Advergic — final BTF */}
+        <div className="mt-10 min-h-[250px]">
+          <div id="Firstjobly_Bottom_BTF" className="av-lazy min-h-[250px]" />
         </div>
       </div>
 
