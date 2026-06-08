@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getJobBySlug, getJobById, getJobsListing } from "../../../lib/jobs";
+import AdsenseFluid from "../../../components/AdsenseFluid";
 import ApplyButton from "../../../components/ApplyButton";
 import StickyApplyBar from "../../../components/StickyApplyBar";
 
@@ -123,6 +124,8 @@ export default async function JobDetailPage({ params }) {
         </div>
 
         {/* DESCRIPTION */}
+        <AdsenseFluid />
+
         {job.description && (
           <section className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 mb-5">
             <h2 className="text-xl font-semibold text-gray-900 mb-5">About This Role</h2>
