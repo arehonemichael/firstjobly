@@ -1,20 +1,24 @@
-"use client";
+﻿"use client";
+import { useRouter } from "next/navigation";
 
-export default function ApplyButton({ link }) {
+export default function ApplyButton({ link, className, children, title, company, slug }) {
+  const router = useRouter();
+
   const handleClick = () => {
-    const newWindow = window.open(link, "_blank");
-
-    if (!newWindow || newWindow.closed || typeof newWindow.closed === "undefined") {
-      alert("Unable to open the application link. Please check your popup blocker or try again.");
-    }
+    if (!link) return;
+    const params = new URLSearchParams({
+      link: encodeURIComponent(link),
+      ...(slug && { slug }),
+    });
+    router.push(`/apply?${params.toString()}`);
   };
 
   return (
     <button
       onClick={handleClick}
-      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+      className={className || "bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700 transition"}
     >
-      Apply Now
+      {children || "Apply Now"}
     </button>
   );
 }

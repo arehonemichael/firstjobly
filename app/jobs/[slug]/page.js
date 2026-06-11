@@ -116,6 +116,11 @@ export default async function JobDetailPage({ params }) {
             {cleanList(job.requirements)}
           </section>
         )}
+        {/* AD 2 — between requirements and description */}
+        <div className="mb-5">
+          <div className="av-lazy" parent-unit="Firstjobly_Incontent_Lazy" />
+        </div>
+
         {/* DESCRIPTION */}
         {job.description && (
           <section className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 mb-5">
@@ -136,12 +141,17 @@ export default async function JobDetailPage({ params }) {
         </div>
 
 
+        {/* AD — before apply CTA */}
+        <div className="mb-5">
+          <div className="av-lazy" parent-unit="Firstjobly_Incontent_Lazy" />
+        </div>
+
         {/* APPLY CTA */}
         {job.link && (
           <div className="bg-gradient-to-br from-pink-50 to-white border border-pink-100 rounded-2xl p-6 sm:p-8 text-center mb-5">
             <h3 className="text-lg font-semibold text-gray-900 mb-1">Interested in this role?</h3>
             <p className="text-gray-500 text-sm mb-5">Apply directly on {job.company || "the employer"}'s website. It only takes a few minutes.</p>
-            <ApplyButton link={job.link} className="inline-flex items-center justify-center bg-pink-600 text-white font-semibold px-8 py-3 rounded-xl hover:bg-pink-700 active:scale-95 transition">
+            <ApplyButton link={job.link} slug={job.slug} title={job.title} company={job.company} className="inline-flex items-center justify-center bg-pink-600 text-white font-semibold px-8 py-3 rounded-xl hover:bg-pink-700 active:scale-95 transition">
               Apply Now
             </ApplyButton>
           </div>
@@ -223,6 +233,11 @@ export default async function JobDetailPage({ params }) {
           </section>
         )}
 
+        {/* AD — before disclaimer */}
+        <div className="mb-5">
+          <div className="av-lazy" parent-unit="Firstjobly_Incontent_Lazy" />
+        </div>
+
         {/* DISCLAIMER */}
         <div className="bg-gray-900 text-white rounded-2xl p-6 mb-5">
           <p className="text-sm text-gray-300 leading-relaxed">
@@ -237,7 +252,7 @@ export default async function JobDetailPage({ params }) {
 
       </div>
 
-      <StickyApplyBar title={job.title} company={job.company} link={job.link} />
+      <StickyApplyBar title={job.title} company={job.company} link={job.link} slug={job.slug} />
 
       <script suppressHydrationWarning type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org/",
