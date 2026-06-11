@@ -62,13 +62,6 @@ export default function RootLayout({ children }) {
         />
 
         {/* Google Analytics */}
-                <Script
-          id="adsense-firstjobly"
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1505001993402465"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
         <Script
           id="ga-loader"
           strategy="afterInteractive"

@@ -2,7 +2,6 @@
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import JobCard from "../../components/JobCard";
-import AdsenseFluid from "../../components/AdsenseFluid";
 
 export default function JobsClient({ allJobs }) {
   const router = useRouter();
@@ -82,11 +81,6 @@ export default function JobsClient({ allJobs }) {
               <option key={cat} value={cat}>{cat}</option>
             ))}
           </select>
-        </div>
-
-        {/* AdSense — top of listings */}
-        <div className="mb-8 rounded-xl overflow-hidden">
-          <AdsenseFluid />
         </div>
 
         {/* Advergic — top in-content */}

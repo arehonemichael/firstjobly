@@ -2,7 +2,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getJobBySlug, getJobById, getJobsListing } from "../../../lib/jobs";
-import AdsenseFluid from "../../../components/AdsenseFluid";
 import ApplyButton from "../../../components/ApplyButton";
 import StickyApplyBar from "../../../components/StickyApplyBar";
 
@@ -135,9 +134,6 @@ export default async function JobDetailPage({ params }) {
         <div className="mb-5">
           <div className="av-lazy" parent-unit="Firstjobly_Incontent_Lazy" />
         </div>
-
-        {/* ADSENSE — high intent placement above apply */}
-        <AdsenseFluid />
 
 
         {/* APPLY CTA */}
