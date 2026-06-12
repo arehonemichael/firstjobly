@@ -89,7 +89,12 @@ function ApplyRedirectContent() {
           </a>
         </div>
 
-        {/* AD 1 */}
+        {/* PLACEHOLDER - AD moved */}
+        <div className="mb-6 hidden">
+          <div id="Firstjobly_Incontent_Lazy" className="av-lazy min-h-[250px]"></div>
+        </div>
+
+        {/* AD 1 — high visibility, right under apply button */}
         <div className="mb-6">
           <div id="Firstjobly_Incontent_Lazy" className="av-lazy min-h-[250px]"></div>
         </div>
