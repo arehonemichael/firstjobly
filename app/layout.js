@@ -107,7 +107,7 @@ gtag('config', 'G-HKHVEJR9N2');`,
                 "name": "South Africa",
               },
               "sameAs": [
-                "https://whatsapp.com/channel/0029VbBbQOK4inoxcWKjHY2v",
+                "https://whatsapp.com/channel/0029Vb8GUixBFLgaZPTb3e2m",
               ],
             }),
           }}
@@ -151,8 +151,8 @@ gtag('config', 'G-HKHVEJR9N2');`,
 
         {/* WhatsApp Channel */}
         <div className="fixed left-0 top-1/2 -translate-y-1/2 z-40">
-          <a
-            href="https://whatsapp.com/channel/0029VbBbQOK4inoxcWKjHY2v"
+          <a
+            href="https://whatsapp.com/channel/0029Vb8GUixBFLgaZPTb3e2m"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 bg-green-500 text-white pl-4 pr-5 py-3 rounded-r-full shadow-lg hover:bg-green-600 transition-all duration-300"
