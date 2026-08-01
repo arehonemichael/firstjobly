@@ -1,5 +1,5 @@
 // app/blog/loading.jsx
-// Removed wrapping <main> — layout.js already provides one
+// Removed wrapping <main> - layout.js already provides one
 export default function Loading() {
   return (
     <div className="max-w-4xl mx-auto p-6">

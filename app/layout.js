@@ -1,10 +1,9 @@
-﻿import "../styles/globals.css";
+import "../styles/globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Script from "next/script";
 import InstallPrompt from "../components/InstallPrompt";
-import AdLoader from "../components/AdLoader";
-import VisibilityAdReloader from "../components/VisibilityAdReloader";
+import AdSlot from "../components/AdSlot";
 
 export const metadata = {
   title:
@@ -36,7 +35,6 @@ export const metadata = {
   alternates: {
     canonical: "https://firstjobly.co.za",
   },
-  // Required for Google Discover large image cards on every page
   robots: {
     index: true,
     follow: true,
@@ -51,14 +49,15 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/* Required for Google Discover large image previews */}
         <meta name="robots" content="max-image-preview:large" />
 
-        {/* Advergic Script - afterInteractive prevents blocking page render */}
+        {/* Google AdSense loader — one script for the whole site */}
         <Script
-          id="advergic-script"
+          id="adsense-script"
           strategy="afterInteractive"
-          src="https://avads.live/s/av-firstjobly.js"
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1505001993402465"
+          crossOrigin="anonymous"
         />
 
         {/* Google Analytics */}
@@ -81,10 +80,8 @@ gtag('config', 'G-HKHVEJR9N2');`,
 
       <body className="bg-white text-gray-800 relative">
 
-        {/* ORGANISATION SCHEMA — trust signal for Google + AI search engines.
-            Lives in layout so it applies to every page automatically.
-            Tells Google who FirstJobly is as an entity — critical for
-            E-E-A-T scoring and appearing in AI search answers. */}
+        {/* ORGANISATION SCHEMA - trust signal for Google + AI search engines.
+            Lives in layout so it applies to every page automatically. */}
         <script
           type="application/ld+json"
           suppressHydrationWarning dangerouslySetInnerHTML={{
@@ -113,18 +110,6 @@ gtag('config', 'G-HKHVEJR9N2');`,
           }}
         />
 
-        {/* TOP SCROLL AD */}
-        <div id="Firstjobly_Top_Scroll" className="av-lazy"></div>
-
-        {/* Ad loader on route changes */}
-        <AdLoader />
-
-        {/* Reload ads when user returns to tab */}
-        <VisibilityAdReloader />
-
-        {/* ANCHOR AD */}
-        <div id="Firstjobly_Anchor_ATF" className="av-lazy mb-6"></div>
-
         <Navbar />
 
         {/* Main Layout */}
@@ -133,14 +118,11 @@ gtag('config', 'G-HKHVEJR9N2');`,
             {children}
           </main>
 
-          {/* SIDEBAR AD */}
-          <aside className="sticky top-24 h-fit space-y-6">
-            <div id="Firstjobly_Sidebar_Top_ATF" className="av-lazy"></div>
+          {/* SIDEBAR AD - desktop only, real unused space */}
+          <aside className="hidden lg:block sticky top-24 h-fit space-y-6">
+            <AdSlot type="display2" />
           </aside>
         </div>
-
-        {/* Right rail removed — was overlapping sidebar on lg screens
-            and causing ad auction dilution across 4 simultaneous slots */}
 
         <Footer />
 
@@ -151,7 +133,7 @@ gtag('config', 'G-HKHVEJR9N2');`,
 
         {/* WhatsApp Channel */}
         <div className="fixed left-0 top-1/2 -translate-y-1/2 z-40">
-          <a
+          <a
             href="https://whatsapp.com/channel/0029Vb8GUixBFLgaZPTb3e2m"
             target="_blank"
             rel="noopener noreferrer"

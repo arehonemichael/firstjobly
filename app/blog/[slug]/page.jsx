@@ -1,5 +1,6 @@
-﻿import { getBlogBySlug } from "../../../lib/blog";
+import { getBlogBySlug } from "../../../lib/blog";
 import Image from "next/image";
+import AdSlot from "../../../components/AdSlot";
 
 export const revalidate = 3600;
 
@@ -100,7 +101,9 @@ export default async function BlogPostPage({ params }) {
           </div>
         )}
 
-        <div id="Firstjobly_Incontent_Lazy" className="av-lazy my-6"></div>
+        <div className="my-6">
+          <AdSlot />
+        </div>
 
         {isStyledPost ? (
           <div dangerouslySetInnerHTML={{ __html: optimizedContent }} />
@@ -113,7 +116,11 @@ export default async function BlogPostPage({ params }) {
                 return (
                   <div key={idx}>
                     <div dangerouslySetInnerHTML={{ __html: chunk }} className="mb-4" />
-                    {shouldShowAd && <div className="av-lazy my-6" parent-unit="Firstjobly_Incontent_Lazy"></div>}
+                    {shouldShowAd && (
+                      <div className="my-6">
+                        <AdSlot type="inArticle" />
+                      </div>
+                    )}
                   </div>
                 );
               })
@@ -124,12 +131,12 @@ export default async function BlogPostPage({ params }) {
         )}
 
         {!isStyledPost && finalChunks.length > 6 && (
-          <div className="av-lazy my-8" parent-unit="Firstjobly_Incontent_Lazy"></div>
+          <div className="my-8">
+            <AdSlot type="native" />
+          </div>
         )}
 
-        <div className="av-lazy my-8" parent-unit="Firstjobly_Incontent_Lazy"></div>
-
-        {/* Google Follow button — lets readers follow FirstJobly directly in Discover */}
+        {/* Google Follow button - lets readers follow FirstJobly directly in Discover */}
         <div className="my-8 flex justify-center">
           <a
             href="https://www.google.com/preferences/source?q=https://firstjobly.co.za"
@@ -147,11 +154,12 @@ export default async function BlogPostPage({ params }) {
           </a>
         </div>
 
-        <div id="Firstjobly_Bottom_BTF" className="av-lazy my-10"></div>
+        <div className="my-10">
+          <AdSlot type="multiplex" />
+        </div>
       </div>
 
       <script suppressHydrationWarning type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "BlogPosting", headline: post.title, image: absoluteImageUrl ? [absoluteImageUrl] : [], author: { "@type": "Organization", name: "FirstJobly" }, publisher: { "@type": "Organization", name: "FirstJobly", logo: { "@type": "ImageObject", url: "https://firstjobly.co.za/logo.png" } }, datePublished: post.createdAt, description: post.description || "", mainEntityOfPage: { "@type": "WebPage", "@id": `https://firstjobly.co.za/blog/${slug}` } }) }} />
     </>
   );
 }
-

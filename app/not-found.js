@@ -1,4 +1,5 @@
-import Link from "next/link";
+﻿import Link from "next/link";
+import AdSlot from "../components/AdSlot";
 
 export default function NotFound() {
   return (
@@ -30,11 +31,11 @@ export default function NotFound() {
         </div>
 
         <div className="mb-6">
-          <div id="Firstjobly_Incontent_Lazy" className="av-lazy" />
+          <AdSlot />
         </div>
 
         <div className="mt-6">
-          <div id="Firstjobly_Bottom_BTF" className="av-lazy" />
+          <AdSlot />
         </div>
       </div>
     </div>

@@ -1,9 +1,10 @@
-﻿import { notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { getJobBySlug, getJobById, getJobsListing } from "../../../lib/jobs";
 import ApplyButton from "../../../components/ApplyButton";
 import StickyApplyBar from "../../../components/StickyApplyBar";
+import AdSlot from "../../../components/AdSlot";
 
 export const revalidate = 600;
 
@@ -13,10 +14,31 @@ export async function generateMetadata({ params }) {
     (params.slug.length >= 20 && /^[A-Za-z0-9]+$/.test(params.slug)
       ? await getJobById(params.slug)
       : null);
+
   if (!job) return { title: "Job Not Found | FirstJobly" };
+
+  const title = `${job.title} at ${job.company || "Confidential"} | FirstJobly`;
+  const description = (job.description || job.requirements || "").slice(0, 155).concat("...");
+  const image = job.logo || "https://firstjobly.co.za/og-image.png";
+  const url = `https://firstjobly.co.za/jobs/${job.slug}`;
+
   return {
-    title: `${job.title} at ${job.company || "Confidential"} | FirstJobly`,
-    description: (job.description || job.requirements || "").slice(0, 155).concat("..."),
+    title,
+    description,
+    openGraph: {
+      title: `${job.title} at ${job.company || "Confidential"}`,
+      description,
+      url,
+      siteName: "FirstJobly",
+      images: [{ url: image, width: 400, height: 400 }],
+      type: "article",
+    },
+    twitter: {
+      card: "summary",
+      title: `${job.title} at ${job.company || "Confidential"}`,
+      description,
+      images: [image],
+    },
   };
 }
 
@@ -60,7 +82,6 @@ export default async function JobDetailPage({ params }) {
       : null);
   if (!job) notFound();
 
-  // Fetch related jobs from same category
   let relatedJobs = [];
   try {
     const allJobs = await getJobsListing();
@@ -68,7 +89,7 @@ export default async function JobDetailPage({ params }) {
       .filter((j) => j.category === job.category && j.slug !== job.slug)
       .slice(0, 5);
   } catch {
-    // Silent fail — page still renders without related jobs
+    // Silent fail - page still renders without related jobs
   }
 
   return (
@@ -104,9 +125,9 @@ export default async function JobDetailPage({ params }) {
           </div>
         </div>
 
-        {/* AD 1 — after header */}
+        {/* AD 1 - after header */}
         <div className="mb-5">
-          <div id="Firstjobly_Incontent_Lazy" className="av-lazy min-h-[250px]" />
+          <AdSlot />
         </div>
 
         {/* REQUIREMENTS */}
@@ -116,9 +137,9 @@ export default async function JobDetailPage({ params }) {
             {cleanList(job.requirements)}
           </section>
         )}
-        {/* AD 2 — between requirements and description */}
+        {/* AD 2 - between requirements and description */}
         <div className="mb-5">
-          <div className="av-lazy" parent-unit="Firstjobly_Incontent_Lazy" />
+          <AdSlot type="native" />
         </div>
 
         {/* DESCRIPTION */}
@@ -135,15 +156,14 @@ export default async function JobDetailPage({ params }) {
           </section>
         )}
 
-        {/* AD 3 — after description */}
+        {/* AD 3 - after description */}
         <div className="mb-5">
-          <div className="av-lazy" parent-unit="Firstjobly_Incontent_Lazy" />
+          <AdSlot type="inArticle" />
         </div>
 
-
-        {/* AD — before apply CTA */}
+        {/* AD - before apply CTA */}
         <div className="mb-5">
-          <div className="av-lazy" parent-unit="Firstjobly_Incontent_Lazy" />
+          <AdSlot type="none" />
         </div>
 
         {/* APPLY CTA - desktop only, mobile uses sticky bar */}
@@ -178,7 +198,7 @@ export default async function JobDetailPage({ params }) {
               </div>
               <div>
                 <p className="font-semibold text-gray-900 text-sm mb-1">Check the closing date</p>
-                <p className="text-gray-600 text-sm">Applications submitted after the closing date are not considered. Apply as early as possible — do not wait until the last day.</p>
+                <p className="text-gray-600 text-sm">Applications submitted after the closing date are not considered. Apply as early as possible - do not wait until the last day.</p>
               </div>
             </div>
             <div className="flex gap-4 p-4 bg-gray-50 rounded-xl">
@@ -202,9 +222,9 @@ export default async function JobDetailPage({ params }) {
           </div>
         </section>
 
-        {/* AD 4 — after tips */}
+        {/* AD 4 - after tips */}
         <div className="mb-5">
-          <div className="av-lazy" parent-unit="Firstjobly_Incontent_Lazy" />
+          <AdSlot type="multiplex" />
         </div>
 
         {/* RELATED JOBS */}
@@ -235,9 +255,9 @@ export default async function JobDetailPage({ params }) {
           </section>
         )}
 
-        {/* AD — before disclaimer */}
+        {/* AD - before disclaimer */}
         <div className="mb-5">
-          <div className="av-lazy" parent-unit="Firstjobly_Incontent_Lazy" />
+          <AdSlot type="none" />
         </div>
 
         {/* DISCLAIMER */}
@@ -247,9 +267,9 @@ export default async function JobDetailPage({ params }) {
           </p>
         </div>
 
-        {/* AD 5 — final BTF */}
+        {/* AD 5 - final BTF */}
         <div className="mt-5">
-          <div id="Firstjobly_Bottom_BTF" className="av-lazy" />
+          <AdSlot type="display2" />
         </div>
 
       </div>

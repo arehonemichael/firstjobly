@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import AdSlot from "../components/AdSlot";
 import {
   FaBriefcase,
   FaUniversity,
@@ -140,9 +141,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* AD — between hero and categories, high visibility position */}
+      {/* AD - between hero and categories */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div id="Firstjobly_Incontent_Lazy" className="av-lazy"></div>
+        <AdSlot type="native" />
       </div>
 
       {/* Popular Job Categories */}
@@ -175,9 +176,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* AD — between categories and SEO section */}
+      {/* AD - between categories and SEO section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="av-lazy" parent-unit="Firstjobly_Incontent_Lazy"></div>
+        <AdSlot type="display2" />
       </div>
 
       {/* SEO-Rich Contextual Section */}
@@ -203,9 +204,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* AD — bottom of homepage */}
+      {/* AD - bottom of homepage */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div id="Firstjobly_Bottom_BTF" className="av-lazy"></div>
+        <AdSlot type="multiplex" />
       </div>
     </>
   );

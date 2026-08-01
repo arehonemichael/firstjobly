@@ -25,7 +25,7 @@ export async function GET() {
   let blogPages = [];
 
   try {
-    // Use existing lib functions — no Firebase reinitialisation, no hardcoded keys
+    // Use existing lib functions - no Firebase reinitialisation, no hardcoded keys
     const jobs = await getJobsListing();
     jobPages = jobs.map((job) => ({
       url: `${baseUrl}/jobs/${job.slug}`,
@@ -34,7 +34,7 @@ export async function GET() {
       changefreq: "daily", // Jobs change/expire frequently
     }));
   } catch {
-    // Silent fail — sitemap still returns static pages
+    // Silent fail - sitemap still returns static pages
   }
 
   try {
@@ -42,11 +42,11 @@ export async function GET() {
     blogPages = posts.map((post) => ({
       url: `${baseUrl}/blog/${post.slug}`,
       lastmod: post.createdAt ? new Date(post.createdAt).toISOString() : new Date().toISOString(),
-      priority: 0.9, // Fixed: blog higher than jobs — drives Discover traffic
+      priority: 0.9, // Fixed: blog higher than jobs - drives Discover traffic
       changefreq: "daily",
     }));
   } catch {
-    // Silent fail — sitemap still returns static + job pages
+    // Silent fail - sitemap still returns static + job pages
   }
 
   const allPages = [...staticPages, ...jobPages, ...blogPages];

@@ -1,7 +1,7 @@
 import JobsClient from "./JobsClient";
 import { getJobsListing } from "../../lib/jobs";
 
-// Fetch fresh data on every request — prevents empty jobs at night
+// Fetch fresh data on every request - prevents empty jobs at night
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata() {

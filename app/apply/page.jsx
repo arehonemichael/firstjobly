@@ -1,8 +1,9 @@
-﻿"use client";
+"use client";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
 import { getJobBySlug } from "../../lib/jobs";
+import AdSlot from "../../components/AdSlot";
 
 function ApplyRedirectContent() {
   const searchParams = useSearchParams();
@@ -69,7 +70,7 @@ function ApplyRedirectContent() {
             )}
             <div>
               <h1 className="text-xl font-bold text-gray-900 leading-snug">{job?.title || "Job Opportunity"}</h1>
-              <p className="text-gray-500 text-sm">{job?.company || "Confidential"}{job?.location && ` · ${job.location}`}</p>
+              <p className="text-gray-500 text-sm">{job?.company || "Confidential"}{job?.location && ` - ${job.location}`}</p>
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -89,14 +90,9 @@ function ApplyRedirectContent() {
           </a>
         </div>
 
-        {/* PLACEHOLDER - AD moved */}
-        <div className="mb-6 hidden">
-          <div id="Firstjobly_Incontent_Lazy" className="av-lazy min-h-[250px]"></div>
-        </div>
-
-        {/* AD 1 — high visibility, right under apply button */}
+        {/* AD 1 - high visibility, right under apply button */}
         <div className="mb-6">
-          <div id="Firstjobly_Incontent_Lazy" className="av-lazy min-h-[250px]"></div>
+          <AdSlot type="none" />
         </div>
 
         {/* Requirements */}
@@ -116,7 +112,7 @@ function ApplyRedirectContent() {
 
         {/* AD 2 */}
         <div className="mb-6">
-          <div className="av-lazy min-h-[250px]" parent-unit="Firstjobly_Incontent_Lazy"></div>
+          <AdSlot type="native" />
         </div>
 
         {/* Description */}
@@ -133,7 +129,7 @@ function ApplyRedirectContent() {
 
         {/* AD 3 */}
         <div className="mb-6">
-          <div className="av-lazy min-h-[250px]" parent-unit="Firstjobly_Incontent_Lazy"></div>
+          <AdSlot type="inArticle" />
         </div>
 
         {/* Apply CTA BOTTOM */}
@@ -148,12 +144,12 @@ function ApplyRedirectContent() {
 
         {/* AD 4 */}
         <div className="mb-6">
-          <div className="av-lazy min-h-[250px]" parent-unit="Firstjobly_Incontent_Lazy"></div>
+          <AdSlot type="none" />
         </div>
 
         {/* Bottom BTF */}
         <div className="mb-6">
-          <div id="Firstjobly_Bottom_BTF" className="av-lazy"></div>
+          <AdSlot type="multiplex" />
         </div>
 
         {/* More jobs */}

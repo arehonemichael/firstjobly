@@ -7,7 +7,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from "../../../lib/firebaseConfig";
 import Image from "next/image";
 
-// Firebase Storage imports removed — no longer needed with URL-based images
+// Firebase Storage imports removed - no longer needed with URL-based images
 
 export default function BlogAdminPage() {
   const router = useRouter();
@@ -46,7 +46,7 @@ export default function BlogAdminPage() {
     setError("");
 
     try {
-      // No upload needed — just save the post with the image URL directly
+      // No upload needed - just save the post with the image URL directly
       await addPost(post);
 
       setPost({ title: "", slug: "", description: "", content: "", image: "" });

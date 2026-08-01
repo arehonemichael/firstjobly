@@ -1,7 +1,8 @@
-﻿"use client";
+"use client";
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import JobCard from "../../components/JobCard";
+import AdSlot from "../../components/AdSlot";
 
 export default function JobsClient({ allJobs }) {
   const router = useRouter();
@@ -83,9 +84,8 @@ export default function JobsClient({ allJobs }) {
           </select>
         </div>
 
-        {/* Advergic — top in-content */}
         <div className="mb-8">
-          <div id="Firstjobly_Incontent_Lazy" className="av-lazy" />
+          <AdSlot />
         </div>
 
         <div className="space-y-4">
@@ -94,7 +94,7 @@ export default function JobsClient({ allJobs }) {
               <JobCard job={job} compact />
               {(index + 1) % 5 === 0 && index + 1 < visibleJobs.length && (
                 <div className="my-8">
-                  <div className="av-lazy" parent-unit="Firstjobly_Incontent_Lazy" />
+                  <AdSlot type="native" />
                 </div>
               )}
             </div>
@@ -108,10 +108,9 @@ export default function JobsClient({ allJobs }) {
           )}
         </div>
 
-        {/* Advergic — after listings */}
         {visibleJobs.length > 0 && (
           <div className="my-8">
-            <div className="av-lazy" parent-unit="Firstjobly_Incontent_Lazy" />
+            <AdSlot type="inArticle" />
           </div>
         )}
 
@@ -133,9 +132,8 @@ export default function JobsClient({ allJobs }) {
           </div>
         )}
 
-        {/* Advergic — final BTF */}
         <div className="mt-10">
-          <div id="Firstjobly_Bottom_BTF" className="av-lazy" />
+          <AdSlot type="multiplex" />
         </div>
       </div>
 

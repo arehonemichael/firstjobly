@@ -16,7 +16,7 @@ export default function ContactPage() {
 
       <h1 className="text-3xl font-bold mb-2">Contact Us</h1>
       <p className="text-gray-600 mb-6">
-        Have a question or feedback? Send us a message and we’ll get back to you.
+        Have a question or feedback? Send us a message and we'll get back to you.
       </p>
 
       <form

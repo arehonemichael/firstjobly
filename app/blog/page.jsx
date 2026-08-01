@@ -2,11 +2,12 @@
 import { getPosts } from "../../lib/blog";
 import Link from "next/link";
 import Image from "next/image";
+import AdSlot from "../../components/AdSlot";
 
 export const revalidate = 60;
 
 export const metadata = {
-  title: "FirstJobly Blog – Latest Posts",
+  title: "FirstJobly Blog - Latest Posts",
   description:
     "Read the latest career tips, job updates, and opportunities on FirstJobly.",
 };
@@ -18,7 +19,6 @@ export default async function BlogPage() {
     return <p className="text-center py-12">No blog posts yet.</p>;
   }
 
-  // Removed wrapping <main> — layout.js already provides one
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       <h1 className="text-3xl font-bold mb-6">Latest Blog Posts</h1>
@@ -43,7 +43,6 @@ export default async function BlogPage() {
                 </p>
               )}
 
-              {/* Fixed: Next.js Image instead of raw <img> for LCP optimisation */}
               {post.image && (
                 <div className="relative w-full h-64 mb-4 rounded overflow-hidden">
                   <Image
@@ -59,19 +58,18 @@ export default async function BlogPage() {
               <p className="text-sm text-gray-700">{post.description}</p>
             </Link>
 
-            {/* Fixed: consistent ad frequency, av-lazy not lazy */}
             {(index + 1) % 4 === 0 && (
-              <div
-                className="av-lazy my-4"
-                parent-unit="Firstjobly_Incontent_Lazy"
-              />
+              <div className="my-4">
+                <AdSlot type="native" />
+              </div>
             )}
           </article>
         ))}
       </div>
 
-      {/* Fixed: av-lazy not lazy */}
-      <div id="Firstjobly_Bottom_BTF" className="av-lazy my-10"></div>
+      <div className="my-10">
+        <AdSlot type="multiplex" />
+      </div>
     </div>
   );
 }
