@@ -92,7 +92,7 @@ export default function JobsClient({ allJobs }) {
           {visibleJobs.map((job, index) => (
             <div key={job.id} className="animate-fade-in" style={{ animationDelay: `${index * 0.03}s` }}>
               <JobCard job={job} compact />
-              {(index + 1) % 5 === 0 && index + 1 < visibleJobs.length && (
+              {(index + 1) % 4 === 0 && index + 1 < visibleJobs.length && (
                 <div className="my-8">
                   <AdSlot type="native" />
                 </div>
@@ -110,7 +110,7 @@ export default function JobsClient({ allJobs }) {
 
         {visibleJobs.length > 0 && (
           <div className="my-8">
-            <AdSlot type="inArticle" />
+            <AdSlot type="display2" />
           </div>
         )}
 
@@ -133,7 +133,7 @@ export default function JobsClient({ allJobs }) {
         )}
 
         <div className="mt-10">
-          <AdSlot type="multiplex" />
+          <AdSlot type="inArticle" />
         </div>
       </div>
 

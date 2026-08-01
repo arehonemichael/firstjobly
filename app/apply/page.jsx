@@ -92,7 +92,7 @@ function ApplyRedirectContent() {
 
         {/* AD 1 - high visibility, right under apply button */}
         <div className="mb-6">
-          <AdSlot type="none" />
+          <AdSlot type="display2" />
         </div>
 
         {/* Requirements */}
@@ -144,7 +144,7 @@ function ApplyRedirectContent() {
 
         {/* AD 4 */}
         <div className="mb-6">
-          <AdSlot type="none" />
+          <AdSlot />
         </div>
 
         {/* Bottom BTF */}
