@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef } from "react";
 
@@ -15,28 +15,28 @@ const AD_UNITS = {
 /**
  * AdSlot - renders a Google AdSense unit.
  * type: "display" | "display2" | "native" | "inArticle" | "multiplex" | "none"
- * "none" renders nothing - retires a position without touching surrounding markup.
  */
-export default function AdSlot({ type = "display", className = "" }) {
+export default function AdSlot({
+  type = "display",
+  className = "",
+  minHeight = 250,
+}) {
   const insRef = useRef(null);
   const pushed = useRef(false);
   const isNone = type === "none";
 
   useEffect(() => {
-    if (isNone) return;
-    if (pushed.current) return;
-    if (!insRef.current) return;
+    if (isNone || pushed.current || !insRef.current) return;
     if (insRef.current.getAttribute("data-adsbygoogle-status")) return;
 
     try {
-      if (typeof window !== "undefined" && window.adsbygoogle) {
-        window.adsbygoogle.push({});
-        pushed.current = true;
-      }
+      window.adsbygoogle = window.adsbygoogle || [];
+      window.adsbygoogle.push({});
+      pushed.current = true;
     } catch (error) {
-      // Silent fail
+      console.error("AdSense request failed:", error);
     }
-  }, [isNone]);
+  }, [isNone, type]);
 
   if (isNone) return null;
 
@@ -44,16 +44,25 @@ export default function AdSlot({ type = "display", className = "" }) {
   const isInArticle = unit.layout === "in-article";
 
   return (
-    <ins
-      ref={insRef}
-      className={`adsbygoogle ${className}`}
-      style={isInArticle ? { display: "block", textAlign: "center" } : { display: "block" }}
-      data-ad-client={AD_CLIENT}
-      data-ad-slot={unit.slot}
-      {...(unit.format ? { "data-ad-format": unit.format } : {})}
-      {...(unit.fullWidthResponsive ? { "data-full-width-responsive": "true" } : {})}
-      {...(unit.layoutKey ? { "data-ad-layout-key": unit.layoutKey } : {})}
-      {...(unit.layout ? { "data-ad-layout": unit.layout } : {})}
-    />
+    <div className={className} style={{ minHeight }}>
+      <ins
+        ref={insRef}
+        className="adsbygoogle"
+        style={
+          isInArticle
+            ? { display: "block", textAlign: "center" }
+            : { display: "block" }
+        }
+        data-ad-client={AD_CLIENT}
+        data-ad-slot={unit.slot}
+        {...(unit.format ? { "data-ad-format": unit.format } : {})}
+        {...(unit.fullWidthResponsive
+          ? { "data-full-width-responsive": "true" }
+          : {})}
+        {...(unit.layoutKey ? { "data-ad-layout-key": unit.layoutKey } : {})}
+        {...(unit.layout ? { "data-ad-layout": unit.layout } : {})}
+      />
+    </div>
   );
 }
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import JobCard from "../../components/JobCard";
@@ -11,8 +11,8 @@ export default function JobsClient({ allJobs }) {
   const category = searchParams.get("category") || "";
   const search = searchParams.get("search") || "";
   const page = parseInt(searchParams.get("page") || "1", 10);
-
   const perPage = 30;
+  const adPageKey = `${page}-${category || "all"}-${search || "none"}`;
 
   const categories = [
     "Internships",
@@ -30,6 +30,7 @@ export default function JobsClient({ allJobs }) {
           .filter(Boolean)
           .some((field) => field.toLowerCase().includes(search.toLowerCase()))
       : true;
+
     return matchesCategory && matchesSearch;
   });
 
@@ -50,17 +51,21 @@ export default function JobsClient({ allJobs }) {
   const handleCategoryChange = (e) => {
     const selected = e.target.value;
     const params = new URLSearchParams();
+
     if (selected) params.set("category", selected);
     if (search) params.set("search", search);
     params.set("page", "1");
+
     router.push(`/jobs?${params.toString()}`);
   };
 
   const handlePageChange = (newPage) => {
     const params = new URLSearchParams();
+
     if (category) params.set("category", category);
     if (search) params.set("search", search);
     params.set("page", String(newPage));
+
     router.push(`/jobs?${params.toString()}`);
   };
 
@@ -69,9 +74,14 @@ export default function JobsClient({ allJobs }) {
       <div className="w-full px-4 py-6 sm:py-10">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">{formattedCategory}</h1>
-            <p className="text-gray-600 text-sm">{filteredJobs.length} opportunities available</p>
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+              {formattedCategory}
+            </h1>
+            <p className="text-gray-600 text-sm">
+              {filteredJobs.length} opportunities available
+            </p>
           </div>
+
           <select
             value={category}
             onChange={handleCategoryChange}
@@ -79,43 +89,62 @@ export default function JobsClient({ allJobs }) {
           >
             <option value="">All Categories</option>
             {categories.map((cat) => (
-              <option key={cat} value={cat}>{cat}</option>
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
             ))}
           </select>
         </div>
 
         <div className="mb-8">
-          <AdSlot />
+          <AdSlot
+            key={`jobs-top-${adPageKey}`}
+            type="display"
+            minHeight={250}
+          />
         </div>
 
         <div className="space-y-4">
-          {visibleJobs.map((job, index) => {
-            const midListAdTypes = ["native", "display2", "inArticle", "multiplex"];
-            const showAd = (index + 1) % 5 === 0 && index + 1 < visibleJobs.length;
-            const adType = showAd ? midListAdTypes[(Math.floor((index + 1) / 5) - 1) % midListAdTypes.length] : null;
-            return (
-              <div key={job.id} className="animate-fade-in" style={{ animationDelay: `${index * 0.03}s` }}>
-                <JobCard job={job} compact />
-                {showAd && (
+          {visibleJobs.map((job, index) => (
+            <div
+              key={job.id}
+              className="animate-fade-in"
+              style={{ animationDelay: `${index * 0.03}s` }}
+            >
+              <JobCard job={job} compact />
+
+              {[5, 14].includes(index) &&
+                index + 1 < visibleJobs.length && (
                   <div className="my-8">
-                    <AdSlot type={adType} />
+                    <AdSlot
+                      key={`jobs-feed-${adPageKey}-${index}`}
+                      type="native"
+                      minHeight={280}
+                    />
                   </div>
                 )}
-              </div>
-            );
-          })}
+            </div>
+          ))}
 
           {visibleJobs.length === 0 && (
             <div className="text-center py-16 bg-white/50 rounded-2xl border border-gray-100">
-              <p className="text-gray-600 text-lg font-medium mb-2">No jobs found</p>
-              <p className="text-gray-500 text-sm">Try a different keyword or category</p>
+              <p className="text-gray-600 text-lg font-medium mb-2">
+                No jobs found
+              </p>
+              <p className="text-gray-500 text-sm">
+                Try a different keyword or category
+              </p>
             </div>
           )}
         </div>
 
         {visibleJobs.length > 0 && (
           <div className="my-8">
-            <AdSlot type="multiplex" />
+            <AdSlot
+              key={`jobs-bottom-${adPageKey}`}
+              type="display2"
+              minHeight={250}
+            />
           </div>
         )}
 
@@ -140,9 +169,16 @@ export default function JobsClient({ allJobs }) {
 
       <style jsx>{`
         @keyframes fade-in {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
+
         .animate-fade-in {
           animation: fade-in 0.4s ease-out forwards;
           opacity: 0;
@@ -151,3 +187,4 @@ export default function JobsClient({ allJobs }) {
     </div>
   );
 }
+
