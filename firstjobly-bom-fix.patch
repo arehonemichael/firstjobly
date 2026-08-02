@@ -1,0 +1,67 @@
+diff --git a/app/jobs/[slug]/not-found.js b/app/jobs/[slug]/not-found.js
+index d48a702..5ea7a62 100644
+--- a/app/jobs/[slug]/not-found.js
++++ b/app/jobs/[slug]/not-found.js
+@@ -1,4 +1,4 @@
+-﻿// app/jobs/[slug]/not-found.js
++// app/jobs/[slug]/not-found.js
+ import Link from "next/link";
+ import AdSlot from "../../../components/AdSlot";
+ 
+diff --git a/app/not-found.js b/app/not-found.js
+index 9b7d90e..0466d4a 100644
+--- a/app/not-found.js
++++ b/app/not-found.js
+@@ -1,4 +1,4 @@
+-﻿import Link from "next/link";
++import Link from "next/link";
+ import AdSlot from "../components/AdSlot";
+ 
+ export default function NotFound() {
+diff --git a/components/AdSlot.jsx b/components/AdSlot.jsx
+index 0910f6b..8f0bc8d 100644
+--- a/components/AdSlot.jsx
++++ b/components/AdSlot.jsx
+@@ -1,4 +1,4 @@
+-﻿"use client";
++"use client";
+ 
+ import { useEffect, useRef } from "react";
+ 
+diff --git a/components/AdsenseFluid.jsx b/components/AdsenseFluid.jsx
+index 582372d..6d6adb4 100644
+--- a/components/AdsenseFluid.jsx
++++ b/components/AdsenseFluid.jsx
+@@ -1,4 +1,4 @@
+-﻿"use client";
++"use client";
+ import { useEffect } from "react";
+ 
+ export default function AdsenseFluid() {
+diff --git a/components/ApplyButton.jsx b/components/ApplyButton.jsx
+index 571af5e..e1d0ef8 100644
+--- a/components/ApplyButton.jsx
++++ b/components/ApplyButton.jsx
+@@ -1,4 +1,4 @@
+-﻿"use client";
++"use client";
+ import { useRouter } from "next/navigation";
+ 
+ export default function ApplyButton({ link, className, children, title, company, slug }) {
+diff --git a/components/StickyApplyBar.jsx b/components/StickyApplyBar.jsx
+index 2d040c4..2124bfe 100644
+--- a/components/StickyApplyBar.jsx
++++ b/components/StickyApplyBar.jsx
+@@ -1,4 +1,4 @@
+-﻿"use client";
++"use client";
+ import { useState, useEffect } from "react";
+ import ApplyButton from "./ApplyButton";
+ 
+diff --git a/public/ads.txt b/public/ads.txt
+index a8fb1c0..ad55dcd 100644
+--- a/public/ads.txt
++++ b/public/ads.txt
+@@ -1 +1 @@
+-﻿google.com, pub-1505001993402465, DIRECT, f08c47fec0942fa0
++google.com, pub-1505001993402465, DIRECT, f08c47fec0942fa0

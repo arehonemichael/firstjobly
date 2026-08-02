@@ -1,4 +1,4 @@
-﻿// app/jobs/[slug]/not-found.js
+// app/jobs/[slug]/not-found.js
 import Link from "next/link";
 import AdSlot from "../../../components/AdSlot";
 

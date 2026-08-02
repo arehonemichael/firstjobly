@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import AdSlot from "../components/AdSlot";
 
 export default function NotFound() {
