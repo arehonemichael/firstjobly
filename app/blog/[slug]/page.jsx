@@ -113,12 +113,14 @@ export default async function BlogPostPage({ params }) {
               finalChunks.map((chunk, idx) => {
                 const chunkNumber = idx + 1;
                 const shouldShowAd = chunkNumber % AD_EVERY_N_CHUNKS === 0 && chunkNumber < finalChunks.length && Math.floor(chunkNumber / AD_EVERY_N_CHUNKS) <= MAX_ADS;
+                const inContentAdTypes = ["inArticle", "native", "display2", "multiplex"];
+                const adType = shouldShowAd ? inContentAdTypes[(Math.floor(chunkNumber / AD_EVERY_N_CHUNKS) - 1) % inContentAdTypes.length] : null;
                 return (
                   <div key={idx}>
                     <div dangerouslySetInnerHTML={{ __html: chunk }} className="mb-4" />
                     {shouldShowAd && (
                       <div className="my-6">
-                        <AdSlot type="inArticle" />
+                        <AdSlot type={adType} />
                       </div>
                     )}
                   </div>

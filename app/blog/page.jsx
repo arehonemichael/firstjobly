@@ -58,11 +58,15 @@ export default async function BlogPage() {
               <p className="text-sm text-gray-700">{post.description}</p>
             </Link>
 
-            {(index + 1) % 4 === 0 && (
-              <div className="my-4">
-                <AdSlot type="native" />
-              </div>
-            )}
+            {(index + 1) % 4 === 0 && (() => {
+              const types = ["native", "inArticle", "display2"];
+              const t = types[(Math.floor((index + 1) / 4) - 1) % types.length];
+              return (
+                <div className="my-4">
+                  <AdSlot type={t} />
+                </div>
+              );
+            })()}
           </article>
         ))}
       </div>

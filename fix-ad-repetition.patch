@@ -1,0 +1,101 @@
+diff --git a/app/blog/[slug]/page.jsx b/app/blog/[slug]/page.jsx
+index 9b5380a..8a1a6ff 100644
+--- a/app/blog/[slug]/page.jsx
++++ b/app/blog/[slug]/page.jsx
+@@ -113,12 +113,14 @@ export default async function BlogPostPage({ params }) {
+               finalChunks.map((chunk, idx) => {
+                 const chunkNumber = idx + 1;
+                 const shouldShowAd = chunkNumber % AD_EVERY_N_CHUNKS === 0 && chunkNumber < finalChunks.length && Math.floor(chunkNumber / AD_EVERY_N_CHUNKS) <= MAX_ADS;
++                const inContentAdTypes = ["inArticle", "native", "display2", "multiplex"];
++                const adType = shouldShowAd ? inContentAdTypes[(Math.floor(chunkNumber / AD_EVERY_N_CHUNKS) - 1) % inContentAdTypes.length] : null;
+                 return (
+                   <div key={idx}>
+                     <div dangerouslySetInnerHTML={{ __html: chunk }} className="mb-4" />
+                     {shouldShowAd && (
+                       <div className="my-6">
+-                        <AdSlot type="inArticle" />
++                        <AdSlot type={adType} />
+                       </div>
+                     )}
+                   </div>
+diff --git a/app/blog/page.jsx b/app/blog/page.jsx
+index 23cecd5..7be4578 100644
+--- a/app/blog/page.jsx
++++ b/app/blog/page.jsx
+@@ -58,11 +58,15 @@ export default async function BlogPage() {
+               <p className="text-sm text-gray-700">{post.description}</p>
+             </Link>
+ 
+-            {(index + 1) % 4 === 0 && (
+-              <div className="my-4">
+-                <AdSlot type="native" />
+-              </div>
+-            )}
++            {(index + 1) % 4 === 0 && (() => {
++              const types = ["native", "inArticle", "display2"];
++              const t = types[(Math.floor((index + 1) / 4) - 1) % types.length];
++              return (
++                <div className="my-4">
++                  <AdSlot type={t} />
++                </div>
++              );
++            })()}
+           </article>
+         ))}
+       </div>
+diff --git a/app/jobs/JobsClient.jsx b/app/jobs/JobsClient.jsx
+index 1b7f5bb..c686917 100644
+--- a/app/jobs/JobsClient.jsx
++++ b/app/jobs/JobsClient.jsx
+@@ -89,16 +89,21 @@ export default function JobsClient({ allJobs }) {
+         </div>
+ 
+         <div className="space-y-4">
+-          {visibleJobs.map((job, index) => (
+-            <div key={job.id} className="animate-fade-in" style={{ animationDelay: `${index * 0.03}s` }}>
+-              <JobCard job={job} compact />
+-              {(index + 1) % 4 === 0 && index + 1 < visibleJobs.length && (
+-                <div className="my-8">
+-                  <AdSlot type="native" />
+-                </div>
+-              )}
+-            </div>
+-          ))}
++          {visibleJobs.map((job, index) => {
++            const midListAdTypes = ["native", "display2", "inArticle", "multiplex"];
++            const showAd = (index + 1) % 5 === 0 && index + 1 < visibleJobs.length;
++            const adType = showAd ? midListAdTypes[(Math.floor((index + 1) / 5) - 1) % midListAdTypes.length] : null;
++            return (
++              <div key={job.id} className="animate-fade-in" style={{ animationDelay: `${index * 0.03}s` }}>
++                <JobCard job={job} compact />
++                {showAd && (
++                  <div className="my-8">
++                    <AdSlot type={adType} />
++                  </div>
++                )}
++              </div>
++            );
++          })}
+ 
+           {visibleJobs.length === 0 && (
+             <div className="text-center py-16 bg-white/50 rounded-2xl border border-gray-100">
+@@ -110,7 +115,7 @@ export default function JobsClient({ allJobs }) {
+ 
+         {visibleJobs.length > 0 && (
+           <div className="my-8">
+-            <AdSlot type="display2" />
++            <AdSlot type="multiplex" />
+           </div>
+         )}
+ 
+@@ -131,10 +136,6 @@ export default function JobsClient({ allJobs }) {
+             ))}
+           </div>
+         )}
+-
+-        <div className="mt-10">
+-          <AdSlot type="inArticle" />
+-        </div>
+       </div>
+ 
+       <style jsx>{`

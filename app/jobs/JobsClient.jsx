@@ -89,16 +89,21 @@ export default function JobsClient({ allJobs }) {
         </div>
 
         <div className="space-y-4">
-          {visibleJobs.map((job, index) => (
-            <div key={job.id} className="animate-fade-in" style={{ animationDelay: `${index * 0.03}s` }}>
-              <JobCard job={job} compact />
-              {(index + 1) % 4 === 0 && index + 1 < visibleJobs.length && (
-                <div className="my-8">
-                  <AdSlot type="native" />
-                </div>
-              )}
-            </div>
-          ))}
+          {visibleJobs.map((job, index) => {
+            const midListAdTypes = ["native", "display2", "inArticle", "multiplex"];
+            const showAd = (index + 1) % 5 === 0 && index + 1 < visibleJobs.length;
+            const adType = showAd ? midListAdTypes[(Math.floor((index + 1) / 5) - 1) % midListAdTypes.length] : null;
+            return (
+              <div key={job.id} className="animate-fade-in" style={{ animationDelay: `${index * 0.03}s` }}>
+                <JobCard job={job} compact />
+                {showAd && (
+                  <div className="my-8">
+                    <AdSlot type={adType} />
+                  </div>
+                )}
+              </div>
+            );
+          })}
 
           {visibleJobs.length === 0 && (
             <div className="text-center py-16 bg-white/50 rounded-2xl border border-gray-100">
@@ -110,7 +115,7 @@ export default function JobsClient({ allJobs }) {
 
         {visibleJobs.length > 0 && (
           <div className="my-8">
-            <AdSlot type="display2" />
+            <AdSlot type="multiplex" />
           </div>
         )}
 
@@ -131,10 +136,6 @@ export default function JobsClient({ allJobs }) {
             ))}
           </div>
         )}
-
-        <div className="mt-10">
-          <AdSlot type="inArticle" />
-        </div>
       </div>
 
       <style jsx>{`

@@ -1,16 +1,9 @@
 "use client";
-import { useRouter } from "next/navigation";
 
 export default function ApplyButton({ link, className, children, title, company, slug }) {
-  const router = useRouter();
-
   const handleClick = () => {
     if (!link) return;
-    const params = new URLSearchParams({
-      link: encodeURIComponent(link),
-      ...(slug && { slug }),
-    });
-    router.push(`/apply?${params.toString()}`);
+    window.open(link, "_blank", "noopener,noreferrer");
   };
 
   return (
