@@ -1,3 +1,92 @@
+﻿$ErrorActionPreference = "Stop"
+
+$root = (Get-Location).Path
+$adSlotPath = Join-Path $root "components\AdSlot.jsx"
+$jobsPath = Join-Path $root "app\jobs\JobsClient.jsx"
+
+if (-not (Test-Path $adSlotPath)) {
+    throw "Could not find components\AdSlot.jsx. Run this script from the FirstJobly project root."
+}
+
+if (-not (Test-Path $jobsPath)) {
+    throw "Could not find app\jobs\JobsClient.jsx. Run this script from the FirstJobly project root."
+}
+
+Copy-Item $adSlotPath "$adSlotPath.bak" -Force
+Copy-Item $jobsPath "$jobsPath.bak" -Force
+
+@'
+"use client";
+
+import { useEffect, useRef } from "react";
+
+const AD_CLIENT = "ca-pub-1505001993402465";
+
+const AD_UNITS = {
+  display: { slot: "2384027274", format: "auto", fullWidthResponsive: true },
+  display2: { slot: "1941174145", format: "auto", fullWidthResponsive: true },
+  native: { slot: "9819664161", format: "fluid", layoutKey: "-gf+f-3-5e+9w" },
+  inArticle: { slot: "5086212235", layout: "in-article", format: "fluid" },
+  multiplex: { slot: "2460048898", format: "autorelaxed" },
+};
+
+/**
+ * AdSlot - renders a Google AdSense unit.
+ * type: "display" | "display2" | "native" | "inArticle" | "multiplex" | "none"
+ */
+export default function AdSlot({
+  type = "display",
+  className = "",
+  minHeight = 250,
+}) {
+  const insRef = useRef(null);
+  const pushed = useRef(false);
+  const isNone = type === "none";
+
+  useEffect(() => {
+    if (isNone || pushed.current || !insRef.current) return;
+    if (insRef.current.getAttribute("data-adsbygoogle-status")) return;
+
+    try {
+      window.adsbygoogle = window.adsbygoogle || [];
+      window.adsbygoogle.push({});
+      pushed.current = true;
+    } catch (error) {
+      console.error("AdSense request failed:", error);
+    }
+  }, [isNone, type]);
+
+  if (isNone) return null;
+
+  const unit = AD_UNITS[type] || AD_UNITS.display;
+  const isInArticle = unit.layout === "in-article";
+
+  return (
+    <div className={className} style={{ minHeight }}>
+      <ins
+        ref={insRef}
+        className="adsbygoogle"
+        style={
+          isInArticle
+            ? { display: "block", textAlign: "center" }
+            : { display: "block" }
+        }
+        data-ad-client={AD_CLIENT}
+        data-ad-slot={unit.slot}
+        {...(unit.format ? { "data-ad-format": unit.format } : {})}
+        {...(unit.fullWidthResponsive
+          ? { "data-full-width-responsive": "true" }
+          : {})}
+        {...(unit.layoutKey ? { "data-ad-layout-key": unit.layoutKey } : {})}
+        {...(unit.layout ? { "data-ad-layout": unit.layout } : {})}
+      />
+    </div>
+  );
+}
+
+'@ | Set-Content -Path $adSlotPath -Encoding utf8
+
+@'
 "use client";
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -105,28 +194,26 @@ export default function JobsClient({ allJobs }) {
         </div>
 
         <div className="space-y-4">
-          {visibleJobs.map((job, index) => {
-            const midListAdType = index === 5 ? "native" : index === 14 ? "inArticle" : null;
-            return (
-              <div
-                key={job.id}
-                className="animate-fade-in"
-                style={{ animationDelay: `${index * 0.03}s` }}
-              >
-                <JobCard job={job} compact />
+          {visibleJobs.map((job, index) => (
+            <div
+              key={job.id}
+              className="animate-fade-in"
+              style={{ animationDelay: `${index * 0.03}s` }}
+            >
+              <JobCard job={job} compact />
 
-                {midListAdType && index + 1 < visibleJobs.length && (
+              {[5, 14].includes(index) &&
+                index + 1 < visibleJobs.length && (
                   <div className="my-8">
                     <AdSlot
                       key={`jobs-feed-${adPageKey}-${index}`}
-                      type={midListAdType}
+                      type="native"
                       minHeight={280}
                     />
                   </div>
                 )}
-              </div>
-            );
-          })}
+            </div>
+          ))}
 
           {visibleJobs.length === 0 && (
             <div className="text-center py-16 bg-white/50 rounded-2xl border border-gray-100">
@@ -190,3 +277,13 @@ export default function JobsClient({ allJobs }) {
   );
 }
 
+'@ | Set-Content -Path $jobsPath -Encoding utf8
+
+Write-Host "AdSense fixes applied."
+Write-Host "Backups created:"
+Write-Host "  $adSlotPath.bak"
+Write-Host "  $jobsPath.bak"
+Write-Host ""
+Write-Host "Next run:"
+Write-Host "  git diff -- components/AdSlot.jsx app/jobs/JobsClient.jsx"
+Write-Host "  npm run build"

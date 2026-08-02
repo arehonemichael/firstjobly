@@ -1,0 +1,62 @@
+diff --git a/app/jobs/JobsClient.jsx b/app/jobs/JobsClient.jsx
+index 6b36aef..f5db89b 100644
+--- a/app/jobs/JobsClient.jsx
++++ b/app/jobs/JobsClient.jsx
+@@ -1,4 +1,4 @@
+-﻿"use client";
++"use client";
+ import { useEffect } from "react";
+ import { useRouter, useSearchParams } from "next/navigation";
+ import JobCard from "../../components/JobCard";
+@@ -105,26 +105,28 @@ export default function JobsClient({ allJobs }) {
+         </div>
+ 
+         <div className="space-y-4">
+-          {visibleJobs.map((job, index) => (
+-            <div
+-              key={job.id}
+-              className="animate-fade-in"
+-              style={{ animationDelay: `${index * 0.03}s` }}
+-            >
+-              <JobCard job={job} compact />
+-
+-              {[5, 14].includes(index) &&
+-                index + 1 < visibleJobs.length && (
++          {visibleJobs.map((job, index) => {
++            const midListAdType = index === 5 ? "native" : index === 14 ? "inArticle" : null;
++            return (
++              <div
++                key={job.id}
++                className="animate-fade-in"
++                style={{ animationDelay: `${index * 0.03}s` }}
++              >
++                <JobCard job={job} compact />
++
++                {midListAdType && index + 1 < visibleJobs.length && (
+                   <div className="my-8">
+                     <AdSlot
+                       key={`jobs-feed-${adPageKey}-${index}`}
+-                      type="native"
++                      type={midListAdType}
+                       minHeight={280}
+                     />
+                   </div>
+                 )}
+-            </div>
+-          ))}
++              </div>
++            );
++          })}
+ 
+           {visibleJobs.length === 0 && (
+             <div className="text-center py-16 bg-white/50 rounded-2xl border border-gray-100">
+diff --git a/components/AdSlot.jsx b/components/AdSlot.jsx
+index f039a7c..8b12849 100644
+--- a/components/AdSlot.jsx
++++ b/components/AdSlot.jsx
+@@ -1,4 +1,4 @@
+-﻿"use client";
++"use client";
+ 
+ import { useEffect, useRef } from "react";
+ 
