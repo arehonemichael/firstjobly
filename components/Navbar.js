@@ -1,10 +1,12 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -14,6 +16,10 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
   const navLinks = [
     { name: "Jobs", href: "/jobs" },
     { name: "Blog", href: "/blog" },
@@ -21,62 +27,96 @@ export default function Navbar() {
     { name: "Contact", href: "/contact" },
   ];
 
+  const isActive = (href) =>
+    pathname === href || (href !== "/" && pathname?.startsWith(`${href}/`));
+
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-white/95 shadow-sm backdrop-blur" : "bg-white"
+      className={`sticky top-0 z-50 border-b border-transparent transition-all duration-300 ${
+        scrolled
+          ? "border-gray-100 bg-white/95 shadow-sm backdrop-blur"
+          : "bg-white"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Logo */}
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="text-2xl font-bold text-pink-600 hover:text-pink-700 transition"
+          className="text-2xl font-bold text-pink-600 transition hover:text-pink-700"
+          aria-label="FirstJobly home"
         >
           First<span className="text-gray-900">Jobly.</span>
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8 font-medium text-gray-700">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="hover:text-pink-600 transition"
-            >
-              {link.name}
-            </Link>
-          ))}
+        <nav
+          className="hidden items-center gap-8 font-medium text-gray-700 md:flex"
+          aria-label="Main navigation"
+        >
+          {navLinks.map((link) => {
+            const active = isActive(link.href);
+
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+                className={`relative py-2 transition ${
+                  active
+                    ? "text-pink-600"
+                    : "text-gray-700 hover:text-pink-600"
+                }`}
+              >
+                {link.name}
+                <span
+                  className={`absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full bg-pink-600 transition-transform ${
+                    active ? "scale-x-100" : "scale-x-0"
+                  }`}
+                />
+              </Link>
+            );
+          })}
         </nav>
 
-        {/* Mobile Menu Toggle */}
         <button
-          className="md:hidden text-gray-800 z-50"
-          onClick={() => setOpen(!open)}
-          aria-label="Toggle menu"
+          type="button"
+          className="z-50 rounded-lg p-2 text-gray-800 transition hover:bg-gray-100 md:hidden"
+          onClick={() => setOpen((current) => !current)}
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          aria-controls="mobile-navigation"
         >
-          {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </div>
 
-      {/* Mobile Dropdown */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          open ? "max-h-60 border-t bg-white shadow-sm" : "max-h-0"
+        id="mobile-navigation"
+        className={`overflow-hidden border-gray-100 bg-white transition-all duration-300 ease-in-out md:hidden ${
+          open ? "max-h-72 border-t shadow-sm" : "max-h-0"
         }`}
       >
-        <div className="flex flex-col px-6 py-4 space-y-4 text-right">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setOpen(false)}
-              className="text-gray-700 hover:text-pink-600 font-medium transition"
-            >
-              {link.name}
-            </Link>
-          ))}
-        </div>
+        <nav
+          className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 sm:px-6"
+          aria-label="Mobile navigation"
+        >
+          {navLinks.map((link) => {
+            const active = isActive(link.href);
+
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+                className={`rounded-lg px-3 py-3 text-left font-medium transition ${
+                  active
+                    ? "bg-pink-50 text-pink-600"
+                    : "text-gray-700 hover:bg-gray-50 hover:text-pink-600"
+                }`}
+              >
+                {link.name}
+              </Link>
+            );
+          })}
+        </nav>
       </div>
     </header>
   );

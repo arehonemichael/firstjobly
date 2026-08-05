@@ -1,4 +1,4 @@
-import "../styles/globals.css";
+﻿import "../styles/globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Script from "next/script";
@@ -7,7 +7,7 @@ import AdSlot from "../components/AdSlot";
 
 export const metadata = {
   title:
-    "FirstJobly - Jobs in South Africa | Internships, Learnerships, Graduate Jobs & Entry-Level Positions 2025",
+    "FirstJobly - Jobs in South Africa | Internships, Learnerships, Graduate Jobs & Entry-Level Positions",
   description:
     "Find internships, learnerships, bursaries, graduate jobs, and entry-level positions in South Africa.",
   metadataBase: new URL("https://firstjobly.co.za"),
@@ -51,7 +51,7 @@ export default function RootLayout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="max-image-preview:large" />
 
-        {/* Google AdSense loader — one script for the whole site */}
+        {/* Google AdSense loader â€” one script for the whole site */}
         <Script
           id="adsense-script"
           strategy="afterInteractive"
@@ -147,3 +147,4 @@ gtag('config', 'G-HKHVEJR9N2');`,
     </html>
   );
 }
+

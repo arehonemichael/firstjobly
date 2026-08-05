@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import JobCard from "../../components/JobCard";
@@ -38,6 +38,18 @@ export default function JobsClient({ allJobs }) {
   const startIndex = (page - 1) * perPage;
   const visibleJobs = filteredJobs.slice(startIndex, startIndex + perPage);
 
+  const getVisiblePageNumbers = () => {
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, index) => index + 1);
+    }
+
+    const pages = new Set([1, totalPages, page - 1, page, page + 1]);
+    return [...pages]
+      .filter((pageNumber) => pageNumber >= 1 && pageNumber <= totalPages)
+      .sort((a, b) => a - b);
+  };
+
+  const visiblePageNumbers = getVisiblePageNumbers();
   const formattedCategory = search
     ? `Results for "${search}"`
     : category
@@ -151,21 +163,56 @@ export default function JobsClient({ allJobs }) {
         )}
 
         {totalPages > 1 && (
-          <div className="flex flex-wrap justify-center mt-10 gap-2">
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i}
-                onClick={() => handlePageChange(i + 1)}
-                className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                  i + 1 === page
-                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md scale-105"
-                    : "bg-white text-gray-700 border border-gray-200 hover:border-blue-300 hover:shadow-sm"
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
+          <nav
+            className="mt-10 flex flex-wrap items-center justify-center gap-2"
+            aria-label="Jobs pagination"
+          >
+            <button
+              type="button"
+              onClick={() => handlePageChange(page - 1)}
+              disabled={page === 1}
+              className="rounded-lg border border-gray-200 bg-white px-4 py-2 font-medium text-gray-700 transition hover:border-blue-300 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Previous
+            </button>
+
+            {visiblePageNumbers.map((pageNumber, index) => {
+              const previousPageNumber = visiblePageNumbers[index - 1];
+              const showEllipsis =
+                previousPageNumber && pageNumber - previousPageNumber > 1;
+
+              return (
+                <div key={pageNumber} className="flex items-center gap-2">
+                  {showEllipsis && (
+                    <span className="px-1 text-gray-400" aria-hidden="true">
+                      …
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => handlePageChange(pageNumber)}
+                    aria-current={pageNumber === page ? "page" : undefined}
+                    className={`min-w-10 rounded-lg px-3 py-2 font-medium transition-all ${
+                      pageNumber === page
+                        ? "scale-105 bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md"
+                        : "border border-gray-200 bg-white text-gray-700 hover:border-blue-300 hover:shadow-sm"
+                    }`}
+                  >
+                    {pageNumber}
+                  </button>
+                </div>
+              );
+            })}
+
+            <button
+              type="button"
+              onClick={() => handlePageChange(page + 1)}
+              disabled={page === totalPages}
+              className="rounded-lg border border-gray-200 bg-white px-4 py-2 font-medium text-gray-700 transition hover:border-blue-300 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Next
+            </button>
+          </nav>
         )}
       </div>
 
@@ -189,4 +236,5 @@ export default function JobsClient({ allJobs }) {
     </div>
   );
 }
+
 
